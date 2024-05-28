@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
                   <Link
                     key={`${href}${label}`}
                     href={href}
-                    className="text-slate-300 hover:bg-slate-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     {label}
                   </Link>
