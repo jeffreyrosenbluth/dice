@@ -1,6 +1,7 @@
 "use client";
 
-import WealthPlot from "@/app/ui/wealth";
+import WealthPlot from "@/app/ui/wealthplot";
+import ReturnPlot from "@/app/ui/returnplot";
 import Button from "@/app/ui/button";
 import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card"; // Update the import statement to match the actual file name
@@ -40,9 +41,8 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-24">
       <div className="relative text-4xl">
         Investment Risk and Return Simulation 🎲
-        {/* ## Investment Risk and Return */}
       </div>
-      <div className="relative flex place-items-center">
+      <div>
         <WealthPlot wealth={wealth} pink={isToggled} />
       </div>
       <div className="grid gap-8 grid-cols-3">
@@ -90,6 +90,9 @@ export default function Home() {
             )}
           </p>
         </Card>
+      </div>
+      <div>
+        <ReturnPlot returns={returns} pink={isToggled} />
       </div>
     </main>
   );
