@@ -1,16 +1,12 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
+import { Wealth, to_df } from "@/app/lib/calc";
 
-export default function WealthPlot() {
+export default function WealthPlot({wealth, pink}) {
   const containerRef = useRef();
-  const [data, setData] = useState();
-
-  useEffect(() => {
-    d3.csv('/wealth.csv', d3.autoType).then((data) => {
-      setData(data);
-    });
-  }, []);
+  const data = to_df(wealth, pink);
+  const n = pink ? 4 : 3;
 
   useEffect(() => {
     if (data === undefined) return;
@@ -18,37 +14,38 @@ export default function WealthPlot() {
       marginLeft: 0,
       marginTop: 50,
       x: {
-        ticks: Math.trunc(data.length / 3),
+        ticks: Math.trunc(data.length / n),
         label: "Years",
         insetLeft: 50,
       },
       color: {
-        domain: ["green", "red", "white"],
-        range: ["mediumseagreen", "crimson", "white"],
+        domain: ["_green", "_red", "_white", "_pink"],
+        range: ["mediumseagreen", "crimson", "white", "hotpink"],
       },
       marks: [
-        Plot.lineY(data, {
+        data.length > n ? Plot.lineY(data, {
           x: "roll_num",
           y: "value",
           stroke: "symbol",
           strokeWidth: 2.5,
-          tip: true,
-        }),
+        }) : Plot.frame(),
         Plot.axisY({
           tickSize: 0,
-          dx: 38, // offset right
-          dy: -6, // offset up
-          lineAnchor: "bottom", // draw labels above grid lines
+          dx: 38, 
+          dy: -6,
+          lineAnchor: "bottom",
           tickFormat: (d, i, _) => d,
         }),
         Plot.gridY({ ticks: 10 }),
-        Plot.ruleY([0], { stroke: "gray" }),
+        data.length > n ? Plot.ruleY([0], { stroke: "gray" }) : null,
+        data.length > n ? null : Plot.text(["Press roll to generate a plot of wealth"], 
+          {frameAnchor: "middle", stroke: "skyblue", fontSize: 35, fontWeight: 1, fontStyle: "normal"}),
         Plot.tickY({ x: [] }),
       ],
     });
     containerRef.current.append(plot);
     return () => plot.remove();
-  }, [data]);
+  }, [data, n]);
 
   return <div ref={containerRef} />;
 }
