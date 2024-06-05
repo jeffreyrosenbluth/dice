@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 import { Wealth, to_df } from "@/app/lib/calc";
 
-export default function WealthPlot({wealth, pink}) {
+export default function WealthPlot({wealth, pink, className=''}) {
   const containerRef = useRef();
   const data = to_df(wealth, pink);
   const n = pink ? 4 : 3;
@@ -13,22 +13,26 @@ export default function WealthPlot({wealth, pink}) {
     const plot = Plot.plot({
       marginLeft: 0,
       marginTop: 50,
+      marginRight: 60,
       x: {
         ticks: Math.trunc(data.length / n),
         label: "Years",
         insetLeft: 50,
       },
+      y: {label: null},
       color: {
         domain: ["_green", "_red", "_white", "_pink"],
         range: ["mediumseagreen", "crimson", "white", "hotpink"],
       },
+      title: "Value of $100 Invested",
       marks: [
         data.length > n ? Plot.lineY(data, {
           x: "roll_num",
           y: "value",
           stroke: "symbol",
           strokeWidth: 2.5,
-        }) : Plot.frame(),
+        }) : null,
+        Plot.text(data, Plot.selectLast({filter: (d) => d.symbol === "_pink", x: "roll_num", y: "value", fill: "hotpink", text: (d) => `${d.value.toFixed(0)}`, dx: 25})),
         Plot.axisY({
           tickSize: 0,
           dx: 38, 
@@ -38,8 +42,8 @@ export default function WealthPlot({wealth, pink}) {
         }),
         Plot.gridY({ ticks: 10 }),
         data.length > n ? Plot.ruleY([0], { stroke: "gray" }) : null,
-        data.length > n ? null : Plot.text(["Press roll to generate a plot of wealth"], 
-          {frameAnchor: "middle", stroke: "skyblue", fontSize: 35, fontWeight: 1, fontStyle: "normal"}),
+        // data.length > n ? null : Plot.text(["Press Roll to Start"], 
+        //   {frameAnchor: "middle", stroke: "skyblue", fontSize: 35, fontWeight: 1, fontStyle: "normal"}),
         Plot.tickY({ x: [] }),
       ],
     });
@@ -47,5 +51,5 @@ export default function WealthPlot({wealth, pink}) {
     return () => plot.remove();
   }, [data, n]);
 
-  return <div ref={containerRef} />;
+  return <div className={className} ref={containerRef} />;
 }

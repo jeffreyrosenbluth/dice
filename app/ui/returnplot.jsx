@@ -1,43 +1,43 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { Wealth, to_df } from "@/app/lib/calc";
+import { Wealth, to_df, countReturns, pmf } from "@/app/lib/calc";
 
 export default function ReturnPlot({returns, pink}) {
   const containerRef = useRef();
-  const data = to_df(returns.slice(0, -1), pink);
+  const data = countReturns(returns.slice(1), pink);
   const n = pink ? 3 : 2;
 
   useEffect(() => {
     if (data === undefined) return;
     const plot = Plot.plot({
-      marginLeft: 20,
+      marginLeft: 30,
       marginTop: 50,
+      marginRight: 60,
       x: {
-        axis: null,
-        // insetLeft: 50,
+        inset: 10,
+        ticks: 5,
       },
+      y: {inset:10, label: null},
       color: {
-        domain: ["_green", "_red", "_white", "_pink"],
+        domain: ["Green Die", "Red Die", "White Die", "pink Die"],
         range: ["mediumseagreen", "crimson", "gainsboro", "hotpink"],
       },
+      facet: {data: data, y: "symbol", label: null},
+      title: "Probability of Returns",
       marks: [
-        data.length > n ? Plot.rectY(data, Plot.binY({y: "proportion-facet"}, {
-          x: "value",
-          fill: "symbol",
-          fx: "symbol",
-        }), {interval: 0.05}) : Plot.frame(),
+        data.length > n ? Plot.frame(): null,
+        data.length > n ? Plot.dot(pmf, {y: "prob", x: "value", fy: "symbol", fill: "gray", r:4}) : null,
+        data.length > n ? Plot.ruleX(data, {y: "count", x: "value", stroke: "symbol", strokeWidth: 3  }) : null,
+        data.length > n ? Plot.dot(data, {y: "count", x: "value", fill: "symbol", r: 4  }) : null,
         Plot.axisY({
           tickSize: 0,
-          dx: 38, 
-          dy: -6,
+          dx: -6, 
           lineAnchor: "bottom",
           tickFormat: (d, i, _) => d,
         }),
         Plot.gridY({ ticks: 10 }),
         data.length > n ? Plot.ruleY([0], { stroke: "gray" }) : null,
-        data.length > n ? null : Plot.text(["Press roll to generate a histogram of returns"], 
-          {frameAnchor: "middle", stroke: "skyblue", fontSize: 25, fontWeight: 1, fontStyle: "normal"}),
         Plot.tickY({ x: [] }),
       ],
     });
