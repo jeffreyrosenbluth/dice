@@ -4,7 +4,7 @@ import WealthPlot from "@/app/ui/wealthplot";
 import ReturnPlot from "@/app/ui/returnplot";
 import Button from "@/app/ui/button";
 import Toggle from "@/app/ui/toggle";
-import Card from "@/app/ui/card"; // Update the import statement to match the actual file name
+import Card from "@/app/ui/card";
 import React, { useState } from "react";
 import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/calc";
 import * as d3 from "d3";
@@ -20,16 +20,13 @@ const initialReturns = [{ green: 1, red: 1, white: 1, pink: 1 }];
 export default function Home() {
   const { model, setModel } = useStateContext();
   const weights: Weights = { green: 0.0, red: 0.5, white: 0.5 };
-  // const [wealth, setWealth] = useState<Wealth[]>(initialWealth.slice());
-  // const [returns, setReturns] = useState<Return[]>(initialReturns.slice());
-  // const [isToggled, setIsToggled] = useState(false);
 
   const addRoll = () => {
     const [w, r] = roll(outcomes, weights, model.wealths);
     setModel({
       wealths: [...model.wealths, w],
       returns: [...model.returns, r],
-      pink: model.pink, // Add the 'pink' property to the object argument
+      pink: model.pink,
     });
   };
 
@@ -43,7 +40,6 @@ export default function Home() {
 
   const handlePink = (checked: boolean) => {
     setModel({ ...model, pink: checked });
-    // Perform any additional actions based on the toggle state
   };
 
   return (

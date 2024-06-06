@@ -1,5 +1,3 @@
-"use client";
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -8,11 +6,11 @@ import { StateProvider } from "@/app/ctx";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata: Metadata = {
-//   title: "Investment Dice Simulation",
-//   description:
-//     "A Simulation of Risk and Wealth When Investing in the Stock Market",
-// };
+export const metadata: Metadata = {
+  title: "Investment Dice Simulation",
+  description:
+    "A Simulation of Risk and Wealth When Investing in the Stock Market",
+};
 
 const navLinks = [
   { label: "Home", href: "/" },
