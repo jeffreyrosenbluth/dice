@@ -15,7 +15,7 @@ export default function WealthPlot({wealth, pink, className=''}) {
       marginTop: 50,
       marginRight: 60,
       x: {
-        ticks: Math.trunc(data.length / n),
+        ticks: Math.min(Math.trunc(data.length / n), 20),
         label: "Years",
         insetLeft: 50,
       },
@@ -32,6 +32,7 @@ export default function WealthPlot({wealth, pink, className=''}) {
           stroke: "symbol",
           strokeWidth: 2.5,
         }) : null,
+        Plot.tip(data, Plot.pointer({x: "roll_num", y: "value", fill: "black", title: (d) => `${d.symbol.charAt(1).toUpperCase() + d.symbol.slice(2)}\nWealth: ${d.value.toFixed(0)}`})),
         Plot.text(data, Plot.selectLast({filter: (d) => d.symbol === "_pink", x: "roll_num", y: "value", fill: "hotpink", text: (d) => `${d.value.toFixed(0)}`, dx: 25})),
         Plot.axisY({
           tickSize: 0,
