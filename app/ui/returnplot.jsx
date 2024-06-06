@@ -1,7 +1,7 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { Wealth, to_df, countReturns, pmf } from "@/app/lib/calc";
+import { Wealth, to_df, countReturns, pmf } from "@/app/lib/core";
 
 export default function ReturnPlot({returns, pink}) {
   const containerRef = useRef();

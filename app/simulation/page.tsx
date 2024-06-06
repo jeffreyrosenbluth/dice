@@ -6,7 +6,7 @@ import Button from "@/app/ui/button";
 import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
 import React, { useState } from "react";
-import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/calc";
+import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/core";
 import * as d3 from "d3";
 import Navbar from "@/app/ui/navbar";
 import { useStateContext } from "@/app/ctx";

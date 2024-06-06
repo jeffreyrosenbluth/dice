@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Wealth, Return } from "@/app/lib/calc";
+import { Wealth, Return } from "@/app/lib/core";
 
 interface Model {
   wealths: Wealth[];
