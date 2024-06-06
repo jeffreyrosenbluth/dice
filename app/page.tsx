@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 export default function Home() {
@@ -22,7 +24,7 @@ export default function Home() {
                   <tr>
                     <th scope="col" className="px-6 py-4"></th>
                     <th scope="col" className="px-6 py-4">
-                      Investment Return
+                      Mean Return
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Standart Deviation
