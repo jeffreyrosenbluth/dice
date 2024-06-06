@@ -42,8 +42,6 @@ export default function WealthPlot({wealth, pink, className=''}) {
         }),
         Plot.gridY({ ticks: 10 }),
         data.length > n ? Plot.ruleY([0], { stroke: "gray" }) : null,
-        // data.length > n ? null : Plot.text(["Press Roll to Start"], 
-        //   {frameAnchor: "middle", stroke: "skyblue", fontSize: 35, fontWeight: 1, fontStyle: "normal"}),
         Plot.tickY({ x: [] }),
       ],
     });

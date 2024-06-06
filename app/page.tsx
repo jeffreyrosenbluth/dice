@@ -1,92 +1,84 @@
 "use client";
 
-import Link from "next/link";
-
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-8">
       <div className="relative flex place-items-center">
-        <h1 className="text-5xl font-bold text-blue-600 ">
+        <div className="text-5xl font-bold text-blue-400 ">
           A Simulation of Investment Risk and Return
-        </h1>
+        </div>
       </div>
-      <div>
-        <h2 className="text-2xl font-bold text-blue-400">
-          Investment Risk and Return
-        </h2>
+      <div className="text-2xl font-bold text-blue-400">
+        Investment Risk and Return
       </div>
-      <div className="flex flex-col">
-        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-            <div className="overflow-hidden">
-              <table className="min-w-full text-left text-sm font-light">
-                <thead className="border-b font-medium dark:border-neutral-500">
-                  <tr>
-                    <th scope="col" className="px-6 py-4"></th>
-                    <th scope="col" className="px-6 py-4">
-                      Mean Return
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Standart Deviation
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Volatility Adjusted
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 font-medium text-emerald-600">
-                      Green
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      8.3%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      20.0%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      6.4%
-                    </td>
-                  </tr>
-                  <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 font-medium text-rose-500">
-                      Red
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      71.0%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      132.0%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      -17.0%
-                    </td>
-                  </tr>
-                  <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                      White
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      0.8%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      4.0%
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      0.7%
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      <div className="overflow-x-auto">
+        <div className="min-w-full py-2 px-6 lg:px-8">
+          <div className="overflow-hidden">
+            <table className="min-w-full text-left text-sm font-light">
+              <thead className="border-b font-medium dark:border-neutral-500">
+                <tr>
+                  <th scope="col" className="px-6 py-3"></th>
+                  <th scope="col" className="px-6 py-3">
+                    Mean Return
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Standart Deviation
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Volatility Adjusted
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b dark:border-neutral-500">
+                  <td className="whitespace-nowrap px-6 py-3 font-medium text-emerald-400">
+                    Green
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    8.3%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    20.0%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    6.4%
+                  </td>
+                </tr>
+                <tr className="border-b dark:border-neutral-500">
+                  <td className="whitespace-nowrap px-6 py-3 font-medium text-rose-500">
+                    Red
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    71.0%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    132.0%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    -17.0%
+                  </td>
+                </tr>
+                <tr className="border-b dark:border-neutral-500">
+                  <td className="whitespace-nowrap px-6 py-3 font-medium">
+                    White
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    0.8%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    4.0%
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-right">
+                    0.7%
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div>
-        <h2 className="text-2xl font-bold text-blue-400">
-          Investment Gross Returns
-        </h2>
+      <div className="text-2xl font-bold text-blue-400">
+        Investment Gross Returns
       </div>
       <div className="flex flex-col">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -95,102 +87,102 @@ export default function Home() {
               <table className="min-w-full text-left text-sm font-light">
                 <thead className="border-b font-medium dark:border-neutral-500">
                   <tr>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-6 py-3">
                       Outcome
                     </th>
-                    <th scope="col" className="px-6 py-4 text-emerald-400">
+                    <th scope="col" className="px-6 py-3 text-emerald-400">
                       Green
                     </th>
-                    <th scope="col" className="px-6 py-4 text-rose-500">
+                    <th scope="col" className="px-6 py-3 text-rose-500">
                       Red
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-6 py-3">
                       White
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       1
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       0.80
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       0.05
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       0.05
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       2
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       0.90
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       0.20
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.00
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       3
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.10
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.00
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.00
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       4
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.10
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       3.00
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.00
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       5
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.20
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       3.00
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.00
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
-                    <td className="whitespace-nowrap px-6 py-4 text-center">
+                    <td className="whitespace-nowrap px-6 py-3 text-center">
                       6
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.40
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       3.00
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="whitespace-nowrap px-6 py-3 text-right">
                       1.10
                     </td>
                   </tr>
@@ -200,18 +192,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Link
-        className="text-blue-300"
-        href="http://deanfoster.net/research/being_warren_buffett.pdf"
-      >
-        Based on:{" "}
-        <em>
-          {" "}
-          Being Warren Buffett: A Classroom Simulation of Risk and Wealth When
-          Investing in the Stock Market
-        </em>
-        , by Dean P. Foster and H. Rober A. Stein.
-      </Link>
     </main>
   );
 }

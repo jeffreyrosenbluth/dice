@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html>
       <body className="bg-slate-700">
-        <Navbar links={navLinks} />
+        <Navbar about={{ href: "/about" }} links={navLinks} />
         <StateProvider>{children}</StateProvider>
       </body>
     </html>

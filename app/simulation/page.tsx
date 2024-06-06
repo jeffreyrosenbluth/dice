@@ -5,6 +5,7 @@ import ReturnPlot from "@/app/ui/returnplot";
 import Button from "@/app/ui/button";
 import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
+import Slider from "@/app/ui/slider";
 import React, { useState } from "react";
 import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/core";
 import * as d3 from "d3";
@@ -42,6 +43,8 @@ export default function Home() {
     setModel({ ...model, pink: checked });
   };
 
+  const avgReturns = average(model.returns.slice(1));
+
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
       <div className="text-4xl">Investment Risk and Return Simulation 🎲</div>
@@ -49,6 +52,27 @@ export default function Home() {
         <div className="flex flex-col gap-8">
           <Button onClick={addRoll}>Roll</Button>
           <Button onClick={reset}>Reset</Button>
+          <Slider
+            className="text-emerald-500"
+            min={0}
+            max={1}
+            step={0.01}
+            initial={0.0}
+          />
+          <Slider
+            className="text-rose-500"
+            min={0}
+            max={1}
+            step={0.01}
+            initial={0.5}
+          />
+          <Slider
+            className="text-white"
+            min={0}
+            max={1}
+            step={0.01}
+            initial={0.5}
+          />
           <Toggle
             label="Show Pink"
             checked={model.pink}
@@ -82,6 +106,7 @@ export default function Home() {
                 )
               )}
             </p>
+            <p>Average Return: {d3.format("10.0%")(avgReturns.green - 1)}</p>
           </Card>
           <Card className="text-rose-500 bg-inherit">
             <p>
@@ -103,6 +128,7 @@ export default function Home() {
                 )
               )}
             </p>
+            <p>Average Return: {d3.format("10.0%")(avgReturns.red - 1)}</p>
           </Card>
           <Card className="text-white bg-inherit">
             <p>
@@ -126,6 +152,7 @@ export default function Home() {
                 )
               )}
             </p>
+            <p>Average Return: {d3.format("10.0%")(avgReturns.white - 1)}</p>
           </Card>
         </div>
       </div>
@@ -135,4 +162,27 @@ export default function Home() {
 
 function annualize(wealth: number, years: number): number {
   return years > 0 ? (wealth / 100) ** (1 / years) - 1 : 0;
+}
+
+function average(returns: Return[]): Return {
+  if (returns.length === 0) {
+    return { green: 1, red: 1, white: 1, pink: 1 };
+  }
+  const sum = returns.reduce(
+    (acc, r) => {
+      acc.green += r.green;
+      acc.red += r.red;
+      acc.white += r.white;
+      acc.pink += r.pink;
+      return acc;
+    },
+    { green: 0, red: 0, white: 0, pink: 0 }
+  );
+
+  return {
+    green: sum.green / returns.length,
+    red: sum.red / returns.length,
+    white: sum.white / returns.length,
+    pink: sum.pink / returns.length,
+  };
 }
