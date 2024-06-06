@@ -27,6 +27,9 @@ export default function RootLayout({
       <body className="bg-slate-700">
         <Navbar about={{ href: "/about" }} links={navLinks} />
         <StateProvider>{children}</StateProvider>
+        <div className="flex flex-row text-sm justify-center pt-12 font-thin">
+          © Copyright 2024 Jeffrey M. Rosenbluth
+        </div>
       </body>
     </html>
   );

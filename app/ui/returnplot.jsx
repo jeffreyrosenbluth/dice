@@ -17,6 +17,7 @@ export default function ReturnPlot({returns, pink}) {
       x: {
         inset: 10,
         ticks: 5,
+        label: "Return %"
       },
       y: {inset:10, label: null},
       color: {
@@ -24,7 +25,7 @@ export default function ReturnPlot({returns, pink}) {
         range: ["mediumseagreen", "crimson", "gainsboro", "hotpink"],
       },
       facet: {data: data, y: "symbol", label: null},
-      title: "Probability of Returns",
+      title: "Probability Distribution of Returns",
       marks: [
         data.length > n ? Plot.frame(): null,
         data.length > n ? Plot.dot(pmf, {y: "prob", x: "value", fy: "symbol", fill: "gray", r:5}) : null,

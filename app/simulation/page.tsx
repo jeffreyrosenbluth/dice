@@ -47,7 +47,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl">Investment Risk and Return Simulation 🎲</div>
+      <div className="text-4xl">
+        <span className="text-6xl align-middle">🎲 </span> Investment Risk and
+        Return Simulation <span className="text-6xl align-middle"> 🎲 </span>
+      </div>
       <div className="grid gap-8 grid-cols-8">
         <div className="flex flex-col gap-8">
           <Button onClick={addRoll}>Roll</Button>
@@ -83,19 +86,19 @@ export default function Home() {
           <WealthPlot wealth={model.wealths} pink={model.pink} />
           <ReturnPlot returns={model.returns} pink={model.pink} />
         </div>
-        <div className="col-span-2  flex  flex-col gap-8">
+        <div className="col-span-2  flex  flex-col gap-1 font-light">
           <Card className="text-emerald-400 bg-inherit">
+            <p className="font-black py-1.5">
+              Wealth:{" "}
+              {d3.format("$,.0f")(
+                model.wealths[model.wealths.length - 1].green
+              )}{" "}
+            </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
                 model.returns[model.returns.length - 1].green - 1
               )}
-            </p>
-            <p>
-              Wealth:{" "}
-              {d3.format("$,.0f")(
-                model.wealths[model.wealths.length - 1].green
-              )}{" "}
             </p>
             <p>
               Annual Return:{" "}
@@ -109,15 +112,15 @@ export default function Home() {
             <p>Average Return: {d3.format("10.0%")(avgReturns.green - 1)}</p>
           </Card>
           <Card className="text-rose-500 bg-inherit">
+            <p className="font-black py-1.5">
+              Wealth:{" "}
+              {d3.format("$,.0f")(model.wealths[model.wealths.length - 1].red)}{" "}
+            </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
                 model.returns[model.returns.length - 1].red - 1
               )}
-            </p>
-            <p>
-              Wealth:{" "}
-              {d3.format("$,.0f")(model.wealths[model.wealths.length - 1].red)}{" "}
             </p>
             <p>
               Annual Return:{" "}
@@ -131,17 +134,17 @@ export default function Home() {
             <p>Average Return: {d3.format("10.0%")(avgReturns.red - 1)}</p>
           </Card>
           <Card className="text-white bg-inherit">
+            <p className="font-black py-1.5">
+              Wealth:{" "}
+              {d3.format("$,.0f")(
+                model.wealths[model.wealths.length - 1].white
+              )}{" "}
+            </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
                 model.returns[model.returns.length - 1].white - 1
               )}
-            </p>
-            <p>
-              Wealth:{" "}
-              {d3.format("$,.0f")(
-                model.wealths[model.wealths.length - 1].white
-              )}{" "}
             </p>
             <p>
               Annual Return:{" "}
@@ -154,6 +157,34 @@ export default function Home() {
             </p>
             <p>Average Return: {d3.format("10.0%")(avgReturns.white - 1)}</p>
           </Card>
+          <div>
+            {model.pink && (
+              <Card className="text-pink-400 bg-inherit">
+                <p className="font-black py-1.5">
+                  Wealth:{" "}
+                  {d3.format("$,.0f")(
+                    model.wealths[model.wealths.length - 1].pink
+                  )}{" "}
+                </p>
+                <p>
+                  Last Return:
+                  {d3.format("10.0%")(
+                    model.returns[model.returns.length - 1].pink - 1
+                  )}
+                </p>
+                <p>
+                  Annual Return:{" "}
+                  {d3.format("10.0%")(
+                    annualize(
+                      model.wealths[model.wealths.length - 1].pink,
+                      model.wealths.length - 1
+                    )
+                  )}
+                </p>
+                <p>Average Return: {d3.format("10.0%")(avgReturns.pink - 1)}</p>
+              </Card>
+            )}
+          </div>
         </div>
       </div>
     </main>
