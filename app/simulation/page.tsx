@@ -22,22 +22,27 @@ export default function Home() {
   const weights: Weights = { green: 0.0, red: 0.5, white: 0.5 };
   // const [wealth, setWealth] = useState<Wealth[]>(initialWealth.slice());
   // const [returns, setReturns] = useState<Return[]>(initialReturns.slice());
-  const [isToggled, setIsToggled] = useState(false);
+  // const [isToggled, setIsToggled] = useState(false);
 
   const addRoll = () => {
     const [w, r] = roll(outcomes, weights, model.wealths);
     setModel({
       wealths: [...model.wealths, w],
       returns: [...model.returns, r],
+      pink: model.pink, // Add the 'pink' property to the object argument
     });
   };
 
   const reset = () => {
-    setModel({ wealths: initialWealth, returns: initialReturns });
+    setModel({
+      wealths: initialWealth,
+      returns: initialReturns,
+      pink: model.pink,
+    });
   };
 
   const handlePink = (checked: boolean) => {
-    setIsToggled(checked);
+    setModel({ ...model, pink: checked });
     // Perform any additional actions based on the toggle state
   };
 
@@ -48,11 +53,15 @@ export default function Home() {
         <div className="flex flex-col gap-8">
           <Button onClick={addRoll}>Roll</Button>
           <Button onClick={reset}>Reset</Button>
-          <Toggle label="Show Pink" checked={isToggled} onChange={handlePink} />
+          <Toggle
+            label="Show Pink"
+            checked={model.pink}
+            onChange={handlePink}
+          />
         </div>
         <div className="col-span-5 ml-16 flex flex-col gap-12">
-          <WealthPlot wealth={model.wealths} pink={isToggled} />
-          <ReturnPlot returns={model.returns} pink={isToggled} />
+          <WealthPlot wealth={model.wealths} pink={model.pink} />
+          <ReturnPlot returns={model.returns} pink={model.pink} />
         </div>
         <div className="col-span-2  flex  flex-col gap-8">
           <Card className="text-emerald-400 bg-inherit">

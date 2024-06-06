@@ -6,6 +6,7 @@ import { Wealth, Return } from "@/app/lib/calc";
 interface Model {
   wealths: Wealth[];
   returns: Return[];
+  pink: boolean;
 }
 
 interface StateContextProps {
@@ -19,6 +20,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [model, setModel] = useState<Model>({
     wealths: [{ roll_num: 0, green: 100, red: 100, white: 100, pink: 100 }],
     returns: [{ green: 1, red: 1, white: 1, pink: 1 }],
+    pink: false,
   });
 
   return (
