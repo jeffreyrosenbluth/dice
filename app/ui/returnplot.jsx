@@ -27,7 +27,7 @@ export default function ReturnPlot({returns, pink}) {
       title: "Probability of Returns",
       marks: [
         data.length > n ? Plot.frame(): null,
-        data.length > n ? Plot.dot(pmf, {y: "prob", x: "value", fy: "symbol", fill: "gray", r:4}) : null,
+        data.length > n ? Plot.dot(pmf, {y: "prob", x: "value", fy: "symbol", fill: "gray", r:5}) : null,
         data.length > n ? Plot.ruleX(data, {y: "count", x: "value", stroke: "symbol", strokeWidth: 3  }) : null,
         data.length > n ? Plot.dot(data, {y: "count", x: "value", fill: "symbol", r: 4  }) : null,
         Plot.axisY({

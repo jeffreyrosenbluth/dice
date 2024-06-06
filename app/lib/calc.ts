@@ -125,11 +125,13 @@ export function countReturns(returns: Return[], pink: boolean) {
       counts.push({ symbol: item.symbol, value: item.value, count: 1 });
     }
     const total = totals.find((total) => total.symbol === item.symbol);
-    total.count += 1;
+    if (total) {
+      total.count += 1;
+    }
   });
   for (let c of counts) {
     const n = totals.find((total) => total.symbol === c.symbol)?.count;
-    c.count = c.count / n;
+    c.count = n ? c.count / n : 0;
   }
   return counts;
 }
