@@ -7,7 +7,7 @@ import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
 import Slider from "@/app/ui/slider";
 import React, { useState } from "react";
-import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/core";
+import { roll, outcomes, Return } from "@/app/lib/core";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
 
