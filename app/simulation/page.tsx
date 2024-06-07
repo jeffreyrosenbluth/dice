@@ -9,7 +9,6 @@ import Slider from "@/app/ui/slider";
 import React, { useState } from "react";
 import { Wealth, roll, outcomes, Weights, Return } from "@/app/lib/core";
 import * as d3 from "d3";
-import Navbar from "@/app/ui/navbar";
 import { useStateContext } from "@/app/ctx";
 
 const initialWealth = [
