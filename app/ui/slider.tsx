@@ -1,26 +1,27 @@
 // components/Slider.tsx
 import React, { useState } from "react";
+import { useStateContext } from "@/app/ctx";
 import clsx from "clsx";
 
 interface SliderProps {
+  identifier: string;
   min: number;
   max: number;
   step: number;
-  initial: number;
   className?: string;
 }
 
 const Slider: React.FC<SliderProps> = ({
+  identifier,
   min,
   max,
   step,
-  initial,
   className,
 }) => {
-  const [value, setValue] = useState(initial);
+  const { model, setModel } = useStateContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(Number(event.target.value));
+    model.setSliderValue(identifier, Number(event.target.value));
   };
 
   return (
@@ -30,12 +31,12 @@ const Slider: React.FC<SliderProps> = ({
         min={min}
         max={max}
         step={step}
-        value={value}
+        value={model.sliderValues[identifier]}
         onChange={handleChange}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
       />
       <span className={clsx("mt-2 text-sm font-medium", className)}>
-        {value}
+        {model.sliderValues[identifier]}
       </span>
     </div>
   );

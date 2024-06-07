@@ -17,25 +17,38 @@ const initialWealth = [
 ];
 
 const initialReturns = [{ green: 1, red: 1, white: 1, pink: 1 }];
+const initialSliderValues = { greenSlider: 0, redSlider: 50 };
 
 export default function Home() {
   const { model, setModel } = useStateContext();
-  const weights: Weights = { green: 0.0, red: 0.5, white: 0.5 };
+
+  const whitePercent =
+    1 - (model.sliderValues.greenSlider + model.sliderValues.redSlider) / 100;
 
   const addRoll = () => {
-    const [w, r] = roll(outcomes, weights, model.wealths);
+    const [w, r] = roll(
+      outcomes,
+      {
+        green: model.sliderValues.greenSlider / 100,
+        red: model.sliderValues.redSlider / 100,
+        white: whitePercent,
+      },
+      model.wealths
+    );
     setModel({
+      ...model,
       wealths: [...model.wealths, w],
       returns: [...model.returns, r],
-      pink: model.pink,
     });
   };
 
   const reset = () => {
     setModel({
+      ...model,
       wealths: initialWealth,
       returns: initialReturns,
       pink: model.pink,
+      sliderValues: initialSliderValues,
     });
   };
 
@@ -47,48 +60,64 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl">
-        <span className="text-6xl align-middle">🎲 </span> Investment Risk and
-        Return Simulation <span className="text-6xl align-middle"> 🎲 </span>
+      <div className="text-4xl text-blue-300">
+        Investment Risk and Return Simulation
       </div>
-      <div className="grid gap-8 grid-cols-8">
-        <div className="flex flex-col gap-8">
-          <Button onClick={addRoll}>Roll</Button>
-          <Button onClick={reset}>Reset</Button>
-          <Slider
-            className="text-emerald-500"
-            min={0}
-            max={1}
-            step={0.01}
-            initial={0.0}
-          />
-          <Slider
-            className="text-rose-500"
-            min={0}
-            max={1}
-            step={0.01}
-            initial={0.5}
-          />
-          <Slider
-            className="text-white"
-            min={0}
-            max={1}
-            step={0.01}
-            initial={0.5}
-          />
+      <div className="grid gap-8 grid-cols-9 min-w-full">
+        <div className="flex flex-col gap-4 col-span-2 px-8">
+          <Button className="py-4 mb-2" onClick={addRoll}>
+            Roll
+          </Button>
+          <Button className="py-4 mb-4" onClick={reset}>
+            Reset
+          </Button>
+          <div className="border p-2 mb-6 border-dotted border-gray-400">
+            <div className="text-1xl justify-center text-emerald-400 text-center py-4">
+              Green %
+            </div>
+            <Slider
+              className="text-emerald-500"
+              identifier="greenSlider"
+              min={0}
+              max={100}
+              step={1}
+            />
+            <div className="text-1xl justify-center text-rose-500 text-center py-4">
+              Red %
+            </div>
+            <Slider
+              className="text-rose-500"
+              identifier="redSlider"
+              min={0}
+              max={100}
+              step={1}
+            />
+            <div className="text-1xl justify-center text-white text-center pt-6">
+              White %
+            </div>
+            <div className="text-sm justify-center text-white text-center py-2">
+              {(100 * whitePercent).toFixed(0)}
+            </div>
+          </div>
           <Toggle
             label="Show Pink"
             checked={model.pink}
             onChange={handlePink}
           />
         </div>
-        <div className="col-span-5 ml-16 flex flex-col gap-12">
-          <WealthPlot wealth={model.wealths} pink={model.pink} />
-          <ReturnPlot returns={model.returns} pink={model.pink} />
+        <div className="col-span-5 ml-12">
+          {model.returns.length > 1 ? (
+            <div className="flex flex-col gap-16">
+              <WealthPlot wealth={model.wealths} pink={model.pink} />
+              <ReturnPlot returns={model.returns} pink={model.pink} />{" "}
+            </div>
+          ) : (
+            <div className="text-9xl flex justify-center mt-24 mr-24">🎲</div>
+          )}
         </div>
-        <div className="col-span-2  flex  flex-col gap-1 font-light">
+        <div className="col-span-2  flex  flex-col gap-1">
           <Card className="text-emerald-400 bg-inherit">
-            <p className="font-black py-1.5">
+            <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
                 model.wealths[model.wealths.length - 1].green
@@ -112,7 +141,7 @@ export default function Home() {
             <p>Average Return: {d3.format("10.0%")(avgReturns.green - 1)}</p>
           </Card>
           <Card className="text-rose-500 bg-inherit">
-            <p className="font-black py-1.5">
+            <p>
               Wealth:{" "}
               {d3.format("$,.0f")(model.wealths[model.wealths.length - 1].red)}{" "}
             </p>
@@ -134,7 +163,7 @@ export default function Home() {
             <p>Average Return: {d3.format("10.0%")(avgReturns.red - 1)}</p>
           </Card>
           <Card className="text-white bg-inherit">
-            <p className="font-black py-1.5">
+            <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
                 model.wealths[model.wealths.length - 1].white
@@ -160,7 +189,7 @@ export default function Home() {
           <div>
             {model.pink && (
               <Card className="text-pink-400 bg-inherit">
-                <p className="font-black py-1.5">
+                <p>
                   Wealth:{" "}
                   {d3.format("$,.0f")(
                     model.wealths[model.wealths.length - 1].pink

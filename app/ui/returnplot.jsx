@@ -45,6 +45,5 @@ export default function ReturnPlot({returns, pink}) {
     containerRef.current.append(plot);
     return () => plot.remove();
   }, [data, n]);
-
   return <div ref={containerRef} />;
 }

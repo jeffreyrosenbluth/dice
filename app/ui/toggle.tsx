@@ -33,7 +33,7 @@ const Toggle: React.FC<ToggleProps> = ({
       <label
         htmlFor={`toggle-${label}`}
         className={`relative inline-flex h-6 w-11 items-center rounded-full bg-gray-400 transition ${
-          isChecked ? "bg-pink-300" : ""
+          isChecked ? "bg-pink-400" : ""
         }`}
       >
         <span
@@ -42,7 +42,7 @@ const Toggle: React.FC<ToggleProps> = ({
           }`}
         />
       </label>
-      {label && <span className="ml-2 text-pink-300">{label}</span>}
+      {label && <span className="ml-2 text-pink-400">{label}</span>}
     </div>
   );
 };
