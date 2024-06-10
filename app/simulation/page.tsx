@@ -47,7 +47,7 @@ export default function Home() {
       wealths: initialWealth,
       returns: initialReturns,
       pink: model.pink,
-      sliderValues: initialSliderValues,
+      // sliderValues: initialSliderValues,
     });
   };
 
@@ -99,7 +99,7 @@ export default function Home() {
             </div>
           </div>
           <Toggle
-            label="Show Pink"
+            label="Portfolio"
             checked={model.pink}
             onChange={handlePink}
           />

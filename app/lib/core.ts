@@ -96,7 +96,7 @@ export function toReturnsDf(returns: Return[], pink: boolean) {
     df.push({ symbol: "Red Die", value: item.red });
     df.push({ symbol: "White Die", value: item.white });
     if (pink) {
-      df.push({ symbol: "pink Die", value: item.pink });
+      df.push({ symbol: "portfolio", value: item.pink });
     }
   });
   return df;
@@ -109,7 +109,7 @@ export function countReturns(returns: Return[], pink: boolean) {
     { symbol: "Green Die", count: 0 },
     { symbol: "Red Die", count: 0 },
     { symbol: "White Die", count: 0 },
-    { symbol: "pink Die", count: 0 },
+    { symbol: "portfolio", count: 0 },
   ];
   const df = toReturnsDf(returns, pink).map((item) => {
     item.value = 100 * (item.value - 1);

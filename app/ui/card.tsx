@@ -8,7 +8,7 @@ interface CardProps {
 export default function Card({ children, className }: CardProps) {
   return (
     <div
-      className={clsx("bg-inherit overflow-hidden, p-4 min-w-48", className)}
+      className={clsx("bg-inherit overflow-hidden, p-4 sm:min-w-48", className)}
     >
       <div>{children}</div>
     </div>

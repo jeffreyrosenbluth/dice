@@ -2,9 +2,9 @@
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start gap-16">
-      <div className="relative flex place-items-center">
-        <div className="text-5xl font-bold text-blue-400  mt-12 mb-6">
+    <main className="flex min-h-screen flex-col flex-grow items-center justify-start gap-16 w-full">
+      <div className="flex place-items-center">
+        <div className="text-5xl font-bold text-blue-400  mt-12 mb-6 text-center">
           A Simulation of Investment Risk and Return
         </div>
       </div>

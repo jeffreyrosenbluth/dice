@@ -11,7 +11,7 @@ export default function WealthPlot({ wealth, pink, className = '' }) {
   useEffect(() => {
     if (data === undefined) return;
     const plot = Plot.plot({
-      marginLeft: 0,
+      marginLeft: 15,
       marginTop: 50,
       marginRight: 60,
       x: {

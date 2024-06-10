@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/app/ui/navmenu";
+import Footer from "@/app/ui/footer";
 import { StateProvider } from "@/app/ctx";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,12 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className="bg-slate-700">
+      <body className="bg-slate-700 `${inter.className} antialiased`">
         <Navbar about={{ href: "/about" }} links={navLinks} />
         <StateProvider>{children}</StateProvider>
-        <div className="flex flex-row text-sm justify-center pt-12 font-thin">
-          © Copyright 2024 Jeffrey M. Rosenbluth
-        </div>
+        <Footer />
       </body>
     </html>
   );
