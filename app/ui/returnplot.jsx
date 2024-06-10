@@ -21,8 +21,8 @@ export default function ReturnPlot({ returns, pink }) {
       },
       y: { inset: 10, label: null },
       color: {
-        domain: ["Green Die", "Red Die", "White Die", "portfolio"],
-        range: ["mediumseagreen", "crimson", "gainsboro", "hotpink"],
+        domain: ["Green Die", "Red Die", "portfolio"],
+        range: ["mediumseagreen", "crimson", "hotpink"],
       },
       facet: { data: data, y: "symbol", label: null },
       title: "Probability Distribution of Returns",

@@ -16,7 +16,6 @@ const initialWealth = [
 ];
 
 const initialReturns = [{ green: 1, red: 1, white: 1, pink: 1 }];
-const initialSliderValues = { greenSlider: 0, redSlider: 50 };
 
 export default function Home() {
   const { model, setModel } = useStateContext();
@@ -47,7 +46,6 @@ export default function Home() {
       wealths: initialWealth,
       returns: initialReturns,
       pink: model.pink,
-      // sliderValues: initialSliderValues,
     });
   };
 
@@ -78,7 +76,7 @@ export default function Home() {
               className="text-emerald-500"
               identifier="greenSlider"
               min={0}
-              max={100}
+              max={200}
               step={1}
             />
             <div className="text-1xl justify-center text-rose-500 text-center py-4">
@@ -88,7 +86,7 @@ export default function Home() {
               className="text-rose-500"
               identifier="redSlider"
               min={0}
-              max={100}
+              max={200}
               step={1}
             />
             <div className="text-1xl justify-center text-white text-center pt-6">

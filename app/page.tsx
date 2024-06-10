@@ -35,13 +35,13 @@ export default function Home() {
                     Green
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    8.3%
+                    7.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
                     20.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    6.4%
+                    5.1%
                   </td>
                 </tr>
                 <tr className="border-b dark:border-neutral-500">
@@ -55,7 +55,7 @@ export default function Home() {
                     132.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    -17.0%
+                    -16.9%
                   </td>
                 </tr>
                 <tr className="border-b dark:border-neutral-500">
@@ -63,13 +63,13 @@ export default function Home() {
                     White
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    0.8%
+                    2.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    4.0%
+                    0.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    0.7%
+                    2.0%
                   </td>
                 </tr>
               </tbody>
@@ -113,7 +113,7 @@ export default function Home() {
                       -95%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      -5%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -127,7 +127,7 @@ export default function Home() {
                       -80%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -135,13 +135,13 @@ export default function Home() {
                       3
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      10%
+                      2%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
                       0%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -155,7 +155,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -169,7 +169,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -183,7 +183,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      10%
+                      2%
                     </td>
                   </tr>
                 </tbody>
