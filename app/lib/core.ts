@@ -28,7 +28,7 @@ export interface Return {
   green: number;
   red: number;
   white: number;
-  pink: number;
+  violet: number;
 }
 
 export interface Wealth {
@@ -36,13 +36,122 @@ export interface Wealth {
   green: number;
   red: number;
   white: number;
-  pink: number;
+  violet: number;
 }
 
 export interface Weights {
   green: number;
   red: number;
   white: number;
+}
+export interface Item {
+  num: number;
+  green: number;
+  red: number;
+  white: number;
+  violet: number;
+}
+
+export interface Batch {
+  batchNum: number;
+  symbol: string;
+  cummReturn: number;
+}
+
+export interface Batches {
+  batches: Batch[];
+  currentReturn: Item;
+}
+
+function mkRoll(outcomes: Outcomes, weights: Weights): Return {
+  const dice = Array.from({ length: 3 }, d3.randomInt(0, 6));
+  return {
+    green: outcomes.green[dice[0]],
+    red: outcomes.red[dice[1]],
+    white: outcomes.white[dice[2]],
+    violet:
+      outcomes.green[dice[0]] * weights.green +
+      outcomes.red[dice[1]] * weights.red +
+      outcomes.white[dice[2]] * weights.white,
+  };
+}
+
+function mkItem(
+  outcomes: Outcomes,
+  weights: Weights,
+  batchSize: number,
+  batchNum: number
+): Item {
+  const item: Item = {
+    num: batchNum,
+    green: 1,
+    red: 1,
+    white: 1,
+    violet: 1,
+  } as Item;
+  for (let i = 0; i < batchSize; i++) {
+    let roll = mkRoll(outcomes, weights);
+    item.green *= roll.green;
+    item.red *= roll.red;
+    item.white *= roll.white;
+    item.violet *= roll.violet;
+  }
+  item.green = Math.log10(item.green);
+  item.red = Math.log10(item.red);
+  item.white = Math.log10(item.white);
+  item.violet = Math.log10(item.violet);
+  return item;
+}
+
+function addBatch(
+  outcomes: Outcomes,
+  weights: Weights,
+  batches: Batches,
+  batchSize: number
+): Batches {
+  const currentReturn = mkItem(
+    outcomes,
+    weights,
+    batchSize,
+    batches.batches.length
+  );
+  return {
+    batches: [
+      ...batches.batches,
+      {
+        batchNum: currentReturn.num,
+        symbol: "green",
+        cummReturn: currentReturn.green,
+      },
+      {
+        batchNum: currentReturn.num,
+        symbol: "red",
+        cummReturn: currentReturn.red,
+      },
+      {
+        batchNum: currentReturn.num,
+        symbol: "violet",
+        cummReturn: currentReturn.violet,
+      },
+    ],
+    currentReturn: currentReturn,
+  };
+}
+
+export function runSim(
+  outcomes: Outcomes,
+  weights: Weights,
+  batchSize: number,
+  numBatches: number
+): Batches {
+  let batches: Batches = {
+    batches: [],
+    currentReturn: { num: 0, green: 1, red: 1, white: 1, violet: 1 },
+  };
+  for (let i = 0; i < numBatches; i++) {
+    batches = addBatch(outcomes, weights, batches, batchSize);
+  }
+  return batches;
 }
 
 export function roll(
@@ -57,7 +166,7 @@ export function roll(
     green: outcomes.green[dice[0]],
     red: outcomes.red[dice[1]],
     white: outcomes.white[dice[2]],
-    pink:
+    violet:
       outcomes.green[dice[0]] * weights.green +
       outcomes.red[dice[1]] * weights.red +
       outcomes.white[dice[2]] * weights.white,
@@ -68,47 +177,51 @@ export function roll(
     green: current.green * newReturn.green,
     red: current.red * newReturn.red,
     white: current.white * newReturn.white,
-    pink: current.pink * newReturn.pink,
+    violet: current.violet * newReturn.violet,
   };
 
   return [newWealth, newReturn];
 }
 
-export function to_df(wealth: Wealth[], pink: boolean) {
+export function to_df(wealth: Wealth[], violet: boolean) {
   const df: { roll_num: number; symbol: string; value: number }[] = [];
   wealth.forEach((item) => {
     df.push({ roll_num: item.roll_num, symbol: "_green", value: item.green });
     df.push({ roll_num: item.roll_num, symbol: "_red", value: item.red });
     df.push({ roll_num: item.roll_num, symbol: "_white", value: item.white });
-    if (pink) {
-      df.push({ roll_num: item.roll_num, symbol: "_pink", value: item.pink });
+    if (violet) {
+      df.push({
+        roll_num: item.roll_num,
+        symbol: "_violet",
+        value: item.violet,
+      });
     }
   });
   return df;
 }
 
-export function toReturnsDf(returns: Return[], pink: boolean) {
+export function toReturnsDf(returns: Return[], violet: boolean) {
   const df: { symbol: string; value: number }[] = [];
   returns.forEach((item) => {
     df.push({ symbol: "Green Die", value: item.green });
     df.push({ symbol: "Red Die", value: item.red });
-    if (pink) {
-      df.push({ symbol: "portfolio", value: item.pink });
+    if (violet) {
+      df.push({ symbol: "portfolio", value: item.violet });
     }
   });
   return df;
 }
 
 // Count the number times each value appeaars for each color in Returns
-export function countReturns(returns: Return[], pink: boolean) {
+export function countReturns(returns: Return[], violet: boolean) {
   const counts: { symbol: string; value: number; count: number }[] = [];
   const totals: { symbol: string; count: number }[] = [
     { symbol: "Green Die", count: 0 },
     { symbol: "Red Die", count: 0 },
     { symbol: "White Die", count: 0 },
-    { symbol: "portfolio", count: 0 },
+    { symbol: "Violet", count: 0 },
   ];
-  const df = toReturnsDf(returns, pink).map((item) => {
+  const df = toReturnsDf(returns, violet).map((item) => {
     item.value = 100 * (item.value - 1);
     return item;
   });

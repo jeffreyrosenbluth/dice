@@ -1,12 +1,11 @@
 import * as Plot from "@observablehq/plot";
-import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { Wealth, to_df, countReturns, pmf } from "@/app/lib/core";
+import { countReturns, pmf } from "@/app/lib/core";
 
-export default function ReturnPlot({ returns, pink }) {
+export default function ReturnPlot({ returns, violet }) {
   const containerRef = useRef();
-  const data = countReturns(returns.slice(1), pink);
-  const n = pink ? 3 : 2;
+  const data = countReturns(returns.slice(1), violet);
+  const n = violet ? 3 : 2;
 
   useEffect(() => {
     if (data === undefined) return;

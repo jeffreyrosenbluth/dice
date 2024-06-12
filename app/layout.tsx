@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/app/ui/navmenu";
 import Footer from "@/app/ui/footer";
 import { StateProvider } from "@/app/ctx";
+import { Providers } from "@/app/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 
 const navLinks = [
   { label: "Home", href: "/" },
+  { label: "Play", href: "/play" },
   { label: "Simulation", href: "/simulation" },
 ];
 
@@ -27,7 +29,9 @@ export default function RootLayout({
     <html>
       <body className="bg-slate-700 `${inter.className} antialiased`">
         <Navbar about={{ href: "/about" }} links={navLinks} />
-        <StateProvider>{children}</StateProvider>
+        <Providers>
+          <StateProvider>{children}</StateProvider>
+        </Providers>
         <Footer />
       </body>
     </html>

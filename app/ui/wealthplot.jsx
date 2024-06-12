@@ -1,12 +1,12 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { Wealth, to_df } from "@/app/lib/core";
+import { to_df } from "@/app/lib/core";
 
-export default function WealthPlot({ wealth, pink, className = '' }) {
+export default function WealthPlot({ wealth, violet, className = '' }) {
   const containerRef = useRef();
-  const data = to_df(wealth, pink);
-  const n = pink ? 4 : 3;
+  const data = to_df(wealth, violet);
+  const n = violet ? 4 : 3;
 
   useEffect(() => {
     if (data === undefined) return;
@@ -21,7 +21,7 @@ export default function WealthPlot({ wealth, pink, className = '' }) {
       },
       y: { label: null },
       color: {
-        domain: ["_green", "_red", "_white", "_pink"],
+        domain: ["_green", "_red", "_white", "_violet"],
         range: ["mediumseagreen", "crimson", "white", "hotpink"],
       },
       title: "Value of $100 Invested",
@@ -37,7 +37,7 @@ export default function WealthPlot({ wealth, pink, className = '' }) {
           fill: "black", title: (d) => `${d.symbol.charAt(1).toUpperCase() + d.symbol.slice(2)}\nWealth: ${d3.format(",.0f")(d.value)}`
         })),
         Plot.text(data, Plot.selectLast({
-          filter: (d) => d.symbol === "_pink", x: "roll_num", y: "value",
+          filter: (d) => d.symbol === "_violet", x: "roll_num", y: "value",
           fill: "hotpink", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.text(data, Plot.selectLast({
