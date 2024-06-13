@@ -96,10 +96,10 @@ function mkItem(
     item.white *= roll.white;
     item.violet *= roll.violet;
   }
-  item.green = Math.log10(item.green);
-  item.red = Math.log10(item.red);
-  item.white = Math.log10(item.white);
-  item.violet = Math.log10(item.violet);
+  item.green = item.green ** (1 / batchSize) - 1;
+  item.red = item.red ** (1 / batchSize) - 1;
+  item.white = item.white ** (1 / batchSize) - 1;
+  item.violet = item.violet ** (1 / batchSize) - 1;
   return item;
 }
 
@@ -219,7 +219,7 @@ export function countReturns(returns: Return[], violet: boolean) {
     { symbol: "Green Die", count: 0 },
     { symbol: "Red Die", count: 0 },
     { symbol: "White Die", count: 0 },
-    { symbol: "Violet", count: 0 },
+    { symbol: "portfolio", count: 0 },
   ];
   const df = toReturnsDf(returns, violet).map((item) => {
     item.value = 100 * (item.value - 1);

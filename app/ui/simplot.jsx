@@ -1,7 +1,6 @@
 import * as Plot from "@observablehq/plot";
-import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { runSim } from "@/app/lib/core";
+import * as d3 from "d3";
 
 export default function SimPlot({ data }) {
     const containerRef = useRef();
@@ -9,9 +8,13 @@ export default function SimPlot({ data }) {
     useEffect(() => {
         if (data === undefined) return;
         const plot = Plot.plot({
-            marginLeft: 50,
+            marginLeft: 40,
             marginTop: 50,
-            marginRight: 60,
+            marginRight: 0,
+            x: {
+                label: "Return",
+                tickFormat: (d) => d3.format(".0%")(d),
+            },
             marks: [
                 Plot.rectY(data.batches.slice(1), Plot.binX({ y2: "count" }, { x: "cummReturn", fill: "symbol", fillOpacity: 0.75 })),
             ]

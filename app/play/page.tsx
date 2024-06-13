@@ -5,7 +5,8 @@ import ReturnPlot from "@/app/ui/returnplot";
 import Button from "@/app/ui/button";
 import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
-import Slider from "@/app/ui/slider";
+// import Slider from "@/app/ui/slider";
+import { Slider } from "@nextui-org/react";
 import React, { useState } from "react";
 import { roll, outcomes, Return } from "@/app/lib/core";
 import * as d3 from "d3";
@@ -21,14 +22,14 @@ export default function Home() {
   const { model, setModel } = useStateContext();
 
   const whitePercent =
-    1 - (model.sliderValues.greenSlider + model.sliderValues.redSlider) / 100;
+    1 - (model.sliderValues.greenSlider + model.sliderValues.redSlider);
 
   const addRoll = () => {
     const [w, r] = roll(
       outcomes,
       {
-        green: model.sliderValues.greenSlider / 100,
-        red: model.sliderValues.redSlider / 100,
+        green: model.sliderValues.greenSlider,
+        red: model.sliderValues.redSlider,
         white: whitePercent,
       },
       model.wealths
@@ -46,6 +47,20 @@ export default function Home() {
       wealths: initialWealth,
       returns: initialReturns,
       violet: model.violet,
+    });
+  };
+
+  const handleGreenSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      sliderValues: { ...model.sliderValues, greenSlider: value as number },
+    });
+  };
+
+  const handleRedSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      sliderValues: { ...model.sliderValues, redSlider: value as number },
     });
   };
 
@@ -68,32 +83,32 @@ export default function Home() {
           <Button className="py-4 mb-4" onClick={reset}>
             Reset
           </Button>
-          <div className="border p-2 mb-6 border-dotted border-gray-400">
-            <div className="text-1xl justify-center text-emerald-400 text-center py-4">
-              Green %
-            </div>
+          <div className="border p-2 mb-6 border-dotted border-gray-400 space-y-4">
             <Slider
+              label="Green"
               className="text-emerald-500"
-              identifier="greenSlider"
-              min={0}
-              max={200}
-              step={1}
+              minValue={0}
+              maxValue={2}
+              hideThumb={true}
+              onChange={handleGreenSlider}
+              step={0.01}
+              defaultValue={0}
+              formatOptions={{ style: "percent" }}
             />
-            <div className="text-1xl justify-center text-rose-500 text-center py-4">
-              Red %
-            </div>
             <Slider
+              label="Red"
               className="text-rose-500"
-              identifier="redSlider"
-              min={0}
-              max={200}
-              step={1}
+              minValue={0}
+              maxValue={2}
+              hideThumb={true}
+              onChange={handleRedSlider}
+              step={0.01}
+              defaultValue={0.5}
+              formatOptions={{ style: "percent" }}
             />
-            <div className="text-1xl justify-center text-white text-center pt-6">
-              White %
-            </div>
-            <div className="text-sm justify-center text-white text-center py-2">
-              {(100 * whitePercent).toFixed(0)}
+            <div className="flex flex-row text-sm justify-between text-white pt-3">
+              <div>White</div>
+              <div>{(100 * whitePercent).toFixed(0)} %</div>
             </div>
           </div>
           <Toggle

@@ -8,7 +8,6 @@ interface Model {
   returns: Return[];
   violet: boolean;
   sliderValues: { [key: string]: number };
-  setSliderValue: (name: string, value: number) => void;
 }
 
 interface StateContextProps {
@@ -23,16 +22,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     wealths: [{ roll_num: 0, green: 100, red: 100, white: 100, violet: 100 }],
     returns: [{ green: 1, red: 1, white: 1, violet: 1 }],
     violet: false,
-    sliderValues: { greenSlider: 0, redSlider: 50 },
-    setSliderValue: (name: string, value: number) => {
-      setModel((prevModel) => ({
-        ...prevModel,
-        sliderValues: {
-          ...prevModel.sliderValues,
-          [name]: value,
-        },
-      }));
-    },
+    sliderValues: { greenSlider: 0, redSlider: 0.5 },
   });
 
   return (
