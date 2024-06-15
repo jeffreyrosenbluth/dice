@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/app/ui/navmenu";
+import { Navbar, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import Footer from "@/app/ui/footer";
 import { StateProvider } from "@/app/ctx";
 import { Providers } from "@/app/providers";
@@ -28,7 +28,32 @@ export default function RootLayout({
   return (
     <html>
       <body className="bg-slate-700 `${inter.className} antialiased`">
-        <Navbar about={{ href: "/about" }} links={navLinks} />
+        <Navbar className="bg-slate-950 border-b border-gray-700">
+          <NavbarContent className="hidden sm:flex gap-4">
+            <NavbarItem>
+              <Link className="text-white" href="/">
+                Home
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link className="text-white" href="/play">
+                Play
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link className="text-white" href="/simulation">
+                Simulation
+              </Link>
+            </NavbarItem>
+          </NavbarContent>
+          <NavbarContent className="sm:flex hidden" justify="end">
+            <NavbarItem>
+              <Link className="text-white" href="/about">
+                About
+              </Link>
+            </NavbarItem>
+          </NavbarContent>
+        </Navbar>
         <Providers>
           <StateProvider>{children}</StateProvider>
         </Providers>

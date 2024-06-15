@@ -1,12 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Wealth, Return } from "@/app/lib/core";
+import { Assets } from "@/app/lib/market";
 
 interface Model {
-  wealths: Wealth[];
-  returns: Return[];
-  violet: boolean;
+  wealths: Assets[];
+  returns: Assets[];
+  includePortfolio: boolean;
   sliderValues: { [key: string]: number };
 }
 
@@ -19,9 +19,9 @@ const StateContext = createContext<StateContextProps | undefined>(undefined);
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [model, setModel] = useState<Model>({
-    wealths: [{ roll_num: 0, green: 100, red: 100, white: 100, violet: 100 }],
-    returns: [{ green: 1, red: 1, white: 1, violet: 1 }],
-    violet: false,
+    wealths: [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }],
+    returns: [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }],
+    includePortfolio: false,
     sliderValues: { greenSlider: 0, redSlider: 0.5 },
   });
 
