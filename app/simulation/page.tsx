@@ -77,7 +77,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-blue-300">
+      <div className="text-4xl text-slate-200">
         Investment Risk and Return Simulation
       </div>
       <div className="grid gap-4 grid-cols-9 min-w-full">
@@ -111,7 +111,7 @@ export default function Home() {
           />
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
-              className="text-emerald-500 pb-4"
+              className="text-blue-400 pb-4"
               label="S&P 500"
               minValue={0}
               maxValue={2}
@@ -122,7 +122,7 @@ export default function Home() {
               onChange={handleStockSlider}
             />
             <Slider
-              className="text-rose-500 pb-6"
+              className="text-orange-400 pb-4"
               label="Venture Capital"
               minValue={0}
               maxValue={2}
@@ -132,7 +132,7 @@ export default function Home() {
               defaultValue={0.5}
               onChange={handleVentureSlider}
             />
-            <div className="flex text-sm justify-between text-white text-left">
+            <div className="flex text-sm justify-between text-green-400 text-left">
               <span>Money Market</span>
               <span> {(100 * cashPercent).toFixed(0)}%</span>
             </div>
@@ -147,7 +147,7 @@ export default function Home() {
         </div>
         {sim.length > 1 && !isCalculating ? (
           <div className="col-span-2  flex  flex-col gap-1 text-sm">
-            <Card className="text-emerald-400 bg-inherit">
+            <Card className="text-blue-400 bg-inherit">
               <p>Arithmetic Mean Return: {d3.format("10.2%")(0.07)}</p>
               <p>
                 Geometric Mean Return: {d3.format("10.2%")(avgReturns.stock)}
@@ -157,7 +157,7 @@ export default function Home() {
               </p>
               <p>Volatility Drag Estimate: {d3.format("10.2%")(0.019)}</p>
             </Card>
-            <Card className="text-rose-500 bg-inherit">
+            <Card className="text-orange-400 bg-inherit">
               <p>Arithmetic Mean Return: {d3.format("10.2%")(0.708)}</p>
               <p>
                 Geometric Mean Return: {d3.format("10.2%")(avgReturns.venture)}
@@ -168,7 +168,7 @@ export default function Home() {
               </p>
               <p>Volatility Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
             </Card>
-            <Card className="text-pink-500 bg-inherit">
+            <Card className="text-white bg-inherit">
               <p>
                 Arithmetic Mean Return: {d3.format("10.2%")(portfolioReturn)}
               </p>

@@ -22,7 +22,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     wealths: [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }],
     returns: [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }],
     includePortfolio: false,
-    sliderValues: { greenSlider: 0, redSlider: 0.5 },
+    sliderValues: { stockSlider: 0, ventureSlider: 0.5 },
   });
 
   return (

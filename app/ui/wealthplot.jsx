@@ -22,7 +22,7 @@ export default function WealthPlot({ wealth, includePortfolio, className = '' })
       y: { label: null },
       color: {
         domain: ["stock", "venture", "cash", "portfolio"],
-        range: ["mediumseagreen", "crimson", "white", "hotpink"],
+        range: ["#60a5fa", "#fb923c", "#4ade80", "white"],
       },
       title: "Value of $100 Invested",
       marks: [
@@ -38,19 +38,19 @@ export default function WealthPlot({ wealth, includePortfolio, className = '' })
         })),
         Plot.text(data, Plot.selectLast({
           filter: (d) => d.key === "portfolio", x: "period", y: "value",
-          fill: "hotpink", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+          fill: "white", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.text(data, Plot.selectLast({
           filter: (d) => d.key === "stock", x: "period", y: "value",
-          fill: "mediumseagreen", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+          fill: "#60a5fa", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.text(data, Plot.selectLast({
           filter: (d) => d.key === "venture", x: "period", y: "value",
-          fill: "crimson", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+          fill: "#fb923c", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.text(data, Plot.selectLast({
           filter: (d) => d.key === "cash", x: "period", y: "value",
-          fill: "white", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+          fill: "#4ade80", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.axisY({
           tickSize: 0,

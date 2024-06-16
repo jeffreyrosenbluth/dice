@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Footer from "@/app/ui/footer";
 import { StateProvider } from "@/app/ctx";
 import { Providers } from "@/app/providers";

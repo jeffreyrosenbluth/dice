@@ -21,7 +21,7 @@ export default function ReturnPlot({ returns, includePortfolio }) {
       y: { inset: 10, label: null },
       color: {
         domain: ["stock", "venture", "portfolio"],
-        range: ["mediumseagreen", "crimson", "hotpink"],
+        range: ["#60a5fa", "#fb923c", "white"],
       },
       facet: { data: data, y: "key", label: null },
       title: "Probability Distribution of Returns",

@@ -5,28 +5,26 @@ import ReturnPlot from "@/app/ui/returnplot";
 import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
 import { Slider, Button } from "@nextui-org/react";
-import React, { useState } from "react";
+import React from "react";
 import { addRoll, Assets } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
-import { m } from "framer-motion";
 
 const initialWealth = [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }];
-
 const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
 
 export default function Home() {
   const { model, setModel } = useStateContext();
 
-  const whitePercent =
-    1 - (model.sliderValues.greenSlider + model.sliderValues.redSlider);
+  const cashPercent =
+    1 - (model.sliderValues.stockSlider + model.sliderValues.ventureSlider);
 
   const roll = () => {
     const [w, r] = addRoll(
       {
-        stock: model.sliderValues.greenSlider,
-        venture: model.sliderValues.redSlider,
-        cash: whitePercent,
+        stock: model.sliderValues.stockSlider,
+        venture: model.sliderValues.ventureSlider,
+        cash: cashPercent,
       },
       model.wealths,
       model.returns
@@ -48,21 +46,21 @@ export default function Home() {
     });
   };
 
-  const handleGreenSlider = (value: number | number[]) => {
+  const handleStockSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      sliderValues: { ...model.sliderValues, greenSlider: value as number },
+      sliderValues: { ...model.sliderValues, stockSlider: value as number },
     });
   };
 
-  const handleRedSlider = (value: number | number[]) => {
+  const handleVentureSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      sliderValues: { ...model.sliderValues, redSlider: value as number },
+      sliderValues: { ...model.sliderValues, ventureSlider: value as number },
     });
   };
 
-  const handleViolet = (checked: boolean) => {
+  const handlePortfolio = (checked: boolean) => {
     setModel({ ...model, includePortfolio: checked });
   };
 
@@ -70,7 +68,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-blue-300">
+      <div className="text-4xl text-slate-200">
         Investment Risk and Return Game
       </div>
       <div className="grid gap-8 grid-cols-9 min-w-full">
@@ -84,35 +82,35 @@ export default function Home() {
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
               label="S&P 500"
-              className="text-emerald-500 pb-4"
+              className="text-blue-400 pb-4"
               minValue={0}
               maxValue={2}
               hideThumb={true}
-              onChange={handleGreenSlider}
+              onChange={handleStockSlider}
               step={0.01}
               defaultValue={0}
               formatOptions={{ style: "percent" }}
             />
             <Slider
               label="Venture Capital"
-              className="text-rose-500 pb-6"
+              className="text-orange-400 pb-4"
               minValue={0}
               maxValue={2}
               hideThumb={true}
-              onChange={handleRedSlider}
+              onChange={handleVentureSlider}
               step={0.01}
               defaultValue={0.5}
               formatOptions={{ style: "percent" }}
             />
-            <div className="flex text-sm justify-between text-white text-left">
+            <div className="flex text-sm justify-between text-green-400 text-left">
               <div>Money Market</div>
-              <div>{(100 * whitePercent).toFixed(0)}%</div>
+              <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>
           </div>
           <Toggle
             label="Show Portfolio"
             checked={model.includePortfolio}
-            onChange={handleViolet}
+            onChange={handlePortfolio}
           />
         </div>
         <div className="col-span-5 ml-12">
@@ -132,7 +130,7 @@ export default function Home() {
           )}
         </div>
         <div className="col-span-2  flex  flex-col gap-1">
-          <Card className="text-emerald-400 bg-inherit">
+          <Card className="text-blue-400 bg-inherit">
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
@@ -156,7 +154,7 @@ export default function Home() {
             </p>
             <p>Average Return: {d3.format("10.0%")(avgReturns.stock - 1)}</p>
           </Card>
-          <Card className="text-rose-500 bg-inherit">
+          <Card className="text-orange-400 bg-inherit">
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
@@ -180,7 +178,7 @@ export default function Home() {
             </p>
             <p>Average Return: {d3.format("10.0%")(avgReturns.venture - 1)}</p>
           </Card>
-          <Card className="text-white bg-inherit">
+          <Card className="text-green-400 bg-inherit">
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(model.wealths[model.wealths.length - 1].cash)}{" "}
@@ -204,7 +202,7 @@ export default function Home() {
           </Card>
           <div>
             {model.includePortfolio && (
-              <Card className="text-pink-400 bg-inherit">
+              <Card className="text-white bg-inherit">
                 <p>
                   Wealth:{" "}
                   {d3.format("$,.0f")(
