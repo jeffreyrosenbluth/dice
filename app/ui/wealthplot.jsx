@@ -1,12 +1,12 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { Wealth, to_df } from "@/app/lib/core";
+import { wealthFrame } from "@/app/lib/market";
 
-export default function WealthPlot({ wealth, pink, className = '' }) {
+export default function WealthPlot({ wealth, includePortfolio, className = '' }) {
   const containerRef = useRef();
-  const data = to_df(wealth, pink);
-  const n = pink ? 4 : 3;
+  const data = wealthFrame(wealth, includePortfolio);
+  const n = includePortfolio ? 4 : 3;
 
   useEffect(() => {
     if (data === undefined) return;
@@ -21,36 +21,36 @@ export default function WealthPlot({ wealth, pink, className = '' }) {
       },
       y: { label: null },
       color: {
-        domain: ["_green", "_red", "_white", "_pink"],
-        range: ["mediumseagreen", "crimson", "white", "hotpink"],
+        domain: ["stock", "venture", "cash", "portfolio"],
+        range: ["#60a5fa", "#fb923c", "#4ade80", "white"],
       },
       title: "Value of $100 Invested",
       marks: [
         Plot.lineY(data, {
-          x: "roll_num",
+          x: "period",
           y: "value",
-          stroke: "symbol",
+          stroke: "key",
           strokeWidth: 2.5,
         }),
         Plot.tip(data, Plot.pointer({
-          x: "roll_num", y: "value",
-          fill: "black", title: (d) => `${d.symbol.charAt(1).toUpperCase() + d.symbol.slice(2)}\nWealth: ${d3.format(",.0f")(d.value)}`
+          x: "period", y: "value",
+          fill: "black", title: (d) => `${d.key.charAt(0).toUpperCase() + d.key.slice(1)}\nWealth: ${d3.format(",.0f")(d.value)}`
         })),
         Plot.text(data, Plot.selectLast({
-          filter: (d) => d.symbol === "_pink", x: "roll_num", y: "value",
-          fill: "hotpink", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
-        })),
-        Plot.text(data, Plot.selectLast({
-          filter: (d) => d.symbol === "_green", x: "roll_num", y: "value",
-          fill: "mediumseagreen", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
-        })),
-        Plot.text(data, Plot.selectLast({
-          filter: (d) => d.symbol === "_red", x: "roll_num", y: "value",
-          fill: "crimson", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
-        })),
-        Plot.text(data, Plot.selectLast({
-          filter: (d) => d.symbol === "_white", x: "roll_num", y: "value",
+          filter: (d) => d.key === "portfolio", x: "period", y: "value",
           fill: "white", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+        })),
+        Plot.text(data, Plot.selectLast({
+          filter: (d) => d.key === "stock", x: "period", y: "value",
+          fill: "#60a5fa", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+        })),
+        Plot.text(data, Plot.selectLast({
+          filter: (d) => d.key === "venture", x: "period", y: "value",
+          fill: "#fb923c", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
+        })),
+        Plot.text(data, Plot.selectLast({
+          filter: (d) => d.key === "cash", x: "period", y: "value",
+          fill: "#4ade80", fontSize: 14, fontWeight: "semibold", text: (d) => `${d3.format(",.0f")(d.value)}`, dx: 25
         })),
         Plot.axisY({
           tickSize: 0,

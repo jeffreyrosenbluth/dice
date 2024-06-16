@@ -4,11 +4,11 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col flex-grow items-center justify-start gap-16 w-full">
       <div className="flex place-items-center">
-        <div className="text-5xl font-bold text-blue-400  mt-12 mb-6 text-center">
+        <div className="text-5xl font-bold text-slate-200  mt-12 mb-6 text-center">
           A Simulation of Investment Risk and Return
         </div>
       </div>
-      <div className="text-2xl font-bold text-blue-400">
+      <div className="text-2xl font-bold text-slate-200">
         Investment Risk and Return
       </div>
       <div className="overflow-x-auto">
@@ -31,22 +31,22 @@ export default function Home() {
               </thead>
               <tbody>
                 <tr className="border-b dark:border-neutral-500">
-                  <td className="whitespace-nowrap px-6 py-3 font-medium text-emerald-400">
-                    Green
+                  <td className="whitespace-nowrap px-6 py-3 font-medium text-blue-400">
+                    S&P 500
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    8.3%
+                    7.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
                     20.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    6.4%
+                    5.1%
                   </td>
                 </tr>
                 <tr className="border-b dark:border-neutral-500">
-                  <td className="whitespace-nowrap px-6 py-3 font-medium text-rose-500">
-                    Red
+                  <td className="whitespace-nowrap px-6 py-3 font-medium text-orange-400">
+                    Venture Capital
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
                     71.0%
@@ -55,21 +55,21 @@ export default function Home() {
                     132.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    -17.0%
+                    -16.9%
                   </td>
                 </tr>
                 <tr className="border-b dark:border-neutral-500">
-                  <td className="whitespace-nowrap px-6 py-3 font-medium">
-                    White
+                  <td className="whitespace-nowrap px-6 py-3 font-medium text-green-400">
+                    Money Market
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    0.8%
+                    2.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    4.0%
+                    0.0%
                   </td>
                   <td className="whitespace-nowrap px-6 py-3 text-right">
-                    0.7%
+                    2.0%
                   </td>
                 </tr>
               </tbody>
@@ -90,14 +90,14 @@ export default function Home() {
                     <th scope="col" className="px-6 py-3">
                       Outcome
                     </th>
-                    <th scope="col" className="px-6 py-3 text-emerald-400">
-                      Green
+                    <th scope="col" className="px-6 py-3 text-blue-400">
+                      S&P 500
                     </th>
-                    <th scope="col" className="px-6 py-3 text-rose-500">
-                      Red
+                    <th scope="col" className="px-6 py-3 text-orange-400">
+                      Venture Capital
                     </th>
-                    <th scope="col" className="px-6 py-3">
-                      White
+                    <th scope="col" className="px-6 py-3 text-green-400">
+                      Money Market
                     </th>
                   </tr>
                 </thead>
@@ -113,7 +113,7 @@ export default function Home() {
                       -95%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      -5%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -127,7 +127,7 @@ export default function Home() {
                       -80%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -135,13 +135,13 @@ export default function Home() {
                       3
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      10%
+                      2%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
                       0%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -155,7 +155,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -169,7 +169,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      0%
+                      2%
                     </td>
                   </tr>
                   <tr className="border-b dark:border-neutral-500">
@@ -183,7 +183,7 @@ export default function Home() {
                       200%
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-right">
-                      10%
+                      2%
                     </td>
                   </tr>
                 </tbody>
