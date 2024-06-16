@@ -6,12 +6,10 @@ import React, { useState, useEffect, use } from "react";
 import { Slider, Button } from "@nextui-org/react";
 import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
+import { useStateContext } from "@/app/ctx";
 
 export default function Home() {
-  const [yearsSlider, setYearsSlider] = useState(20);
-  const [samplesSlider, setSamplesSlider] = useState(1000);
-  const [stockSlider, setStockSlider] = useState(0);
-  const [ventureSlider, setVentureSlider] = useState(0.5);
+  const { model, setModel } = useStateContext();
   const [sim, setSim] = useState<AssetFrame>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [avgReturns, setAvgReturns] = useState({
@@ -20,25 +18,39 @@ export default function Home() {
     portfolio: 0,
   });
 
-  function handleStockSlider(value: number | number[]) {
-    setStockSlider(value as number);
-  }
-  function handleVentureSlider(value: number | number[]) {
-    setVentureSlider(value as number);
-  }
+  const handleStockSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      simSliders: { ...model.simSliders, stockSlider: value as number },
+    });
+  };
 
-  function handleYearsSlider(value: number | number[]) {
-    setYearsSlider(value as number);
-  }
+  const handleVentureSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      simSliders: { ...model.simSliders, ventureSlider: value as number },
+    });
+  };
 
-  function handleSamplesSlider(value: number | number[]) {
-    setSamplesSlider(value as number);
-  }
+  const handleYearsSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      simSliders: { ...model.simSliders, yearsSlider: value as number },
+    });
+  };
 
-  const cashPercent = 1 - (stockSlider + ventureSlider);
+  const handleSamplesSlider = (value: number | number[]) => {
+    setModel({
+      ...model,
+      simSliders: { ...model.simSliders, samplesSlider: value as number },
+    });
+  };
+
+  const cashPercent =
+    1 - (model.simSliders.stockSlider + model.simSliders.ventureSlider);
   const weights = {
-    stock: stockSlider,
-    venture: ventureSlider,
+    stock: model.simSliders.stockSlider,
+    venture: model.simSliders.ventureSlider,
     cash: cashPercent,
   };
   const portfolioReturn =
@@ -50,15 +62,18 @@ export default function Home() {
         const avgStocks =
           af
             .filter((b) => b.key === "stock")
-            .reduce((acc, b) => acc + b.value, 0) / samplesSlider;
+            .reduce((acc, b) => acc + b.value, 0) /
+          model.simSliders.samplesSlider;
         const avgVenture =
           af
             .filter((b) => b.key === "venture")
-            .reduce((acc, b) => acc + b.value, 0) / samplesSlider;
+            .reduce((acc, b) => acc + b.value, 0) /
+          model.simSliders.samplesSlider;
         const avgPortfolio =
           af
             .filter((b) => b.key === "portfolio")
-            .reduce((acc, b) => acc + b.value, 0) / samplesSlider;
+            .reduce((acc, b) => acc + b.value, 0) /
+          model.simSliders.samplesSlider;
         return {
           stock: avgStocks,
           venture: avgVenture,
@@ -67,11 +82,17 @@ export default function Home() {
       };
       setAvgReturns(averages(sim));
     }
-  }, [sim, isCalculating, samplesSlider]);
+  }, [isCalculating, model.simSliders.samplesSlider, sim]);
 
   function go() {
     setIsCalculating(true);
-    setSim(simulate(weights, yearsSlider, samplesSlider));
+    setSim(
+      simulate(
+        weights,
+        model.simSliders.yearsSlider,
+        model.simSliders.samplesSlider
+      )
+    );
     setIsCalculating(false);
   }
 
@@ -92,6 +113,7 @@ export default function Home() {
           <Slider
             className="pb-4"
             label="Years per Simulation"
+            value={model.simSliders.yearsSlider}
             minValue={1}
             maxValue={50}
             step={1}
@@ -102,6 +124,7 @@ export default function Home() {
           <Slider
             className="pb-4"
             label="Samples"
+            value={model.simSliders.samplesSlider}
             minValue={100}
             maxValue={10000}
             step={10}
@@ -113,6 +136,7 @@ export default function Home() {
             <Slider
               className="text-blue-400 pb-4"
               label="S&P 500"
+              value={model.simSliders.stockSlider}
               minValue={0}
               maxValue={2}
               step={0.01}
@@ -124,6 +148,7 @@ export default function Home() {
             <Slider
               className="text-orange-400 pb-4"
               label="Venture Capital"
+              value={model.simSliders.ventureSlider}
               minValue={0}
               maxValue={2}
               step={0.01}

@@ -7,7 +7,8 @@ interface Model {
   wealths: Assets[];
   returns: Assets[];
   includePortfolio: boolean;
-  sliderValues: { [key: string]: number };
+  playSliders: { [key: string]: number };
+  simSliders: { [key: string]: number };
 }
 
 interface StateContextProps {
@@ -22,7 +23,13 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     wealths: [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }],
     returns: [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }],
     includePortfolio: false,
-    sliderValues: { stockSlider: 0, ventureSlider: 0.5 },
+    playSliders: { stockSlider: 0, ventureSlider: 0.5 },
+    simSliders: {
+      yearsSlider: 20,
+      samplesSlider: 1000,
+      stockSlider: 0,
+      ventureSlider: 0.5,
+    },
   });
 
   return (

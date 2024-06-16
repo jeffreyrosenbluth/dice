@@ -17,13 +17,13 @@ export default function Home() {
   const { model, setModel } = useStateContext();
 
   const cashPercent =
-    1 - (model.sliderValues.stockSlider + model.sliderValues.ventureSlider);
+    1 - (model.playSliders.stockSlider + model.playSliders.ventureSlider);
 
   const roll = () => {
     const [w, r] = addRoll(
       {
-        stock: model.sliderValues.stockSlider,
-        venture: model.sliderValues.ventureSlider,
+        stock: model.playSliders.stockSlider,
+        venture: model.playSliders.ventureSlider,
         cash: cashPercent,
       },
       model.wealths,
@@ -49,14 +49,14 @@ export default function Home() {
   const handleStockSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      sliderValues: { ...model.sliderValues, stockSlider: value as number },
+      playSliders: { ...model.playSliders, stockSlider: value as number },
     });
   };
 
   const handleVentureSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      sliderValues: { ...model.sliderValues, ventureSlider: value as number },
+      playSliders: { ...model.playSliders, ventureSlider: value as number },
     });
   };
 
@@ -83,6 +83,7 @@ export default function Home() {
             <Slider
               label="S&P 500"
               className="text-blue-400 pb-4"
+              value={model.playSliders.stockSlider}
               minValue={0}
               maxValue={2}
               hideThumb={true}
@@ -94,6 +95,7 @@ export default function Home() {
             <Slider
               label="Venture Capital"
               className="text-orange-400 pb-4"
+              value={model.playSliders.ventureSlider}
               minValue={0}
               maxValue={2}
               hideThumb={true}
