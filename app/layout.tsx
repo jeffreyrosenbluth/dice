@@ -15,22 +15,16 @@ export const metadata: Metadata = {
     "A Simulation of Risk and Wealth When Investing in the Stock Market",
 };
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Play", href: "/play" },
-  { label: "Simulation", href: "/simulation" },
-];
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html>
+    <html className="dark">
       <body className="bg-slate-700 `${inter.className} antialiased`">
         <Navbar className="bg-slate-950 border-b border-gray-700">
-          <NavbarContent className="hidden sm:flex gap-4">
+          <NavbarContent className="hidden sm:flex gap-8">
             <NavbarItem>
               <Link className="text-white" href="/">
                 Home
@@ -38,12 +32,17 @@ export default function RootLayout({
             </NavbarItem>
             <NavbarItem>
               <Link className="text-white" href="/play">
-                Play
+                Dice Game
               </Link>
             </NavbarItem>
             <NavbarItem>
               <Link className="text-white" href="/simulation">
-                Simulation
+                Dice Simulation
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link className="text-white" href="/coinflip">
+                Coin Flip
               </Link>
             </NavbarItem>
           </NavbarContent>

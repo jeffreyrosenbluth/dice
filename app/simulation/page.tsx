@@ -99,7 +99,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
       <div className="text-4xl text-slate-200">
-        Investment Risk and Return Simulation
+        Risk and Return Dice Simulation
       </div>
       <div className="grid gap-4 grid-cols-9 min-w-full">
         <div className="flex flex-col gap-4 col-span-2 px-8">

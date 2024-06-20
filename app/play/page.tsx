@@ -2,9 +2,8 @@
 
 import WealthPlot from "@/app/ui/wealthplot";
 import ReturnPlot from "@/app/ui/returnplot";
-import Toggle from "@/app/ui/toggle";
 import Card from "@/app/ui/card";
-import { Slider, Button } from "@nextui-org/react";
+import { Slider, Button, Switch } from "@nextui-org/react";
 import React from "react";
 import { addRoll, Assets } from "@/app/lib/market";
 import * as d3 from "d3";
@@ -68,9 +67,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-slate-200">
-        Investment Risk and Return Game
-      </div>
+      <div className="text-4xl text-slate-200">Risk and Return Dice Game</div>
       <div className="grid gap-8 grid-cols-9 min-w-full">
         <div className="flex flex-col gap-4 col-span-2 px-8">
           <Button className="py-4 mb-2" onClick={roll} color="primary">
@@ -109,11 +106,12 @@ export default function Home() {
               <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>
           </div>
-          <Toggle
-            label="Show Portfolio"
-            checked={model.includePortfolio}
-            onChange={handlePortfolio}
-          />
+          <Switch
+            isSelected={model.includePortfolio}
+            onValueChange={handlePortfolio}
+          >
+            <span className="text-slate-200">Show Portfolio</span>
+          </Switch>
         </div>
         <div className="col-span-5 ml-12">
           {model.returns.length > 1 ? (
