@@ -1,26 +1,43 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, RadioGroup, Radio, Input } from "@nextui-org/react";
+import { Button, RadioGroup, Radio, Input, Image } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
-import { addFlip } from "@/app/lib/coin";
+import Coin from "@/app/ui/coin";
+import { addFlip, Flip } from "@/app/lib/coin";
 
-const initialFlips = [
-  { flip_num: 0, value: 100, value10: 100, value20: 100, kelly: 100 },
+const initialFlips: Flip[] = [
+  {
+    flip_num: 0,
+    value: 100,
+    value10: 100,
+    value20: 100,
+    kelly: 100,
+    coin: "heads",
+  },
 ];
 
 export default function Home() {
   const [flips, setFlips] = useState(initialFlips);
-  const [bet, setBet] = useState(0);
+  const [bet, setBet] = useState(10);
   const [headsTails, setHeadsTails] = useState("heads");
+  const [isFlipping, setIsFlipping] = useState(false);
 
   const handleFlip = () => {
     setFlips(addFlip(flips, bet, headsTails));
+    setIsFlipping(true);
+    setTimeout(() => {
+      setIsFlipping(false);
+    }, 1000); // duration of the flip animation
   };
 
   const handleReset = () => {
     setFlips(initialFlips);
+    setBet(10);
   };
+
+  const flipResult = flips[flips.length - 1].coin;
+  const balance = flips[flips.length - 1].value;
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
@@ -52,10 +69,9 @@ export default function Home() {
             }
             type="number"
             color="default"
-            value={bet.toFixed(2)}
+            value={Math.min(bet, balance).toFixed(2)}
             onValueChange={(v) => setBet(parseFloat(v))}
             label="Bet Amount"
-            placeholder="0.00"
             labelPlacement="outside"
           />
           <Button className="py-2 mb-1" color="primary" onClick={handleFlip}>
@@ -64,12 +80,15 @@ export default function Home() {
           <Button className="py-2 mb-2" color="primary" onClick={handleReset}>
             Reset
           </Button>
-          <div className="text-blue-400">
-            Winnings: {flips[flips.length - 1].value.toFixed(2)}
+          <div className="px-8 brightness-90">
+            <Coin isFlipping={isFlipping} result={flipResult} />
+          </div>
+          <div className="flex flex-col text-white text-lg items-center">
+            Balance: {balance.toFixed(2)}
           </div>
         </div>
-        <div className="col-span-3 ml-12">
-          <FlipPlot flips={flips} />
+        <div className="col-span-3 ml-8 px-8">
+          {flips.length > 1 ? <FlipPlot flips={flips} /> : null}
         </div>
       </div>
     </main>

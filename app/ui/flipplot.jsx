@@ -13,6 +13,8 @@ export default function FlipPlot({ flips, className = '' }) {
             marginLeft: 15,
             marginTop: 50,
             marginRight: 60,
+            width: 720,
+            height: 40 / 64 * 720,
             x: {
                 label: "Flip",
                 insetLeft: 50,
@@ -24,7 +26,8 @@ export default function FlipPlot({ flips, className = '' }) {
                 range: ["#60a5fa", "#fb923c", "#4ade80", "white"],
             },
             marks: [
-                Plot.lineY(data, { x: "flip_num", y: "value", stroke: "key" }),
+                Plot.ruleY([0], { stroke: "gray" }),
+                Plot.lineY(data, { x: "flip_num", y: "value", stroke: "key", strokeWidth: 2.5 }),
                 Plot.tip(data, Plot.pointer({
                     x: "flip_num", y: "value",
                     fill: "black", title: (d) => `${d.key.charAt(0).toUpperCase() + d.key.slice(1)}\nWinnings: ${d3.format(",.0f")(d.value)}`
@@ -53,7 +56,6 @@ export default function FlipPlot({ flips, className = '' }) {
                     tickFormat: (d, i, _) => d,
                 }),
                 Plot.gridY({ ticks: 10 }),
-                Plot.ruleY([0], { stroke: "gray" }),
                 Plot.tickY({ x: [] }),
             ]
         });

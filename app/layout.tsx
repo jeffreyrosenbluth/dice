@@ -42,7 +42,7 @@ export default function RootLayout({
             </NavbarItem>
             <NavbarItem>
               <Link className="text-white" href="/coinflip">
-                Coin Flip
+                Coin Game
               </Link>
             </NavbarItem>
           </NavbarContent>

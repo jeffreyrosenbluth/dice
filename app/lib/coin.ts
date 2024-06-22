@@ -1,11 +1,14 @@
 import * as d3 from "d3";
 
+export type Face = "heads" | "tails";
+
 export type Flip = {
   flip_num: number;
   value: number;
   value10: number;
   value20: number;
   kelly: number;
+  coin: Face;
 };
 
 export type FlipN = {
@@ -19,26 +22,31 @@ const K1 = 0.1;
 const K2 = 20;
 const KELLY = 0.20833;
 
-export function addFlip(
-  flips: Flip[],
-  bet: number,
-  headsOrTails: string
-): Flip[] {
-  const ht = headsOrTails === "heads" ? 1 : 0;
+export function addFlip(flips: Flip[], bet: number, betOn: string): Flip[] {
+  const ht = betOn === "heads" ? 1 : 0;
   const bias = ht ? BIAS : 1 - BIAS;
-  let b = d3.randomBernoulli(bias)();
+  let flipResult = d3.randomBernoulli(bias)();
   let flip = flips[flips.length - 1];
-  const v = b ? flip.value + bet : flip.value - bet;
-  const v1 = b
+  const v =
+    flip.value > 0 ? (flipResult ? flip.value + bet : flip.value - bet) : 0;
+  const v1 = flipResult
     ? flip.value10 + flip.value10 * K1
     : flip.value10 - flip.value10 * K1;
-  const v2 = b ? flip.value20 + K2 : flip.value20 - K2;
-  const vk = b
+  const v2 =
+    flip.value > 0 ? (flipResult ? flip.value20 + K2 : flip.value20 - K2) : 0;
+  const vk = flipResult
     ? flip.kelly + flip.kelly * KELLY
     : flip.kelly - flip.kelly * KELLY;
   return [
     ...flips,
-    { flip_num: flips.length, value: v, value10: v1, value20: v2, kelly: vk },
+    {
+      flip_num: flips.length,
+      value: v,
+      value10: v1,
+      value20: v2,
+      kelly: vk,
+      coin: flipResult ? "heads" : "tails",
+    },
   ];
 }
 
