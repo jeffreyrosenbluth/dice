@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button, RadioGroup, Radio, Input, Image } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, Flip } from "@/app/lib/coin";
+import { addFlip, flip, Flip } from "@/app/lib/coin";
 
 const initialFlips: Flip[] = [
   {
@@ -21,14 +21,19 @@ export default function Home() {
   const [flips, setFlips] = useState(initialFlips);
   const [bet, setBet] = useState(10);
   const [headsTails, setHeadsTails] = useState("heads");
+  const [flipResult, setFlipResult] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
 
   const handleFlip = () => {
-    setFlips(addFlip(flips, bet, headsTails));
-    setIsFlipping(true);
-    setTimeout(() => {
-      setIsFlipping(false);
-    }, 1000); // duration of the flip animation
+    if (!isFlipping) {
+      setIsFlipping(true);
+      setFlipResult(flip(headsTails));
+    }
+  };
+
+  const handleFlipComplete = () => {
+    setIsFlipping(false);
+    setFlips(addFlip(flips, bet, flipResult));
   };
 
   const handleReset = () => {
@@ -36,7 +41,6 @@ export default function Home() {
     setBet(10);
   };
 
-  const flipResult = flips[flips.length - 1].coin;
   const balance = flips[flips.length - 1].value;
 
   return (
@@ -74,16 +78,25 @@ export default function Home() {
             label="Bet Amount"
             labelPlacement="outside"
           />
-          <Button className="py-2 mb-1" color="primary" onClick={handleFlip}>
+          <Button
+            className="py-2 mb-1"
+            color="primary"
+            onClick={handleFlip}
+            disabled={isFlipping}
+          >
             Flip
           </Button>
           <Button className="py-2 mb-2" color="primary" onClick={handleReset}>
             Reset
           </Button>
           <div className="px-8 brightness-90">
-            <Coin isFlipping={isFlipping} result={flipResult} />
+            <Coin
+              isFlipping={isFlipping}
+              result={flipResult}
+              onAnimationComplete={handleFlipComplete}
+            />
           </div>
-          <div className="flex flex-col text-white text-lg items-center">
+          <div className="flex flex-col text-blue-400 text-lg items-center">
             Balance: {balance.toFixed(2)}
           </div>
         </div>

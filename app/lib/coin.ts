@@ -22,10 +22,20 @@ const K1 = 0.1;
 const K2 = 20;
 const KELLY = 0.20833;
 
-export function addFlip(flips: Flip[], bet: number, betOn: string): Flip[] {
+export function flip(betOn: string): number {
   const ht = betOn === "heads" ? 1 : 0;
   const bias = ht ? BIAS : 1 - BIAS;
-  let flipResult = d3.randomBernoulli(bias)();
+  return d3.randomBernoulli(bias)();
+}
+
+export function addFlip(
+  flips: Flip[],
+  bet: number,
+  flipResult: number
+): Flip[] {
+  // const ht = betOn === "heads" ? 1 : 0;
+  // const bias = ht ? BIAS : 1 - BIAS;
+  // let flipResult = d3.randomBernoulli(bias)();
   let flip = flips[flips.length - 1];
   const v =
     flip.value > 0 ? (flipResult ? flip.value + bet : flip.value - bet) : 0;

@@ -1,22 +1,38 @@
-// components/Coin.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const Coin = ({
+interface CoinProps {
+  isFlipping: boolean;
+  result: number;
+  onAnimationComplete: () => void;
+}
+
+const Coin: React.FC<CoinProps> = ({
   isFlipping,
   result,
-}: {
-  isFlipping: boolean;
-  result: string;
+  onAnimationComplete,
 }) => {
-  const rotation = result === "heads" ? 0 : 180;
+  const [hasFlipped, setHasFlipped] = useState(false);
+
+  useEffect(() => {
+    if (isFlipping) {
+      setHasFlipped(true);
+    }
+  }, [isFlipping]);
+
+  // 0 means tails (180 degrees) and 1 means heads (0 degrees)
+  const finalRotation = hasFlipped ? (result === 0 ? 180 : 0) : 0;
+  // When flipping, rotate 720 degrees (two full rotations) plus the final rotation
+  const rotation = isFlipping ? 720 + finalRotation : finalRotation;
 
   return (
     <div className="flex flex-col items-center justify-center mt-4">
       <motion.div
         className="w-24 h-24 relative"
-        animate={{ rotateY: isFlipping ? [0, 540 + rotation] : rotation }}
-        transition={{ duration: 1, ease: "linear" }}
+        animate={{ rotateY: rotation }}
+        initial={{ rotateY: 0 }}
+        transition={{ duration: isFlipping ? 1 : 0, ease: "linear" }}
+        onAnimationComplete={isFlipping ? onAnimationComplete : undefined}
         style={{ transformStyle: "preserve-3d" }}
       >
         <motion.img
