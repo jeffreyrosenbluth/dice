@@ -31,7 +31,7 @@ const Coin: React.FC<CoinProps> = ({
         className="w-24 h-24 relative"
         animate={{ rotateY: rotation }}
         initial={{ rotateY: 0 }}
-        transition={{ duration: isFlipping ? 1 : 0, ease: "linear" }}
+        transition={{ duration: isFlipping ? 0.75 : 0, ease: "linear" }}
         onAnimationComplete={isFlipping ? onAnimationComplete : undefined}
         style={{ transformStyle: "preserve-3d" }}
       >

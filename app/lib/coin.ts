@@ -33,9 +33,6 @@ export function addFlip(
   bet: number,
   flipResult: number
 ): Flip[] {
-  // const ht = betOn === "heads" ? 1 : 0;
-  // const bias = ht ? BIAS : 1 - BIAS;
-  // let flipResult = d3.randomBernoulli(bias)();
   let flip = flips[flips.length - 1];
   const v =
     flip.value > 0 ? (flipResult ? flip.value + bet : flip.value - bet) : 0;
