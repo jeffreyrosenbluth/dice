@@ -40,7 +40,7 @@ export function addFlip(
     ? flip.value10 + flip.value10 * K1
     : flip.value10 - flip.value10 * K1;
   const v2 =
-    flip.value > 0 ? (flipResult ? flip.value20 + K2 : flip.value20 - K2) : 0;
+    flip.value20 > 0 ? (flipResult ? flip.value20 + K2 : flip.value20 - K2) : 0;
   const vk = flipResult
     ? flip.kelly + flip.kelly * KELLY
     : flip.kelly - flip.kelly * KELLY;
