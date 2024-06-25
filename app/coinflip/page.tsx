@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { Button, RadioGroup, Radio, Slider } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip } from "@/app/lib/coin";
-import { Flip } from "@/app/lib/coin";
+import { addFlip, flip, Flip } from "@/app/lib/coin";
 import CurrencyInput from "react-currency-input-field";
-import { parse } from "path";
+import { useStateContext } from "@/app/ctx";
 
 const initialFlips: Flip[] = [
   {
@@ -21,34 +20,37 @@ const initialFlips: Flip[] = [
 ];
 
 export default function Home() {
-  const [flips, setFlips] = useState(initialFlips);
-  const [bet, setBet] = useState(10);
-  const [headsTails, setHeadsTails] = useState("heads");
-  const [flipResult, setFlipResult] = useState(0);
+  const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
 
   const handleFlip = () => {
     if (!isFlipping) {
       setIsFlipping(true);
-      setFlipResult(flip(headsTails));
+      setModel({ ...model, coinPlayFlipResult: flip(model.coinPlayHT) });
     }
   };
 
   const handleFlipComplete = () => {
     setIsFlipping(false);
-    setFlips(addFlip(flips, bet, flipResult));
+    setModel({
+      ...model,
+      coinPlayFlips: addFlip(
+        model.coinPlayFlips,
+        model.coinPlayBet,
+        model.coinPlayFlipResult
+      ),
+    });
   };
 
   const handleReset = () => {
-    setFlips(initialFlips);
-    setBet(0);
+    setModel({ ...model, coinPlayFlips: initialFlips, coinPlayBet: 0 });
   };
 
   const handleSlider = (value: number | number[]) => {
-    setBet(value as number);
+    setModel({ ...model, coinPlayBet: value as number });
   };
 
-  const balance = flips[flips.length - 1].value;
+  const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
@@ -59,8 +61,8 @@ export default function Home() {
             className="flex gap-8"
             defaultValue="heads"
             orientation="horizontal"
-            value={headsTails}
-            onValueChange={setHeadsTails}
+            value={model.coinPlayHT}
+            onValueChange={(value) => setModel({ ...model, coinPlayHT: value })}
           >
             {" "}
             <div className="flex space-x-8">
@@ -82,15 +84,18 @@ export default function Home() {
               defaultValue={0}
               decimalsLimit={2}
               step={1}
-              value={bet}
+              value={model.coinPlayBet}
               onValueChange={(value, name, values) =>
-                setBet(values!.float || 0)
+                setModel({
+                  ...model,
+                  coinPlayBet: Math.min(balance, values!.float || 0),
+                })
               }
               className="w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
             />
             <Slider
               className="text-orange-400 pb-4"
-              value={bet}
+              value={model.coinPlayBet}
               minValue={0}
               maxValue={balance}
               hideThumb={true}
@@ -113,7 +118,7 @@ export default function Home() {
           <div className="px-8 brightness-90">
             <Coin
               isFlipping={isFlipping}
-              result={flipResult}
+              result={model.coinPlayFlipResult}
               onAnimationComplete={handleFlipComplete}
             />
           </div>
@@ -122,7 +127,9 @@ export default function Home() {
           </div>
         </div>
         <div className="col-span-3 ml-8 px-8">
-          {flips.length > 1 ? <FlipPlot flips={flips} /> : null}
+          {model.coinPlayFlips.length > 1 ? (
+            <FlipPlot flips={model.coinPlayFlips} />
+          ) : null}
         </div>
       </div>
     </main>

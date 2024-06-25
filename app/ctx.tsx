@@ -2,6 +2,18 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Assets, AssetFrame } from "@/app/lib/market";
+import { Flip } from "@/app/lib/coin";
+
+const initialFlips: Flip[] = [
+  {
+    flip_num: 0,
+    value: 100,
+    value10: 100,
+    value20: 100,
+    kelly: 100,
+    coin: "heads",
+  },
+];
 
 type Model = {
   diceWealths: Assets[];
@@ -12,6 +24,10 @@ type Model = {
   diceAvgReturns: { stock: number; venture: number; portfolio: number };
   diceSim: AssetFrame;
   coinSimSliders: { [key: string]: number };
+  coinPlayFlips: Flip[];
+  coinPlayBet: number;
+  coinPlayHT: string;
+  coinPlayFlipResult: number;
 };
 
 interface StateContextProps {
@@ -41,6 +57,10 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       biasSlider: 0.6,
       betSlider: 0.15,
     },
+    coinPlayFlips: initialFlips,
+    coinPlayBet: 10,
+    coinPlayHT: "heads",
+    coinPlayFlipResult: 0,
   });
 
   return (
