@@ -16,31 +16,32 @@ export default function Home() {
   const { model, setModel } = useStateContext();
 
   const cashPercent =
-    1 - (model.playSliders.stockSlider + model.playSliders.ventureSlider);
+    1 -
+    (model.dicePlaySliders.stockSlider + model.dicePlaySliders.ventureSlider);
 
   const roll = () => {
     const [w, r] = addRoll(
       {
-        stock: model.playSliders.stockSlider,
-        venture: model.playSliders.ventureSlider,
+        stock: model.dicePlaySliders.stockSlider,
+        venture: model.dicePlaySliders.ventureSlider,
         cash: cashPercent,
       },
-      model.wealths,
-      model.returns
+      model.diceWealths,
+      model.diceReturns
     );
 
     setModel({
       ...model,
-      wealths: w,
-      returns: r,
+      diceWealths: w,
+      diceReturns: r,
     });
   };
 
   const reset = () => {
     setModel({
       ...model,
-      wealths: initialWealth,
-      returns: initialReturns,
+      diceWealths: initialWealth,
+      diceReturns: initialReturns,
       includePortfolio: model.includePortfolio,
     });
   };
@@ -48,14 +49,20 @@ export default function Home() {
   const handleStockSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      playSliders: { ...model.playSliders, stockSlider: value as number },
+      dicePlaySliders: {
+        ...model.dicePlaySliders,
+        stockSlider: value as number,
+      },
     });
   };
 
   const handleVentureSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      playSliders: { ...model.playSliders, ventureSlider: value as number },
+      dicePlaySliders: {
+        ...model.dicePlaySliders,
+        ventureSlider: value as number,
+      },
     });
   };
 
@@ -63,24 +70,24 @@ export default function Home() {
     setModel({ ...model, includePortfolio: checked });
   };
 
-  const avgReturns = average(model.returns.slice(1));
+  const avgReturns = average(model.diceReturns.slice(1));
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
       <div className="text-4xl text-slate-200">Risk and Return Dice Game</div>
       <div className="grid gap-8 grid-cols-9 min-w-full">
         <div className="flex flex-col gap-4 col-span-2 px-8">
-          <Button className="py-4 mb-2" onClick={roll} color="primary">
+          <Button className="py-4 mb-2 bg-blue-500" onClick={roll}>
             Roll
           </Button>
-          <Button className="py-4 mb-4" onClick={reset} color="primary">
+          <Button className="py-4 mb-4 bg-blue-500" onClick={reset}>
             Reset
           </Button>
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
               label="S&P 500"
               className="text-blue-400 pb-4"
-              value={model.playSliders.stockSlider}
+              value={model.dicePlaySliders.stockSlider}
               minValue={0}
               maxValue={2}
               hideThumb={true}
@@ -92,7 +99,7 @@ export default function Home() {
             <Slider
               label="Venture Capital"
               className="text-orange-400 pb-4"
-              value={model.playSliders.ventureSlider}
+              value={model.dicePlaySliders.ventureSlider}
               minValue={0}
               maxValue={2}
               hideThumb={true}
@@ -114,14 +121,14 @@ export default function Home() {
           </Switch>
         </div>
         <div className="col-span-5 ml-12">
-          {model.returns.length > 1 ? (
+          {model.diceReturns.length > 1 ? (
             <div className="flex flex-col gap-16">
               <WealthPlot
-                wealth={model.wealths}
+                wealth={model.diceWealths}
                 includePortfolio={model.includePortfolio}
               />
               <ReturnPlot
-                returns={model.returns}
+                returns={model.diceReturns}
                 includePortfolio={model.includePortfolio}
               />{" "}
             </div>
@@ -134,21 +141,21 @@ export default function Home() {
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
-                model.wealths[model.wealths.length - 1].stock
+                model.diceWealths[model.diceWealths.length - 1].stock
               )}{" "}
             </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
-                model.returns[model.returns.length - 1].stock - 1
+                model.diceReturns[model.diceReturns.length - 1].stock - 1
               )}
             </p>
             <p>
               Annual Return:{" "}
               {d3.format("10.0%")(
                 annualize(
-                  model.wealths[model.wealths.length - 1].stock,
-                  model.wealths.length - 1
+                  model.diceWealths[model.diceWealths.length - 1].stock,
+                  model.diceWealths.length - 1
                 )
               )}
             </p>
@@ -158,21 +165,21 @@ export default function Home() {
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
-                model.wealths[model.wealths.length - 1].venture
+                model.diceWealths[model.diceWealths.length - 1].venture
               )}{" "}
             </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
-                model.returns[model.returns.length - 1].venture - 1
+                model.diceReturns[model.diceReturns.length - 1].venture - 1
               )}
             </p>
             <p>
               Annual Return:{" "}
               {d3.format("10.0%")(
                 annualize(
-                  model.wealths[model.wealths.length - 1].venture,
-                  model.wealths.length - 1
+                  model.diceWealths[model.diceWealths.length - 1].venture,
+                  model.diceWealths.length - 1
                 )
               )}
             </p>
@@ -181,20 +188,22 @@ export default function Home() {
           <Card className="text-green-400 bg-inherit">
             <p>
               Wealth:{" "}
-              {d3.format("$,.0f")(model.wealths[model.wealths.length - 1].cash)}{" "}
+              {d3.format("$,.0f")(
+                model.diceWealths[model.diceWealths.length - 1].cash
+              )}{" "}
             </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
-                model.returns[model.returns.length - 1].cash - 1
+                model.diceReturns[model.diceReturns.length - 1].cash - 1
               )}
             </p>
             <p>
               Annual Return:{" "}
               {d3.format("10.0%")(
                 annualize(
-                  model.wealths[model.wealths.length - 1].cash,
-                  model.wealths.length - 1
+                  model.diceWealths[model.diceWealths.length - 1].cash,
+                  model.diceWealths.length - 1
                 )
               )}
             </p>
@@ -206,21 +215,22 @@ export default function Home() {
                 <p>
                   Wealth:{" "}
                   {d3.format("$,.0f")(
-                    model.wealths[model.wealths.length - 1].portfolio
+                    model.diceWealths[model.diceWealths.length - 1].portfolio
                   )}{" "}
                 </p>
                 <p>
                   Last Return:
                   {d3.format("10.0%")(
-                    model.returns[model.returns.length - 1].portfolio - 1
+                    model.diceReturns[model.diceReturns.length - 1].portfolio -
+                      1
                   )}
                 </p>
                 <p>
                   Annual Return:{" "}
                   {d3.format("10.0%")(
                     annualize(
-                      model.wealths[model.wealths.length - 1].portfolio,
-                      model.wealths.length - 1
+                      model.diceWealths[model.diceWealths.length - 1].portfolio,
+                      model.diceWealths.length - 1
                     )
                   )}
                 </p>

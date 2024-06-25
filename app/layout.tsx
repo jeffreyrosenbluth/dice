@@ -45,6 +45,11 @@ export default function RootLayout({
                 Coin Game
               </Link>
             </NavbarItem>
+            <NavbarItem>
+              <Link className="text-white" href="/coinsim">
+                Coin Simulation
+              </Link>
+            </NavbarItem>
           </NavbarContent>
           <NavbarContent className="sm:flex hidden" justify="end">
             <NavbarItem>

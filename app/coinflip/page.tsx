@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, RadioGroup, Radio, Input, Image } from "@nextui-org/react";
+import { Button, RadioGroup, Radio, Slider } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip, Flip } from "@/app/lib/coin";
+import { addFlip, flip } from "@/app/lib/coin";
+import { Flip } from "@/app/lib/coin";
+import CurrencyInput from "react-currency-input-field";
+import { parse } from "path";
 
 const initialFlips: Flip[] = [
   {
@@ -38,7 +41,11 @@ export default function Home() {
 
   const handleReset = () => {
     setFlips(initialFlips);
-    setBet(10);
+    setBet(0);
+  };
+
+  const handleSlider = (value: number | number[]) => {
+    setBet(value as number);
   };
 
   const balance = flips[flips.length - 1].value;
@@ -65,28 +72,42 @@ export default function Home() {
               </Radio>
             </div>
           </RadioGroup>
-          <Input
-            startContent={
-              <div className="pointer-events-none flex items-center">
-                <span className="text-default-400 text-small">$</span>
-              </div>
-            }
-            type="number"
-            color="default"
-            value={Math.min(bet, balance).toFixed(2)}
-            onValueChange={(v) => setBet(parseFloat(v))}
-            label="Bet Amount"
-            labelPlacement="outside"
-          />
+          <div>
+            <p className="text-slate-200 mb-2">Bet Size</p>
+            <CurrencyInput
+              id="bet-input"
+              name="bet-input"
+              placeholder="Bet Size"
+              prefix={"$ "}
+              defaultValue={0}
+              decimalsLimit={2}
+              step={1}
+              value={bet}
+              onValueChange={(value, name, values) =>
+                setBet(values!.float || 0)
+              }
+              className="w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
+            />
+            <Slider
+              className="text-orange-400 pb-4"
+              value={bet}
+              minValue={0}
+              maxValue={balance}
+              hideThumb={true}
+              onChange={handleSlider}
+              step={1.0}
+              defaultValue={0.5}
+              formatOptions={{ style: "percent" }}
+            />
+          </div>
           <Button
-            className="py-2 mb-1"
-            color="primary"
+            className="py-2 mb-1 bg-blue-500"
             onClick={handleFlip}
             disabled={isFlipping}
           >
             Flip
           </Button>
-          <Button className="py-2 mb-2" color="primary" onClick={handleReset}>
+          <Button className="py-2 mb-2 bg-blue-500" onClick={handleReset}>
             Reset
           </Button>
           <div className="px-8 brightness-90">

@@ -2,7 +2,7 @@
 
 import * as d3 from "d3";
 import Card from "@/app/ui/card";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { Slider, Button } from "@nextui-org/react";
 import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
@@ -10,47 +10,47 @@ import { useStateContext } from "@/app/ctx";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
-  const [sim, setSim] = useState<AssetFrame>([]);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [avgReturns, setAvgReturns] = useState({
-    stock: 0,
-    venture: 0,
-    portfolio: 0,
-  });
 
   const handleStockSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      simSliders: { ...model.simSliders, stockSlider: value as number },
+      diceSimSliders: { ...model.diceSimSliders, stockSlider: value as number },
     });
   };
 
   const handleVentureSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      simSliders: { ...model.simSliders, ventureSlider: value as number },
+      diceSimSliders: {
+        ...model.diceSimSliders,
+        ventureSlider: value as number,
+      },
     });
   };
 
   const handleYearsSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      simSliders: { ...model.simSliders, yearsSlider: value as number },
+      diceSimSliders: { ...model.diceSimSliders, yearsSlider: value as number },
     });
   };
 
   const handleSamplesSlider = (value: number | number[]) => {
     setModel({
       ...model,
-      simSliders: { ...model.simSliders, samplesSlider: value as number },
+      diceSimSliders: {
+        ...model.diceSimSliders,
+        samplesSlider: value as number,
+      },
     });
   };
 
   const cashPercent =
-    1 - (model.simSliders.stockSlider + model.simSliders.ventureSlider);
+    1 - (model.diceSimSliders.stockSlider + model.diceSimSliders.ventureSlider);
   const weights = {
-    stock: model.simSliders.stockSlider,
-    venture: model.simSliders.ventureSlider,
+    stock: model.diceSimSliders.stockSlider,
+    venture: model.diceSimSliders.ventureSlider,
     cash: cashPercent,
   };
   const portfolioReturn =
@@ -63,36 +63,38 @@ export default function Home() {
           af
             .filter((b) => b.key === "stock")
             .reduce((acc, b) => acc + b.value, 0) /
-          model.simSliders.samplesSlider;
+          model.diceSimSliders.samplesSlider;
         const avgVenture =
           af
             .filter((b) => b.key === "venture")
             .reduce((acc, b) => acc + b.value, 0) /
-          model.simSliders.samplesSlider;
+          model.diceSimSliders.samplesSlider;
         const avgPortfolio =
           af
             .filter((b) => b.key === "portfolio")
             .reduce((acc, b) => acc + b.value, 0) /
-          model.simSliders.samplesSlider;
+          model.diceSimSliders.samplesSlider;
         return {
           stock: avgStocks,
           venture: avgVenture,
           portfolio: avgPortfolio,
         };
       };
-      setAvgReturns(averages(sim));
+      setModel({ ...model, diceAvgReturns: averages(model.diceSim) });
     }
-  }, [isCalculating, model.simSliders.samplesSlider, sim]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCalculating, model.diceSimSliders.samplesSlider, model.diceSim]);
 
   function go() {
     setIsCalculating(true);
-    setSim(
-      simulate(
+    setModel({
+      ...model,
+      diceSim: simulate(
         weights,
-        model.simSliders.yearsSlider,
-        model.simSliders.samplesSlider
-      )
-    );
+        model.diceSimSliders.yearsSlider,
+        model.diceSimSliders.samplesSlider
+      ),
+    });
     setIsCalculating(false);
   }
 
@@ -103,17 +105,13 @@ export default function Home() {
       </div>
       <div className="grid gap-4 grid-cols-9 min-w-full">
         <div className="flex flex-col gap-4 col-span-2 px-8">
-          <Button
-            className="py-4 mb-2"
-            onClick={go}
-            color={isCalculating ? "success" : "primary"}
-          >
+          <Button className="py-4 mb-2 bg-blue-500" onClick={go}>
             Run
           </Button>
           <Slider
             className="pb-4"
             label="Years per Simulation"
-            value={model.simSliders.yearsSlider}
+            value={model.diceSimSliders.yearsSlider}
             minValue={1}
             maxValue={50}
             step={1}
@@ -124,7 +122,7 @@ export default function Home() {
           <Slider
             className="pb-4"
             label="Samples"
-            value={model.simSliders.samplesSlider}
+            value={model.diceSimSliders.samplesSlider}
             minValue={100}
             maxValue={10000}
             step={10}
@@ -136,7 +134,7 @@ export default function Home() {
             <Slider
               className="text-blue-400 pb-4"
               label="S&P 500"
-              value={model.simSliders.stockSlider}
+              value={model.diceSimSliders.stockSlider}
               minValue={0}
               maxValue={2}
               step={0.01}
@@ -148,7 +146,7 @@ export default function Home() {
             <Slider
               className="text-orange-400 pb-4"
               label="Venture Capital"
-              value={model.simSliders.ventureSlider}
+              value={model.diceSimSliders.ventureSlider}
               minValue={0}
               maxValue={2}
               step={0.01}
@@ -164,32 +162,35 @@ export default function Home() {
           </div>
         </div>
         <div className="col-span-5 ml-12">
-          {sim.length > 1 && !isCalculating ? (
-            <SimPlot data={sim} />
+          {model.diceSim.length > 1 && !isCalculating ? (
+            <SimPlot data={model.diceSim} />
           ) : (
             <div className="text-9xl flex justify-center mt-24 mr-24">🎲</div>
           )}
         </div>
-        {sim.length > 1 && !isCalculating ? (
+        {model.diceSim.length > 1 && !isCalculating ? (
           <div className="col-span-2  flex  flex-col gap-1 text-sm">
             <Card className="text-blue-400 bg-inherit">
               <p>Arithmetic Mean Return: {d3.format("10.2%")(0.07)}</p>
               <p>
-                Geometric Mean Return: {d3.format("10.2%")(avgReturns.stock)}
+                Geometric Mean Return:{" "}
+                {d3.format("10.2%")(model.diceAvgReturns.stock)}
               </p>
               <p>
-                Volatility Drag: {d3.format("10.2%")(0.07 - avgReturns.stock)}
+                Volatility Drag:{" "}
+                {d3.format("10.2%")(0.07 - model.diceAvgReturns.stock)}
               </p>
               <p>Volatility Drag Estimate: {d3.format("10.2%")(0.019)}</p>
             </Card>
             <Card className="text-orange-400 bg-inherit">
               <p>Arithmetic Mean Return: {d3.format("10.2%")(0.708)}</p>
               <p>
-                Geometric Mean Return: {d3.format("10.2%")(avgReturns.venture)}
+                Geometric Mean Return:{" "}
+                {d3.format("10.2%")(model.diceAvgReturns.venture)}
               </p>
               <p>
                 Volatility Drag:{" "}
-                {d3.format("10.2%")(0.708 - avgReturns.venture)}
+                {d3.format("10.2%")(0.708 - model.diceAvgReturns.venture)}
               </p>
               <p>Volatility Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
             </Card>
@@ -199,11 +200,13 @@ export default function Home() {
               </p>
               <p>
                 Geometric Mean Return:{" "}
-                {d3.format("10.2%")(avgReturns.portfolio)}
+                {d3.format("10.2%")(model.diceAvgReturns.portfolio)}
               </p>
               <p>
                 Volatility Drag:{" "}
-                {d3.format("10.2%")(portfolioReturn - avgReturns.portfolio)}
+                {d3.format("10.2%")(
+                  portfolioReturn - model.diceAvgReturns.portfolio
+                )}
               </p>
             </Card>
           </div>
