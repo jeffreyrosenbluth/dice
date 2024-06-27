@@ -58,7 +58,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       betSlider: 0.15,
     },
     coinPlayFlips: initialFlips,
-    coinPlayBet: 10,
+    coinPlayBet: 15,
     coinPlayHT: "heads",
     coinPlayFlipResult: 0,
   });

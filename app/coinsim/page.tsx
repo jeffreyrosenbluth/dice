@@ -4,7 +4,6 @@ import * as d3 from "d3";
 import Card from "@/app/ui/card";
 import React, { useState, useEffect, use } from "react";
 import { Slider, Button, Image } from "@nextui-org/react";
-import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
 import { useStateContext } from "@/app/ctx";
 

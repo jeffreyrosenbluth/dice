@@ -43,7 +43,7 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setModel({ ...model, coinPlayFlips: initialFlips, coinPlayBet: 0 });
+    setModel({ ...model, coinPlayFlips: initialFlips });
   };
 
   const handleSlider = (value: number | number[]) => {
@@ -51,6 +51,8 @@ export default function Home() {
   };
 
   const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
+  const heads =
+    model.coinPlayFlips.filter((f) => f.coin === "heads").length - 1;
 
   return (
     <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
@@ -124,6 +126,17 @@ export default function Home() {
           </div>
           <div className="flex flex-col text-blue-400 text-lg items-center">
             Balance: {balance.toFixed(2)}
+          </div>
+          <div className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
+            <div>Heads {heads}</div>
+            <div>Tails {model.coinPlayFlips.length - heads - 1}</div>
+            <div>Flips {model.coinPlayFlips.length - 1}</div>
+          </div>
+          <div className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
+            <div>
+              <span>{`Probability of Heads  `} </span>
+              {((100 * heads) / (model.coinPlayFlips.length - 1)).toFixed(2)}%
+            </div>
           </div>
         </div>
         <div className="col-span-3 ml-8 px-8">
