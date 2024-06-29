@@ -1,5 +1,5 @@
 import * as Plot from "@observablehq/plot";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { countReturns, pmf } from "@/app/lib/market";
 
 export default function ReturnPlot({ returns, includePortfolio }) {

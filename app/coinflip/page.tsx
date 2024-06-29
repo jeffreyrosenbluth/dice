@@ -1,12 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, RadioGroup, Radio, Slider } from "@nextui-org/react";
+import {
+  Button,
+  RadioGroup,
+  Radio,
+  Slider,
+  Card,
+  CardHeader,
+  Divider,
+  CardBody,
+} from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
 import { addFlip, flip, Flip } from "@/app/lib/coin";
 import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
+import HTPlot from "@/app/ui/htplot";
 
 const initialFlips: Flip[] = [
   {
@@ -67,12 +77,12 @@ export default function Home() {
             onValueChange={(value) => setModel({ ...model, coinPlayHT: value })}
           >
             {" "}
-            <div className="flex space-x-8">
+            <div className="flex space-x-4">
               <Radio value="heads">
-                <span className="text-slate-200">Heads</span>
+                <span className="text-slate-200">Heads 60%</span>
               </Radio>
               <Radio value="tails">
-                <span className="text-slate-200">Tails</span>
+                <span className="text-slate-200">Tails 40%</span>
               </Radio>
             </div>
           </RadioGroup>
@@ -127,21 +137,37 @@ export default function Home() {
           <div className="flex flex-col text-blue-400 text-lg items-center">
             Balance: {balance.toFixed(2)}
           </div>
-          <div className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
-            <div>Heads {heads}</div>
-            <div>Tails {model.coinPlayFlips.length - heads - 1}</div>
-            <div>Flips {model.coinPlayFlips.length - 1}</div>
-          </div>
-          <div className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
-            <div>
-              <span>{`Probability of Heads  `} </span>
-              {((100 * heads) / (model.coinPlayFlips.length - 1)).toFixed(2)}%
+          <Card className="bg-zinc-800">
+            <CardHeader className="justify-center">Statistics</CardHeader>
+            <Divider />
+            <CardBody className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
+              <div className="text-red-500">Heads {heads}</div>
+              <div className="text-zinc-400">
+                Tails {model.coinPlayFlips.length - heads - 1}
+              </div>
+              <div>Flips {model.coinPlayFlips.length - 1}</div>
+            </CardBody>
+            <div className="flex flex-row text-slate-200 text-md px-3 justify-start">
+              <div>Heads</div>
+              <div className="ml-4">
+                {model.coinPlayFlips.length > 1
+                  ? `${(
+                      (100 * heads) /
+                      (model.coinPlayFlips.length - 1)
+                    ).toFixed(2)}%`
+                  : null}
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
         <div className="col-span-3 ml-8 px-8">
           {model.coinPlayFlips.length > 1 ? (
             <FlipPlot flips={model.coinPlayFlips} />
+          ) : null}
+          {model.coinPlayFlips.length > 1 ? (
+            <div className="mt-10">
+              <HTPlot flips={model.coinPlayFlips.slice(1)} />
+            </div>
           ) : null}
         </div>
       </div>

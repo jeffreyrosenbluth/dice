@@ -1,6 +1,6 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { mkFlipNs, Flip, FlipN } from "@/app/lib/coin";
 
 type FlipPlotProps = {
