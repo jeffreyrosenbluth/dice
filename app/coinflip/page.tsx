@@ -65,29 +65,27 @@ export default function Home() {
     model.coinPlayFlips.filter((f) => f.coin === "heads").length - 1;
 
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-slate-200">Coin Flipping Game</div>
-      <div className="grid gap-4 grid-cols-4 min-w-full">
-        <div className="flex flex-col gap-6 col-span-1 px-8">
+    <main className="flex min-h-screen flex-col space-y-24 mt-12">
+      <div className="flex flex-row justify-center text-4xl text-slate-200">
+        Coin Flipping Game
+      </div>
+      <div className="grid grid-cols-12">
+        <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-72">
           <RadioGroup
             className="flex gap-8"
             defaultValue="heads"
-            orientation="horizontal"
             value={model.coinPlayHT}
             onValueChange={(value) => setModel({ ...model, coinPlayHT: value })}
           >
-            {" "}
-            <div className="flex space-x-4">
-              <Radio value="heads">
-                <span className="text-slate-200">Heads 60%</span>
-              </Radio>
-              <Radio value="tails">
-                <span className="text-slate-200">Tails 40%</span>
-              </Radio>
-            </div>
+            <Radio classNames={{ label: "text-xs md:text-base" }} value="heads">
+              Heads (probability = 0.6)
+            </Radio>
+            <Radio classNames={{ label: "text-xs md:text-base" }} value="tails">
+              Tails (probability = 0.4)
+            </Radio>
           </RadioGroup>
           <div>
-            <p className="text-slate-200 mb-2">Bet Size</p>
+            <p className="text-sm md:text-base text-slate-200 mb-2">Bet Size</p>
             <CurrencyInput
               id="bet-input"
               name="bet-input"
@@ -103,7 +101,7 @@ export default function Home() {
                   coinPlayBet: Math.min(balance, values!.float || 0),
                 })
               }
-              className="w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
+              className="text-sm md:text-base w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
             />
             <Slider
               className="text-orange-400 pb-4"
@@ -117,16 +115,21 @@ export default function Home() {
               formatOptions={{ style: "percent" }}
             />
           </div>
-          <Button
-            className="py-2 mb-1 bg-blue-500"
-            onClick={handleFlip}
-            disabled={isFlipping}
-          >
-            Flip
-          </Button>
-          <Button className="py-2 mb-2 bg-blue-500" onClick={handleReset}>
-            Reset
-          </Button>
+          <div className="flex flex-row justify-evenly">
+            <Button
+              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+              onClick={handleFlip}
+              disabled={isFlipping}
+            >
+              Flip
+            </Button>
+            <Button
+              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
+          </div>
           <div className="px-8 brightness-90">
             <Coin
               isFlipping={isFlipping}
@@ -134,20 +137,22 @@ export default function Home() {
               onAnimationComplete={handleFlipComplete}
             />
           </div>
-          <div className="flex flex-col text-blue-400 text-lg items-center">
+          <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
             Balance: {balance.toFixed(2)}
           </div>
           <Card className="bg-zinc-800">
-            <CardHeader className="justify-center">Statistics</CardHeader>
+            <CardHeader className="text-sm md:text-base justify-center">
+              Statistics
+            </CardHeader>
             <Divider />
-            <CardBody className="flex flex-row text-slate-200 text-md gap-6 justify-stretch">
+            <CardBody className="flex flex-row text-slate-200 text-sm md:text-base gap-6 justify-stretch">
               <div className="text-red-500">Heads {heads}</div>
               <div className="text-zinc-400">
                 Tails {model.coinPlayFlips.length - heads - 1}
               </div>
               <div>Flips {model.coinPlayFlips.length - 1}</div>
             </CardBody>
-            <div className="flex flex-row text-slate-200 text-md px-3 justify-start">
+            <div className="flex flex-row text-slate-200 text-sm md:text-base px-3 justify-start">
               <div>Heads</div>
               <div className="ml-4">
                 {model.coinPlayFlips.length > 1
@@ -160,7 +165,7 @@ export default function Home() {
             </div>
           </Card>
         </div>
-        <div className="col-span-3 ml-8 px-8">
+        <div className="col-span-8 mx-8">
           {model.coinPlayFlips.length > 1 ? (
             <FlipPlot flips={model.coinPlayFlips} />
           ) : null}

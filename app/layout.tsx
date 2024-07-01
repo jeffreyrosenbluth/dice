@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html className="dark">
-      <body className="bg-slate-700 `${inter.className} antialiased`">
+      <body className="bg-slate-700 `${inter.className} antialiased ">
         <Navbar className="bg-slate-950 border-b border-gray-700">
           <NavbarContent className="hidden sm:flex gap-8">
             <NavbarItem>

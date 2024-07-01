@@ -13,7 +13,32 @@ export default function FlipPlot({ flips, className = "" }: FlipPlotProps) {
   const data = mkFlipNs(flips);
 
   const getTickValues = (data: FlipN[]): number[] => {
-    return data.map((d) => d.flip_num);
+    const d = data.filter((d) => d.key === "Kelly").map((d) => d.flip_num);
+    if (d.length > 320) {
+      return d.filter((_, i) => i % 9 === 0);
+    }
+    if (d.length > 280) {
+      return d.filter((_, i) => i % 8 === 0);
+    }
+    if (d.length > 240) {
+      return d.filter((_, i) => i % 7 === 0);
+    }
+    if (d.length > 200) {
+      return d.filter((_, i) => i % 6 === 0);
+    }
+    if (d.length > 160) {
+      return d.filter((_, i) => i % 5 === 0);
+    }
+    if (d.length > 120) {
+      return d.filter((_, i) => i % 4 === 0);
+    }
+    if (d.length > 80) {
+      return d.filter((_, i) => i % 3 === 0);
+    }
+    if (d.length > 40) {
+      return d.filter((_, i) => i % 2 === 0);
+    }
+    return d;
   };
 
   useEffect(() => {
