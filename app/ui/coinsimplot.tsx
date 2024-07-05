@@ -57,7 +57,7 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
               fill: "key",
               fillOpacity: 0.7,
             }
-          )
+          ) as any // don't know why typescript doesn't think fill is a proporty.
         ),
       ],
     });
