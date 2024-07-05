@@ -20,25 +20,19 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
 
   useEffect(() => {
     if (profits === undefined || containerRef.current === null) return;
-    const toPlotS = toPlot.toSorted();
-    const dom = toPlotS.map((s) => {
+    const series = toPlot.map((s) => {
       if (s === "player") {
         return `Constant ${betFraction}%`;
-      } else if (s === "constant") {
+      }
+      if (s === "constant") {
         return "Constant $20";
-      } else if (s === "kelly") {
+      }
+      if (s === "kelly") {
         return "Kelly";
       }
     });
-    const rng = toPlotS.map((s) => {
-      if (s === "player") {
-        return "#60a5fa";
-      } else if (s === "constant") {
-        return "#fb923c";
-      } else if (s === "kelly") {
-        return "white";
-      }
-    });
+    let data = profits.filter((b) => series.includes(b.key));
+
     const plot = Plot.plot({
       marginLeft: 40,
       marginTop: 50,
@@ -50,12 +44,12 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
       y: { tickFormat: (d) => d3.format(".0%")(d) },
       color: {
         legend: true,
-        domain: dom,
-        range: rng,
+        domain: [`Constant ${betFraction}%`, "Constant $20", "Kelly"],
+        range: ["#60a5fa", "#fb923c", "white"],
       },
       marks: [
         Plot.rectY(
-          profits.slice(),
+          data,
           Plot.binX(
             { y2: "proportion" },
             {
