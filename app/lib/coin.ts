@@ -17,15 +17,20 @@ export type FlipN = {
   value: number;
 };
 
-const BIAS = 0.6;
+export type Profit = {
+  key: string;
+  value: number;
+};
+
+export const BIAS = 0.6;
 const K1 = 0.1;
 const K2 = 20;
 const KELLY = 0.20833;
 
-export function flip(betOn: string): number {
+export function flip(betOn: string, bias: number): number {
   const ht = betOn === "heads" ? 1 : 0;
-  const bias = ht ? BIAS : 1 - BIAS;
-  return d3.randomBernoulli(bias)();
+  const b = ht ? bias : 1 - bias;
+  return d3.randomBernoulli(b)();
 }
 
 export function addFlip(
@@ -60,10 +65,42 @@ export function addFlip(
 export function mkFlipNs(flips: Flip[]): FlipN[] {
   let flipN = [];
   for (let f of flips) {
-    flipN.push({ flip_num: f.flip_num, key: "You", value: f.value });
+    flipN.push({ flip_num: f.flip_num, key: "Player", value: f.value });
     flipN.push({ flip_num: f.flip_num, key: "Constant 10%", value: f.value10 });
     flipN.push({ flip_num: f.flip_num, key: "Constant $20", value: f.value20 });
     flipN.push({ flip_num: f.flip_num, key: "Kelly", value: f.kelly });
   }
   return flipN;
+}
+
+function mkCoinBatch(n: number, bias: number, betFraction: number): Profit[] {
+  let c10p = 1;
+  let c20d = 1;
+  let kelly = 1;
+  const kellyFraction = (bias * 2 - 1) / (4 * (bias - bias * bias));
+  const bet = Math.trunc(betFraction * 100);
+  for (let i = 0; i < n; i++) {
+    const toss = flip("heads", bias);
+    c10p = toss ? (1 + betFraction) * c10p : c10p * (1 - betFraction);
+    c20d = c20d > 0 ? (toss ? c20d + K2 / 100 : c20d - K2 / 100) : 0;
+    kelly = toss ? kelly * (1 + kellyFraction) : kelly * (1 - kellyFraction);
+  }
+  return [
+    { key: `Constant ${bet}%`, value: Math.pow(c10p, 1 / n) - 1 },
+    { key: "Constant $20", value: Math.pow(Math.max(0, c20d), 1 / n) - 1 },
+    { key: "Kelly", value: Math.pow(kelly, 1 / n) - 1 },
+  ];
+}
+
+export function runCoinSim(
+  batchSize: number,
+  n: number,
+  bias: number,
+  betFraction: number
+): Profit[] {
+  let profit = [];
+  for (let i = 0; i < n; i++) {
+    profit.push(...mkCoinBatch(batchSize, bias, betFraction));
+  }
+  return profit;
 }

@@ -3,14 +3,22 @@
 import * as d3 from "d3";
 import Card from "@/app/ui/card";
 import React, { useState, useEffect, use } from "react";
-import { Slider, Button, Image } from "@nextui-org/react";
-import SimPlot from "@/app/ui/simplot";
+import {
+  Slider,
+  Button,
+  Image,
+  CheckboxGroup,
+  Checkbox,
+} from "@nextui-org/react";
+import CoinSimPlot from "@/app/ui/coinsimplot";
 import { useStateContext } from "@/app/ctx";
+import { Profit, runCoinSim } from "@/app/lib/coin";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
-  const sim: any = [];
+  const bias = model.coinSimSliders.biasSlider;
+  const kellyFraction = (bias * 2 - 1) / (4 * (bias - bias * bias));
 
   const handleYearsSlider = (value: number | number[]) => {
     setModel({
@@ -49,18 +57,75 @@ export default function Home() {
     });
   };
 
+  useEffect(() => {
+    if (!isCalculating) {
+      const averages = (profits: Profit[]) => {
+        const playerProfits = profits.filter(
+          (b) =>
+            b.key ===
+            `Constant ${Math.trunc(100 * model.coinSimSliders.betSlider)}%`
+        );
+        const constantProfits = profits.filter((b) => b.key === "Constant $20");
+        const kellyProfits = profits.filter((b) => b.key === "Kelly");
+        const avgPlayer = d3.mean(playerProfits.map((b) => b.value))!;
+        const avgConstant = d3.mean(constantProfits.map((b) => b.value))!;
+        const avgKelly = d3.mean(kellyProfits.map((b) => b.value))!;
+        const medianPlayer = d3.median(playerProfits.map((b) => b.value))!;
+        const medianConstant = d3.median(constantProfits.map((b) => b.value))!;
+        const medianKelly = d3.median(kellyProfits.map((b) => b.value))!;
+        return [
+          {
+            player: avgPlayer,
+            constant: avgConstant,
+            kelly: avgKelly,
+          },
+          {
+            player: medianPlayer,
+            constant: medianConstant,
+            kelly: medianKelly,
+          },
+        ];
+      };
+      const [avg, median] = averages(model.coinSim);
+      setModel({
+        ...model,
+        coinAvgReturns: avg,
+        coinMedianReturns: median,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCalculating, model.coinSimSliders.samplesSlider, model.coinSim]);
+
+  function go() {
+    setIsCalculating(true);
+    setModel({
+      ...model,
+      coinSim: runCoinSim(
+        model.coinSimSliders.yearsSlider,
+        model.coinSimSliders.samplesSlider,
+        model.coinSimSliders.biasSlider,
+        model.coinSimSliders.betSlider
+      ),
+    });
+    setIsCalculating(false);
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-slate-200">Coin Flip Simulation</div>
-      <div className="grid gap-4 grid-cols-9 min-w-full">
-        <div className="flex flex-col gap-4 col-span-2 px-8">
-          <Button className="py-4 mb-2 bg-blue-500">Run</Button>
+    <main className="flex min-h-screen flex-col space-y-24 mt-12">
+      <div className=" flex flex-row justify-center text-3xl text-slate-200">
+        Coin Simulation
+      </div>
+      <div className="grid gap-4 grid-cols-9">
+        <div className="flex flex-col gap-4 col-span-2 px-8 md:min-w-56">
+          <Button className="py-4 mb-2 bg-blue-500" onClick={go}>
+            Run
+          </Button>
           <Slider
             className="pb-4"
-            label="Years per Simulation"
+            label="Flips"
             value={model.coinSimSliders.yearsSlider}
             minValue={1}
-            maxValue={50}
+            maxValue={100}
             step={1}
             hideThumb={true}
             onChange={handleYearsSlider}
@@ -93,7 +158,7 @@ export default function Home() {
             className="text-slate-200 pb-4"
             label="Heads Probability"
             value={model.coinSimSliders.biasSlider}
-            minValue={0}
+            minValue={0.5}
             maxValue={1}
             step={0.01}
             formatOptions={{ style: "percent" }}
@@ -101,50 +166,73 @@ export default function Home() {
             defaultValue={0.5}
             onChange={handleBiasSlider}
           />
+          <CheckboxGroup
+            label="Plot"
+            value={model.coinSimBoxes}
+            onValueChange={(value) =>
+              setModel({ ...model, coinSimBoxes: value })
+            }
+          >
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm" }}
+              value="player"
+            >
+              {`Constant ${Math.trunc(100 * model.coinSimSliders.betSlider)}%`}
+            </Checkbox>
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm" }}
+              value="constant"
+            >
+              Constant $20
+            </Checkbox>
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm" }}
+              value="kelly"
+            >
+              {`Kelly ${Math.round(10000 * kellyFraction) / 100}%`}
+            </Checkbox>
+          </CheckboxGroup>
         </div>
         <div className="col-span-5 ml-12">
-          {sim.length > 1 && !isCalculating ? (
-            <SimPlot data={sim} />
+          {model.coinSim.length > 1 && !isCalculating ? (
+            <CoinSimPlot
+              profits={model.coinSim}
+              betFraction={Math.trunc(100 * model.coinSimSliders.betSlider)}
+              toPlot={model.coinSimBoxes}
+            />
           ) : (
-            <div className="text-9xl flex justify-center mt-24 mr-24">
+            <div className="text-9xl flex justify-center mt-24 mr-8">
               <Image src="/heads.png" alt="Heads" width={250} />
             </div>
           )}
         </div>
-        {sim.length > 1 && !isCalculating ? (
+        {model.coinSim.length > 1 && !isCalculating ? (
           <div className="col-span-2  flex  flex-col gap-1 text-sm">
             <Card className="text-blue-400 bg-inherit">
-              <p>Arithmetic Mean Return: {d3.format("10.2%")(0.07)}</p>
               <p>
-                {/* Geometric Mean Return: {d3.format("10.2%")(avgReturns.stock)} */}
+                Mean Return: {d3.format("10.2%")(model.coinAvgReturns.player)}
               </p>
               <p>
-                {/* Volatility Drag: {d3.format("10.2%")(0.07 - avgReturns.stock)} */}
+                Median Return:
+                {d3.format("10.2%")(model.coinMedianReturns.player)}
               </p>
-              <p>Volatility Drag Estimate: {d3.format("10.2%")(0.019)}</p>
             </Card>
             <Card className="text-orange-400 bg-inherit">
-              <p>Arithmetic Mean Return: {d3.format("10.2%")(0.708)}</p>
               <p>
-                {/* Geometric Mean Return: {d3.format("10.2%")(avgReturns.venture)} */}
+                Mean Return: {d3.format("10.2%")(model.coinAvgReturns.constant)}
               </p>
               <p>
-                Volatility Drag:{" "}
-                {/* {d3.format("10.2%")(0.708 - avgReturns.venture)} */}
+                Median Return:
+                {d3.format("10.2%")(model.coinMedianReturns.constant)}
               </p>
-              <p>Volatility Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
             </Card>
             <Card className="text-white bg-inherit">
               <p>
-                {/* Arithmetic Mean Return: {d3.format("10.2%")(portfolioReturn)} */}
+                Mean Return: {d3.format("10.2%")(model.coinAvgReturns.kelly)}
               </p>
               <p>
-                Geometric Mean Return:{" "}
-                {/* {d3.format("10.2%")(avgReturns.portfolio)} */}
-              </p>
-              <p>
-                Volatility Drag:{" "}
-                {/* {d3.format("10.2%")(portfolioReturn - avgReturns.portfolio)} */}
+                Median Return:
+                {d3.format("10.2%")(model.coinMedianReturns.kelly)}
               </p>
             </Card>
           </div>

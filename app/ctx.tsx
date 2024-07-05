@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Assets, AssetFrame } from "@/app/lib/market";
-import { Flip } from "@/app/lib/coin";
+import { Flip, Profit } from "@/app/lib/coin";
 
 const initialFlips: Flip[] = [
   {
@@ -24,10 +24,14 @@ type Model = {
   diceAvgReturns: { stock: number; venture: number; portfolio: number };
   diceSim: AssetFrame;
   coinSimSliders: { [key: string]: number };
+  coinSimBoxes: string[];
   coinPlayFlips: Flip[];
   coinPlayBet: number;
   coinPlayHT: string;
   coinPlayFlipResult: number;
+  coinSim: Profit[];
+  coinAvgReturns: { player: number; constant: number; kelly: number };
+  coinMedianReturns: { player: number; constant: number; kelly: number };
 };
 
 interface StateContextProps {
@@ -55,12 +59,16 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       yearsSlider: 20,
       samplesSlider: 1000,
       biasSlider: 0.6,
-      betSlider: 0.15,
+      betSlider: 0.1,
     },
     coinPlayFlips: initialFlips,
     coinPlayBet: 15,
     coinPlayHT: "heads",
     coinPlayFlipResult: 0,
+    coinSim: [],
+    coinAvgReturns: { player: 0, constant: 0, kelly: 0 },
+    coinMedianReturns: { player: 0, constant: 0, kelly: 0 },
+    coinSimBoxes: ["player", "constant", "kelly"],
   });
 
   return (

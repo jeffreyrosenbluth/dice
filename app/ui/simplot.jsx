@@ -15,12 +15,13 @@ export default function SimPlot({ data }) {
                 label: "Return",
                 tickFormat: (d) => d3.format(".0%")(d),
             },
+            y: { tickFormat: (d) => d3.format(".0%")(d) },
             color: {
                 domain: ["stock", "venture", "portfolio"],
                 range: ["#60a5fa", "#fb923c", "white"],
             },
             marks: [
-                Plot.rectY(data.slice(), Plot.binX({ y2: "count" }, { x: "value", fill: "key", fillOpacity: 0.75 })),
+                Plot.rectY(data.slice(), Plot.binX({ y2: "proportion" }, { x: "value", fill: "key", fillOpacity: 0.75 })),
             ]
         });
         containerRef.current.append(plot);

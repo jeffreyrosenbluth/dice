@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip, Flip } from "@/app/lib/coin";
+import { addFlip, flip, Flip, BIAS } from "@/app/lib/coin";
 import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
@@ -36,7 +36,7 @@ export default function Home() {
   const handleFlip = () => {
     if (!isFlipping) {
       setIsFlipping(true);
-      setModel({ ...model, coinPlayFlipResult: flip(model.coinPlayHT) });
+      setModel({ ...model, coinPlayFlipResult: flip(model.coinPlayHT, BIAS) });
     }
   };
 
@@ -66,7 +66,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col space-y-24 mt-12">
-      <div className="flex flex-row justify-center text-4xl text-slate-200">
+      <div className="flex flex-row justify-center text-3xl text-slate-200">
         Coin Flipping Game
       </div>
       <div className="grid grid-cols-12">
@@ -145,14 +145,14 @@ export default function Home() {
               Statistics
             </CardHeader>
             <Divider />
-            <CardBody className="flex flex-row text-slate-200 text-sm md:text-base gap-6 justify-stretch">
+            <CardBody className="flex flex-row text-slate-200 text-xs md:text-sm gap-6 justify-stretch">
               <div className="text-red-500">Heads {heads}</div>
               <div className="text-zinc-400">
                 Tails {model.coinPlayFlips.length - heads - 1}
               </div>
               <div>Flips {model.coinPlayFlips.length - 1}</div>
             </CardBody>
-            <div className="flex flex-row text-slate-200 text-sm md:text-base px-3 justify-start">
+            <div className="flex flex-row text-slate-200 text-xs md:text-sm px-3 justify-start">
               <div>Heads</div>
               <div className="ml-4">
                 {model.coinPlayFlips.length > 1

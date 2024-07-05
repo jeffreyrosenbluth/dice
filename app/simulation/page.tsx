@@ -99,18 +99,18 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-24 mt-12">
-      <div className="text-4xl text-slate-200">
-        Risk and Return Dice Simulation
+    <main className="flex min-h-screen flex-col space-y-24 mt-12">
+      <div className="flex flex-row justify-center text-3xl text-slate-200">
+        Dice Simulation
       </div>
-      <div className="grid gap-4 grid-cols-9 min-w-full">
-        <div className="flex flex-col gap-4 col-span-2 px-8">
+      <div className="grid gap-4 grid-cols-9">
+        <div className="flex flex-col gap-4 col-span-2 px-8 max-w-56 md:min-w-56">
           <Button className="py-4 mb-2 bg-blue-500" onClick={go}>
             Run
           </Button>
           <Slider
             className="pb-4"
-            label="Years per Simulation"
+            label="Rolls"
             value={model.diceSimSliders.yearsSlider}
             minValue={1}
             maxValue={50}
@@ -169,37 +169,37 @@ export default function Home() {
           )}
         </div>
         {model.diceSim.length > 1 && !isCalculating ? (
-          <div className="col-span-2  flex  flex-col gap-1 text-sm">
+          <div className="col-span-2 flex flex-col gap-1 text-xs lg:text-sm">
+            <div className="flex flex-row text-base px-4 font-semibold text-slate-200">
+              Returns
+            </div>
             <Card className="text-blue-400 bg-inherit">
-              <p>Arithmetic Mean Return: {d3.format("10.2%")(0.07)}</p>
+              <p>Arithmetic Mean: {d3.format("10.2%")(0.07)}</p>
               <p>
-                Geometric Mean Return:{" "}
-                {d3.format("10.2%")(model.diceAvgReturns.stock)}
+                Geometric Mean: {d3.format("10.2%")(model.diceAvgReturns.stock)}
               </p>
               <p>
                 Volatility Drag:{" "}
                 {d3.format("10.2%")(0.07 - model.diceAvgReturns.stock)}
               </p>
-              <p>Volatility Drag Estimate: {d3.format("10.2%")(0.019)}</p>
+              <p>Drag Estimate: {d3.format("10.2%")(0.019)}</p>
             </Card>
             <Card className="text-orange-400 bg-inherit">
-              <p>Arithmetic Mean Return: {d3.format("10.2%")(0.708)}</p>
+              <p>Arithmetic Mean: {d3.format("10.2%")(0.708)}</p>
               <p>
-                Geometric Mean Return:{" "}
+                Geometric Mean:{" "}
                 {d3.format("10.2%")(model.diceAvgReturns.venture)}
               </p>
               <p>
                 Volatility Drag:{" "}
                 {d3.format("10.2%")(0.708 - model.diceAvgReturns.venture)}
               </p>
-              <p>Volatility Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
+              <p>Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
             </Card>
             <Card className="text-white bg-inherit">
+              <p>Arithmetic Mean: {d3.format("10.2%")(portfolioReturn)}</p>
               <p>
-                Arithmetic Mean Return: {d3.format("10.2%")(portfolioReturn)}
-              </p>
-              <p>
-                Geometric Mean Return:{" "}
+                Geometric Mean:{" "}
                 {d3.format("10.2%")(model.diceAvgReturns.portfolio)}
               </p>
               <p>
