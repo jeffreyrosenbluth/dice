@@ -65,9 +65,12 @@ export default function Home() {
     model.coinPlayFlips.filter((f) => f.coin === "heads").length - 1;
 
   return (
-    <main className="flex min-h-screen flex-col space-y-24 mt-12">
+    <main className="flex min-h-screen flex-col space-y-6 mt-12">
       <div className="flex flex-row justify-center text-3xl text-slate-200">
         Coin Flipping Game
+      </div>
+      <div className="flex flex-row justify-center text-slate-200">
+        Starting Balance: $100
       </div>
       <div className="grid grid-cols-12">
         <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-72">

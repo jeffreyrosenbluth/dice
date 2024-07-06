@@ -4,29 +4,22 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center mt-12 px-48">
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 mb-6 text-center">
-        A Simulation of Investment Risk and Return
+        A Dice Rolling Investment Game
       </div>
-      <div className="relative flex place-items-center mb-8">
-        <p className="text-justify">
-          Both students practioners of finance often have a hard time making the
-          connection between variance and risk. In this simulation, which is
-          based on the work of Foster and Stine, players roll virtual dice that
-          simulate the returns of three investments. The three investments
-          behave very differently: one is like a risk free money market
-          instrument, the second is like the S&P 500,, and the third is like
-          venture capital or perhaps even a meme stock. As the simulation
-          proceeds, some have great success with this last investment, they
-          accumulate far greater wealth than the majority of players. For most
-          players, however, this last investment leads to ruin because of its
-          volatility - the so called
-          <em> Variance Drain</em>. The stark difference in outcomes often
-          surprises players who discover how hard it is to separate luck from
-          skill. The simulation also demonstrates how combining assets in
-          portfolios reduces he risk (variance). Players discover that a mixture
-          of two poor investments emerges as a surprising performer. After this
-          experience, our players often begin to associate financial volatility
-        </p>
-      </div>
+      In this simulation, players bet on the flip of a biased coin to understand
+      optimal bet sizing. Inspired by a study from Victor Haghani and Richard
+      Dewey, participants start with $25 and have 30 minutes to place bets on a
+      coin with a 60% chance of landing heads. They can wager any amount on each
+      flip and keep their earnings, up to a maximum payout. Despite the
+      favorable odds, many players struggle with bet sizing, revealing common
+      behavioral biases and sub-optimal strategies. The optimal approach, based
+      on the Kelly criterion, suggests betting 20% of one's wealth on each flip.
+      This strategy maximizes the growth rate of wealth by balancing risk and
+      reward. However, most players deviate, leading to erratic betting patterns
+      and poor outcomes. Through this simulation, players learn about risk
+      management and the importance of consistent, proportional betting. They
+      experience firsthand the challenges of maintaining discipline and the
+      pitfalls of emotional decision-making in investment scenarios.
       <div className="flex place-items-center"></div>
       <div className="text-2xl font-bold text-slate-200">Risk and Return</div>
       <div className="overflow-x-auto">

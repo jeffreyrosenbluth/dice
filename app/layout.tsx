@@ -90,13 +90,18 @@ export default function RootLayout({
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem>
-                    <Link href="/coinflip" className="w-full h-full block">
+                    <Link href="/coinplay" className="w-full h-full block">
                       Game
                     </Link>
                   </DropdownItem>
                   <DropdownItem>
                     <Link href="/coinsim" className="w-full h-full block">
                       Simulation
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link href="/coinabout" className="w-full h-full block">
+                      About
                     </Link>
                   </DropdownItem>
                 </DropdownMenu>
@@ -117,17 +122,17 @@ export default function RootLayout({
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem>
-                    <Link href="/play" className="w-full h-full block">
+                    <Link href="/diceplay" className="w-full h-full block">
                       Game
                     </Link>
                   </DropdownItem>
                   <DropdownItem>
-                    <Link href="/simulation" className="w-full h-full block">
+                    <Link href="/dicesim" className="w-full h-full block">
                       Simulation
                     </Link>
                   </DropdownItem>
                   <DropdownItem>
-                    <Link href="/about" className="w-full h-full block">
+                    <Link href="/diceabout" className="w-full h-full block">
                       About
                     </Link>
                   </DropdownItem>
