@@ -71,7 +71,7 @@ export default function RootLayout({
         <Navbar className="bg-slate-950 border-b border-gray-700">
           <NavbarBrand>
             <Link href="/" className="text-2xl">
-              🎲
+              ELF 🎲
             </Link>
           </NavbarBrand>
           <NavbarContent className="hidden sm:flex gap-8">
