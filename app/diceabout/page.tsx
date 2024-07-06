@@ -6,20 +6,37 @@ export default function Home() {
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 mb-6 text-center">
         A Dice Rolling Investment Game
       </div>
-      In this simulation, players bet on the flip of a biased coin to understand
-      optimal bet sizing. Inspired by a study from Victor Haghani and Richard
-      Dewey, participants start with $25 and have 30 minutes to place bets on a
-      coin with a 60% chance of landing heads. They can wager any amount on each
-      flip and keep their earnings, up to a maximum payout. Despite the
-      favorable odds, many players struggle with bet sizing, revealing common
-      behavioral biases and sub-optimal strategies. The optimal approach, based
-      on the Kelly criterion, suggests betting 20% of one's wealth on each flip.
-      This strategy maximizes the growth rate of wealth by balancing risk and
-      reward. However, most players deviate, leading to erratic betting patterns
-      and poor outcomes. Through this simulation, players learn about risk
-      management and the importance of consistent, proportional betting. They
-      experience firsthand the challenges of maintaining discipline and the
-      pitfalls of emotional decision-making in investment scenarios.
+      <div className="relative flex place-items-center mb-8">
+        <p className="text-justify">
+          Many students and practitioners of finance struggle to connect the
+          concepts of variance and risk. This simulation, inspired by the work
+          of Foster and Stine, aims to bridge that gap. In the game, players
+          roll virtual dice representing the returns of three distinct types of
+          investments: a risk-free money market instrument, the S&P 500, and a
+          high-risk option like venture capital or meme stocks.
+          <br />
+          <br />
+          Each investment behaves differently, illustrating real-world financial
+          scenarios. As the simulation progresses, some players may experience
+          remarkable success with the high-risk investment, accumulating
+          significantly more wealth than their peers. However, the majority will
+          encounter financial ruin due to the {"investment's"} extreme
+          volatility—a phenomenon known as the {'"Variance Drain"'}.
+          <br />
+          <br />
+          This stark contrast in outcomes often surprises players, highlighting
+          the difficulty in distinguishing luck from skill in investment
+          performance. Additionally, the simulation demonstrates how
+          diversifying assets within a portfolio can reduce overall risk
+          (variance). Players discover that combining two poor investments can
+          unexpectedly result in a robust portfolio performance.
+          <br />
+          <br />
+          By the end of the simulation, players gain a deeper understanding of
+          financial volatility and the importance of diversification in managing
+          investment risk.
+        </p>
+      </div>
       <div className="flex place-items-center"></div>
       <div className="text-2xl font-bold text-slate-200">Risk and Return</div>
       <div className="overflow-x-auto">
