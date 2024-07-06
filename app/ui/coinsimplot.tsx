@@ -56,14 +56,15 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
               x: "value",
               fill: "key",
               fillOpacity: 0.7,
+              thresholds: 100,
             }
-          ) as any // don't know why typescript doesn't think fill is a proporty.
+          ) as any // don't know why typescript doesn't think fill is a property.
         ),
       ],
     });
     containerRef.current.append(plot);
     return () => plot.remove();
-  }, [profits]);
+  }, [profits, toPlot]);
   return <div className={className} ref={containerRef} />;
 };
 

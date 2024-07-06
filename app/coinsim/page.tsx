@@ -57,6 +57,10 @@ export default function Home() {
     });
   };
 
+  const handleCheckbox = (value: string[]) => {
+    setModel({ ...model, coinSimBoxes: value });
+  };
+
   useEffect(() => {
     if (!isCalculating) {
       const averages = (profits: Profit[]) => {
@@ -169,9 +173,7 @@ export default function Home() {
           <CheckboxGroup
             label="Plot"
             value={model.coinSimBoxes}
-            onValueChange={(value) =>
-              setModel({ ...model, coinSimBoxes: value })
-            }
+            onValueChange={handleCheckbox}
           >
             <Checkbox
               classNames={{ label: "text-xs md:text-sm" }}
