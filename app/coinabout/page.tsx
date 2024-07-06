@@ -27,8 +27,10 @@ export default function Home() {
         firsthand the challenges of maintaining discipline and the pitfalls of
         emotional decision-making in investment scenarios.
       </div>
+      <br />
+      <hr className="w-full border-t-2 border-slate-400" />
       <Link
-        className="text-blue-300 mt-12"
+        className="text-blue-300 mt-6"
         href="https://elmwealth.com/lessons-from-betting-on-a-biased-coin-cool-heads-and-cautionary-tales/"
       >
         Based on:{" "}

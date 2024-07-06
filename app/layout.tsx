@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   Button,
   NavbarBrand,
+  Image,
 } from "@nextui-org/react";
 import Footer from "@/app/ui/footer";
 import { StateProvider } from "@/app/ctx";
@@ -70,8 +71,16 @@ export default function RootLayout({
       <body className="bg-slate-700 `${inter.className} antialiased ">
         <Navbar className="bg-slate-950 border-b border-gray-700">
           <NavbarBrand>
-            <Link href="/" className="text-2xl">
-              ELF 🎲
+            <Link href="/" className="text-xl">
+              <div className="flex flex-row items-center gap-2">
+                <Image
+                  src="/elf.svg"
+                  alt="Elf"
+                  width={32}
+                  className="filter invert"
+                />
+                ELF
+              </div>
             </Link>
           </NavbarBrand>
           <NavbarContent className="hidden sm:flex gap-8">

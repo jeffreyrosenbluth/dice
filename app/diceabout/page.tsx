@@ -220,8 +220,10 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <br />
+      <hr className="w-full border-t-2 border-slate-300" />
       <Link
-        className="text-blue-300 mt-12"
+        className="text-blue-300 mt-4 mb-12 "
         href="http://deanfoster.net/research/being_warren_buffett.pdf"
       >
         Based on:{" "}
