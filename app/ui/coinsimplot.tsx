@@ -41,7 +41,6 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
         label: "Return",
         tickFormat: (d) => d3.format(".0%")(d),
       },
-      y: { tickFormat: (d) => d3.format(".0%")(d) },
       color: {
         legend: true,
         domain: [`Constant ${betFraction}%`, "Constant $20", "Kelly"],
@@ -51,7 +50,7 @@ const CoinSimPlot: React.FC<CoinSimPlotProps> = ({
         Plot.rectY(
           data,
           Plot.binX(
-            { y2: "proportion" },
+            { y2: "count" },
             {
               x: "value",
               fill: "key",
