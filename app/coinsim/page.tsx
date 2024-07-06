@@ -115,9 +115,12 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col space-y-24 mt-12">
-      <div className=" flex flex-row justify-center text-3xl text-slate-200">
+    <main className="flex min-h-screen flex-col space-y-6 mt-12">
+      <div className="flex flex-row justify-center text-3xl text-slate-200">
         Coin Simulation
+      </div>
+      <div className="flex flex-row justify-center text-slate-200">
+        Starting Balance: $100
       </div>
       <div className="grid gap-4 grid-cols-9">
         <div className="flex flex-col gap-4 col-span-2 px-8 md:min-w-56">
@@ -125,7 +128,7 @@ export default function Home() {
             Run
           </Button>
           <Slider
-            className="pb-4"
+            className="pb-1"
             label="Flips"
             value={model.coinSimSliders.yearsSlider}
             minValue={1}
@@ -136,7 +139,7 @@ export default function Home() {
             defaultValue={20}
           />
           <Slider
-            className="pb-4"
+            className="pb-1"
             label="Samples"
             value={model.coinSimSliders.samplesSlider}
             minValue={100}
@@ -147,7 +150,7 @@ export default function Home() {
             defaultValue={1000}
           />
           <Slider
-            className="text-slate-200 pb-4"
+            className="text-slate-200 pb-1"
             label="Bet Size"
             value={model.coinSimSliders.betSlider}
             minValue={0}
@@ -171,6 +174,7 @@ export default function Home() {
             onChange={handleBiasSlider}
           />
           <CheckboxGroup
+            className="border border-dotted border-gray-400 p-2"
             label="Plot"
             value={model.coinSimBoxes}
             onValueChange={handleCheckbox}
