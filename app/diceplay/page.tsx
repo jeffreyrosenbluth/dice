@@ -2,9 +2,10 @@
 
 import WealthPlot from "@/app/ui/wealthplot";
 import ReturnPlot from "@/app/ui/returnplot";
+import Die from "@/app/ui/die";
 import Card from "@/app/ui/card";
 import { Slider, Button, Switch } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
 import { addRoll, Assets } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
@@ -13,13 +14,21 @@ const initialWealth = [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }];
 const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
 
 export default function Home() {
+  const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
 
   const cashPercent =
     1 -
     (model.dicePlaySliders.stockSlider + model.dicePlaySliders.ventureSlider);
 
+  const handleRoll = () => {
+    if (!isRolling) {
+      setIsRolling(true);
+    }
+  };
+
   const roll = () => {
+    setIsRolling(false);
     const [w, r] = addRoll(
       {
         stock: model.dicePlaySliders.stockSlider,
@@ -79,12 +88,19 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-9">
         <div className="flex flex-col gap-4 col-span-2 px-8 max-w-56 md:min-w-56">
-          <Button className="py-4 mb-2 bg-blue-500" onClick={roll}>
+          <Button
+            className="py-4 mb-2 bg-blue-500"
+            onClick={handleRoll}
+            disabled={isRolling}
+          >
             Roll
           </Button>
           <Button className="py-4 mb-4 bg-blue-500" onClick={reset}>
             Reset
           </Button>
+          <div className="flex flex-col items-center">
+            <Die isRolling={isRolling} onAnimationComplete={roll} />
+          </div>
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
               label="S&P 500"
@@ -134,9 +150,7 @@ export default function Home() {
                 includePortfolio={model.includePortfolio}
               />{" "}
             </div>
-          ) : (
-            <div className="text-9xl flex justify-center mt-24 mr-24">🎲</div>
-          )}
+          ) : null}
         </div>
         <div className="col-span-2 flex flex-col gap-1 px-4 text-sm lg:text-base">
           <Card className="text-blue-400 bg-inherit">
