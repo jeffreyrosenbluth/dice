@@ -28,6 +28,7 @@ const WealthPlot: React.FC<WealthPlotProps> = ({
         ticks: Math.min(Math.trunc(data.length / n), 20),
         label: "Years",
         insetLeft: 50,
+        tickFormat: (d) => d.toFixed(0),
       },
       y: { label: null },
       color: {

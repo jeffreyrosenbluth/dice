@@ -25,7 +25,7 @@ export type Profit = {
 export const BIAS = 0.6;
 const K1 = 0.1;
 const K2 = 20;
-const KELLY = 0.20833;
+const KELLY = 0.2;
 
 export function flip(betOn: string, bias: number): number {
   const ht = betOn === "heads" ? 1 : 0;
@@ -77,7 +77,7 @@ function mkCoinBatch(n: number, bias: number, betFraction: number): Profit[] {
   let c10p = 1;
   let c20d = 1;
   let kelly = 1;
-  const kellyFraction = (bias * 2 - 1) / (4 * (bias - bias * bias));
+  const kellyFraction = bias * 2 - 1;
   const bet = Math.trunc(betFraction * 100);
   for (let i = 0; i < n; i++) {
     const toss = flip("heads", bias);

@@ -18,7 +18,7 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const bias = model.coinSimSliders.biasSlider;
-  const kellyFraction = (bias * 2 - 1) / (4 * (bias - bias * bias));
+  const kellyFraction = bias * 2 - 1;
 
   const handleYearsSlider = (value: number | number[]) => {
     setModel({
