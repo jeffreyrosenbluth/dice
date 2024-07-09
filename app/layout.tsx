@@ -73,12 +73,7 @@ export default function RootLayout({
           <NavbarBrand>
             <Link href="/" className="text-xl">
               <div className="flex flex-row items-center gap-2">
-                <Image
-                  src="/elf.svg"
-                  alt="Elf"
-                  width={32}
-                  className="filter invert"
-                />
+                <Image src="/elf.svg" alt="Elf" width={32} className="invert" />
                 ELF
               </div>
             </Link>

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center mt-12 px-48">
+    <main className="flex min-h-screen max-w-5xl flex-col items-center mt-12 px-48">
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 mb-6 text-center">
         A Coin Flipping Investment Game
       </div>
