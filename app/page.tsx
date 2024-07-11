@@ -1,12 +1,33 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Image } from "@nextui-org/react";
+
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const refresh = searchParams.get("refresh");
+    if (refresh === "true") {
+      // Remove the refresh parameter from the URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete("refresh");
+      router.replace(newUrl.toString());
+
+      // Force a re-render of the entire app
+      window.location.reload();
+    }
+  }, [searchParams, router]);
+
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
         Experiments for Learning Finance
       </div>
       <div className="flex flex-col place-items-center">
-        <Image src="/elf.svg" alt="Elf" width={96} className="invert" />
+        <Image src="/elf_blue.svg" alt="Elf" width={96} />
         <ul className="list-disc max-w-2xl">
           <li className="py-4">
             <div className="text-xl mb-2 ">Coin Flip Game</div>
