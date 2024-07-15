@@ -27,7 +27,7 @@ const K1 = 0.1;
 const K2 = 20;
 const KELLY = 0.2;
 
-export function flip(betOn: string, bias: number): number {
+export function flip(betOn: Face, bias: number): number {
   const ht = betOn === "heads" ? 1 : 0;
   const b = ht ? bias : 1 - bias;
   return d3.randomBernoulli(b)();
@@ -36,11 +36,12 @@ export function flip(betOn: string, bias: number): number {
 export function addFlip(
   flips: Flip[],
   bet: number,
-  flipResult: number
+  flipResult: number,
+  betOn: Face
 ): Flip[] {
   let flip = flips[flips.length - 1];
-  const v =
-    flip.value > 0 ? (flipResult ? flip.value + bet : flip.value - bet) : 0;
+  const b = betOn === "heads" ? bet : -bet;
+  const v = flip.value > 0 ? (flipResult ? flip.value + b : flip.value - b) : 0;
   const v1 = flipResult
     ? flip.value10 + flip.value10 * K1
     : flip.value10 - flip.value10 * K1;
