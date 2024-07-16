@@ -5,12 +5,20 @@ import { mkFlipNs, Flip, FlipN } from "@/app/lib/coin";
 
 type FlipPlotProps = {
   flips: Flip[];
+  completed: boolean;
   className?: string;
 };
 
-export default function FlipPlot({ flips, className = "" }: FlipPlotProps) {
+export default function FlipPlot({
+  flips,
+  completed,
+  className = "",
+}: FlipPlotProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const data = mkFlipNs(flips);
+  const data = mkFlipNs(flips, completed);
+  const domain = completed
+    ? ["Player", "Constant 10%", "Constant $20", "Kelly"]
+    : ["Player"];
 
   const getTickValues = (data: FlipN[]): number[] => {
     const d = data.filter((d) => d.key === "Kelly").map((d) => d.flip_num);
@@ -58,7 +66,7 @@ export default function FlipPlot({ flips, className = "" }: FlipPlotProps) {
       color: {
         legend: true,
         label: "Label Text",
-        domain: ["Player", "Constant 10%", "Constant $20", "Kelly"],
+        domain: domain,
         range: ["#60a5fa", "#fb923c", "#4ade80", "white"],
       },
       marks: [

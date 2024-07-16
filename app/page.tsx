@@ -39,6 +39,23 @@ export default function Home() {
           </li>
           <li className="py-4">
             <div className="text-xl mb-2">Dice Roll Game</div>
+            <p>
+              In this game, you will start with $100 and roll 3 dice. Each die
+              is calibrated to represent a different investment, one the S&P
+              500, one a venture capital investment, and one a money market
+              investment. You will also create a portfolio of these investments
+              with up to 2x levearge in the stock and venture investments. The
+              app will keep track of cummulative balance for each investment and
+              the portfolio and plot the results. It will also plot the
+              histograms of each investment compared to its trure probability
+              distrtibution.
+              <br />
+              <br />
+              The dice roll game should be played before running any dice roll
+              simulations or reading the about section of the Dice Rolling tab.
+              That way you will be able to play the game without being biased by
+              knowing the optimal strategy.
+            </p>
           </li>
           <li className="py-4">
             <div className="text-xl mb-2">Dice Roll Simulation</div>

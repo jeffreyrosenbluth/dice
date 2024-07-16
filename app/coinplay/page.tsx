@@ -133,10 +133,18 @@ export default function Home() {
           </div>
           <div className="flex flex-row justify-evenly">
             <Button
-              className={clsx("text-sm md:text-base py-2 mb-1 bg-blue-500", {
-                "opacity-50 cursor-not-allowed":
-                  selected === undefined || model.coinPlayBet === 0,
-              })}
+              className={clsx(
+                "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                {
+                  "opacity-50 ":
+                    selected === undefined || model.coinPlayBet === 0,
+                },
+                {
+                  "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                    selected === undefined || model.coinPlayBet === 0,
+                },
+                "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+              )}
               onClick={handleFlip}
               disabled={
                 isFlipping || selected === undefined || model.coinPlayBet === 0
@@ -188,7 +196,7 @@ export default function Home() {
         </div>
         <div className="col-span-8 mx-8">
           {model.coinPlayFlips.length > 1 ? (
-            <FlipPlot flips={model.coinPlayFlips} />
+            <FlipPlot flips={model.coinPlayFlips} completed={false} />
           ) : null}
           {model.coinPlayFlips.length > 1 ? (
             <div className="mt-10">

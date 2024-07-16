@@ -63,13 +63,23 @@ export function addFlip(
   ];
 }
 
-export function mkFlipNs(flips: Flip[]): FlipN[] {
+export function mkFlipNs(flips: Flip[], gameCompleted: boolean): FlipN[] {
   let flipN = [];
   for (let f of flips) {
     flipN.push({ flip_num: f.flip_num, key: "Player", value: f.value });
-    flipN.push({ flip_num: f.flip_num, key: "Constant 10%", value: f.value10 });
-    flipN.push({ flip_num: f.flip_num, key: "Constant $20", value: f.value20 });
-    flipN.push({ flip_num: f.flip_num, key: "Kelly", value: f.kelly });
+    if (gameCompleted) {
+      flipN.push({
+        flip_num: f.flip_num,
+        key: "Constant 10%",
+        value: f.value10,
+      });
+      flipN.push({
+        flip_num: f.flip_num,
+        key: "Constant $20",
+        value: f.value20,
+      });
+      flipN.push({ flip_num: f.flip_num, key: "Kelly", value: f.kelly });
+    }
   }
   return flipN;
 }
