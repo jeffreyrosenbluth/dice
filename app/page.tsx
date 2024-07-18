@@ -2,11 +2,75 @@
 
 import { Image } from "@nextui-org/react";
 
+import { useCallback, useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { type User, SupabaseClient } from "@supabase/supabase-js";
+
 export default function Home() {
+  // const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [coin, setCoin] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+
+  useEffect(() => {
+    setSupabase(createClient());
+  }, []);
+
+  const getProfile = useCallback(async () => {
+    if (!supabase) return;
+
+    try {
+      setLoading(true);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+      console.log(user);
+
+      if (!user) {
+        console.log("No user found");
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("coin_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+
+      if (data) {
+        console.log(data);
+        setCoin(data.coin_complete);
+      }
+    } catch (error) {
+      alert("Error loading user data");
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase]);
+
+  useEffect(() => {
+    if (supabase) {
+      getProfile();
+    }
+  }, [supabase, getProfile]);
+
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
         Experiments for Learning Finance
+      </div>
+      <div>
+        {coin ? "Coin game completed" : "Please complete the coin game"}
       </div>
       <div className="flex flex-col place-items-center">
         <Image src="/elf_blue.svg" alt="Elf" width={96} />

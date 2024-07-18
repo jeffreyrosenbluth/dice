@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   RadioGroup,
@@ -18,6 +18,7 @@ import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
+import { createClient } from "@/utils/supabase/client";
 
 const initialFlips: Flip[] = [
   {
@@ -34,6 +35,30 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [profileComplete, setProfileComplete] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("coin_complete")
+          .eq("id", user.id)
+          .single();
+
+        if (data && !error) {
+          setProfileComplete(data.coin_complete);
+        }
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleFlip = () => {
     if (!isFlipping) {
@@ -196,7 +221,7 @@ export default function Home() {
         </div>
         <div className="col-span-8 mx-8">
           {model.coinPlayFlips.length > 1 ? (
-            <FlipPlot flips={model.coinPlayFlips} completed={false} />
+            <FlipPlot flips={model.coinPlayFlips} completed={profileComplete} />
           ) : null}
           {model.coinPlayFlips.length > 1 ? (
             <div className="mt-10">
