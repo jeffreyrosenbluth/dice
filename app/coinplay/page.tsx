@@ -20,7 +20,7 @@ import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
-const MINFLIPS = 2;
+const MINFLIPS = 20;
 
 const initialFlips: Flip[] = [
   {
@@ -37,7 +37,7 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [profileComplete, setProfileComplete] = useState(false);
+  const [coinComplete, setCoinComplete] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -54,7 +54,7 @@ export default function Home() {
           .single();
 
         if (data && !error) {
-          setProfileComplete(data.coin_complete);
+          setCoinComplete(data.coin_complete);
         }
       }
     };
@@ -78,7 +78,7 @@ export default function Home() {
       if (error) {
         console.error("Error updating profile:", error);
       } else {
-        setProfileComplete(true);
+        setCoinComplete(true);
         console.log("Game completed successfully!");
       }
     }
@@ -201,7 +201,7 @@ export default function Home() {
             >
               Flip
             </Button>
-            {!profileComplete ? (
+            {!coinComplete ? (
               <Button
                 className={clsx(
                   "text-sm md:text-base py-2 mb-1 bg-blue-500",
@@ -265,7 +265,7 @@ export default function Home() {
         </div>
         <div className="col-span-8 mx-8">
           {model.coinPlayFlips.length > 1 ? (
-            <FlipPlot flips={model.coinPlayFlips} completed={profileComplete} />
+            <FlipPlot flips={model.coinPlayFlips} completed={coinComplete} />
           ) : null}
           {model.coinPlayFlips.length > 1 ? (
             <div className="mt-10">
