@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   RadioGroup,
@@ -13,10 +13,14 @@ import {
 } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip, Flip, BIAS } from "@/app/lib/coin";
+import { addFlip, flip, Flip, BIAS, Face } from "@/app/lib/coin";
 import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
+import clsx from "clsx";
+import { createClient } from "@/utils/supabase/client";
+
+const MINFLIPS = 20;
 
 const initialFlips: Flip[] = [
   {
@@ -32,32 +36,98 @@ const initialFlips: Flip[] = [
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [coinComplete, setCoinComplete] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("coin_complete")
+          .eq("id", user.id)
+          .single();
+
+        if (data && !error) {
+          setCoinComplete(data.coin_complete);
+        }
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleFinishGame = async () => {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ coin_complete: true })
+        .eq("id", user.id)
+        .select();
+
+      if (error) {
+        console.error("Error updating profile:", error);
+      } else {
+        setCoinComplete(true);
+        console.log("Game completed successfully!");
+      }
+    }
+  };
 
   const handleFlip = () => {
     if (!isFlipping) {
       setIsFlipping(true);
-      setModel({ ...model, coinPlayFlipResult: flip(model.coinPlayHT, BIAS) });
+      setModel((prevModel) => ({
+        ...prevModel,
+        coinPlayFlipResult: flip(model.coinPlayHT, BIAS),
+      }));
     }
   };
 
   const handleFlipComplete = () => {
     setIsFlipping(false);
-    setModel({
-      ...model,
-      coinPlayFlips: addFlip(
-        model.coinPlayFlips,
-        model.coinPlayBet,
-        model.coinPlayFlipResult
-      ),
-    });
+    setSelected(undefined);
+    const newflip = addFlip(
+      model.coinPlayFlips,
+      model.coinPlayBet,
+      model.coinPlayFlipResult,
+      model.coinPlayHT
+    );
+    setModel((prevModel) => ({
+      ...prevModel,
+      coinPlayFlips: newflip,
+      coinPlayBet: 0,
+    }));
   };
 
   const handleReset = () => {
-    setModel({ ...model, coinPlayFlips: initialFlips });
+    setModel((prevModel) => ({ ...prevModel, coinPlayFlips: initialFlips }));
   };
 
   const handleSlider = (value: number | number[]) => {
-    setModel({ ...model, coinPlayBet: value as number });
+    setModel((prevModel) => ({ ...prevModel, coinPlayBet: value as number }));
+  };
+
+  const handleInput = (value: any, name: any, values: any) => {
+    setModel((prevModel) => ({
+      ...prevModel,
+      coinPlayBet: Math.min(balance, values!.float || 0),
+    }));
+  };
+
+  const handleRadio = (value: string) => {
+    setModel((prevModel) => ({ ...prevModel, coinPlayHT: value as Face }));
+    setSelected(value as string);
   };
 
   const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
@@ -76,9 +146,8 @@ export default function Home() {
         <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-72">
           <RadioGroup
             className="flex gap-8"
-            defaultValue="heads"
-            value={model.coinPlayHT}
-            onValueChange={(value) => setModel({ ...model, coinPlayHT: value })}
+            value={selected || ""}
+            onValueChange={handleRadio}
           >
             <Radio classNames={{ label: "text-xs md:text-base" }} value="heads">
               Heads (probability = 0.6)
@@ -94,16 +163,10 @@ export default function Home() {
               name="bet-input"
               placeholder="Bet Size"
               prefix={"$ "}
-              defaultValue={0}
               decimalsLimit={2}
               step={1}
               value={model.coinPlayBet}
-              onValueChange={(value, name, values) =>
-                setModel({
-                  ...model,
-                  coinPlayBet: Math.min(balance, values!.float || 0),
-                })
-              }
+              onValueChange={handleInput}
               className="text-sm md:text-base w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
             />
             <Slider
@@ -114,29 +177,61 @@ export default function Home() {
               hideThumb={true}
               onChange={handleSlider}
               step={1.0}
-              defaultValue={0.5}
               formatOptions={{ style: "percent" }}
             />
           </div>
           <div className="flex flex-row justify-evenly">
             <Button
-              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+              className={clsx(
+                "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                {
+                  "opacity-50 ":
+                    selected === undefined || model.coinPlayBet === 0,
+                },
+                {
+                  "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                    selected === undefined || model.coinPlayBet === 0,
+                },
+                "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+              )}
               onClick={handleFlip}
-              disabled={isFlipping}
+              disabled={
+                isFlipping || selected === undefined || model.coinPlayBet === 0
+              }
             >
               Flip
             </Button>
-            <Button
-              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
+            {!coinComplete ? (
+              <Button
+                className={clsx(
+                  "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                  {
+                    "opacity-50 ": model.coinPlayFlips.length < MINFLIPS + 1,
+                  },
+                  {
+                    "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                      model.coinPlayFlips.length < MINFLIPS + 1,
+                  },
+                  "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+                )}
+                disabled={model.coinPlayFlips.length < MINFLIPS + 1}
+                onClick={handleFinishGame}
+              >
+                Finish
+              </Button>
+            ) : (
+              <Button
+                className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            )}
           </div>
           <div className="px-8 brightness-90">
             <Coin
               isFlipping={isFlipping}
-              result={model.coinPlayFlipResult}
+              landedOn={model.coinPlayFlipResult}
               onAnimationComplete={handleFlipComplete}
             />
           </div>
@@ -170,7 +265,7 @@ export default function Home() {
         </div>
         <div className="col-span-8 mx-8">
           {model.coinPlayFlips.length > 1 ? (
-            <FlipPlot flips={model.coinPlayFlips} />
+            <FlipPlot flips={model.coinPlayFlips} completed={coinComplete} />
           ) : null}
           {model.coinPlayFlips.length > 1 ? (
             <div className="mt-10">

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Assets, AssetFrame } from "@/app/lib/market";
-import { Flip, Profit } from "@/app/lib/coin";
+import { Flip, Profit, Face } from "@/app/lib/coin";
 
 const initialFlips: Flip[] = [
   {
@@ -27,7 +27,7 @@ type Model = {
   coinSimBoxes: string[];
   coinPlayFlips: Flip[];
   coinPlayBet: number;
-  coinPlayHT: string;
+  coinPlayHT: Face;
   coinPlayFlipResult: number;
   coinSim: Profit[];
   coinAvgReturns: { player: number; constant: number; kelly: number };
@@ -80,7 +80,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
 
 export const useStateContext = () => {
   const context = useContext(StateContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useStateContext must be used within a StateProvider");
   }
   return context;

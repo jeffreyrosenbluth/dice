@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 
 interface CoinProps {
   isFlipping: boolean;
-  result: number;
+  landedOn: number;
   onAnimationComplete: () => void;
 }
 
 const Coin: React.FC<CoinProps> = ({
   isFlipping,
-  result,
+  landedOn: result,
   onAnimationComplete,
 }) => {
   const [hasFlipped, setHasFlipped] = useState(false);
