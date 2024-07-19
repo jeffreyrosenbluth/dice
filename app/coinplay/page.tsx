@@ -20,7 +20,7 @@ import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
-const MINFLIPS = 20;
+const MINFLIPS = 2;
 
 const initialFlips: Flip[] = [
   {
@@ -61,6 +61,28 @@ export default function Home() {
 
     fetchProfile();
   }, []);
+
+  const handleFinishGame = async () => {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ coin_complete: true })
+        .eq("id", user.id)
+        .select();
+
+      if (error) {
+        console.error("Error updating profile:", error);
+      } else {
+        setProfileComplete(true);
+        console.log("Game completed successfully!");
+      }
+    }
+  };
 
   const handleFlip = () => {
     if (!isFlipping) {
@@ -179,24 +201,6 @@ export default function Home() {
             >
               Flip
             </Button>
-            <Button
-              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
-          </div>
-          <div className="px-8 brightness-90">
-            <Coin
-              isFlipping={isFlipping}
-              landedOn={model.coinPlayFlipResult}
-              onAnimationComplete={handleFlipComplete}
-            />
-          </div>
-          <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
-            Balance: {balance.toFixed(2)}
-          </div>
-          <div className="flex flex-row justify-center">
             {!profileComplete ? (
               <Button
                 className={clsx(
@@ -211,10 +215,28 @@ export default function Home() {
                   "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
                 )}
                 disabled={model.coinPlayFlips.length < MINFLIPS + 1}
+                onClick={handleFinishGame}
               >
                 Finish
               </Button>
-            ) : null}
+            ) : (
+              <Button
+                className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            )}
+          </div>
+          <div className="px-8 brightness-90">
+            <Coin
+              isFlipping={isFlipping}
+              landedOn={model.coinPlayFlipResult}
+              onAnimationComplete={handleFlipComplete}
+            />
+          </div>
+          <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
+            Balance: {balance.toFixed(2)}
           </div>
           <Card className="bg-zinc-800">
             <CardHeader className="text-sm md:text-base justify-center">
