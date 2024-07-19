@@ -21,7 +21,7 @@ export default function FlipPlot({
     : ["Player"];
 
   const getTickValues = (data: FlipN[]): number[] => {
-    const d = data.filter((d) => d.key === "Kelly").map((d) => d.flip_num);
+    const d = data.filter((d) => d.key === "Player").map((d) => d.flip_num);
     if (d.length > 320) {
       return d.filter((_, i) => i % 9 === 0);
     }

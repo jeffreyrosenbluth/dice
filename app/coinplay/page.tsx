@@ -20,6 +20,8 @@ import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
+const MINFLIPS = 20;
+
 const initialFlips: Flip[] = [
   {
     flip_num: 0,
@@ -193,6 +195,26 @@ export default function Home() {
           </div>
           <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
             Balance: {balance.toFixed(2)}
+          </div>
+          <div className="flex flex-row justify-center">
+            {!profileComplete ? (
+              <Button
+                className={clsx(
+                  "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                  {
+                    "opacity-50 ": model.coinPlayFlips.length < MINFLIPS + 1,
+                  },
+                  {
+                    "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                      model.coinPlayFlips.length < MINFLIPS + 1,
+                  },
+                  "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+                )}
+                disabled={model.coinPlayFlips.length < MINFLIPS + 1}
+              >
+                Finish
+              </Button>
+            ) : null}
           </div>
           <Card className="bg-zinc-800">
             <CardHeader className="text-sm md:text-base justify-center">
