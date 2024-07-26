@@ -69,9 +69,6 @@ export default function Home() {
       <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
         Experiments for Learning Finance
       </div>
-      <div>
-        {coin ? "Coin game completed" : "Please complete the coin game"}
-      </div>
       <div className="flex flex-col place-items-center">
         <Image src="/elf_blue.svg" alt="Elf" width={96} />
         <ul className="list-disc max-w-3xl">

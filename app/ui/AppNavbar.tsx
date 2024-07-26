@@ -149,10 +149,17 @@ const AppNavbar: React.FC = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent className="sm:flex hidden" justify="end">
+        <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>
         <NavbarItem>
-          <Button variant="flat" onClick={handleAuthClick}>
-            {user ? "Sign Out" : "Sign In"}
-          </Button>
+          {!user ? (
+            <Button variant="flat" onClick={handleAuthClick}>
+              Sign In
+            </Button>
+          ) : (
+            <Button isIconOnly variant="light" onClick={handleAuthClick}>
+              <Image src="/user.svg" alt="User" width={32} />
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
     </Navbar>

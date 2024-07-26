@@ -21,7 +21,8 @@ import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
-const MINFLIPS = 5;
+const MINFLIPS = 20;
+const MAXFLIPS = 300;
 
 export default function Home() {
   const { model, setModel } = useStateContext();
