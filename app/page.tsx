@@ -5,6 +5,7 @@ import { Image } from "@nextui-org/react";
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { type User, SupabaseClient } from "@supabase/supabase-js";
+import { Link, Button } from "@nextui-org/react";
 
 export default function Home() {
   // const supabase = createClient();
@@ -48,7 +49,6 @@ export default function Home() {
       }
 
       if (data) {
-        console.log(data);
         setCoin(data.coin_complete);
       }
     } catch (error) {
@@ -74,32 +74,72 @@ export default function Home() {
       </div>
       <div className="flex flex-col place-items-center">
         <Image src="/elf_blue.svg" alt="Elf" width={96} />
-        <ul className="list-disc max-w-2xl">
+        <ul className="list-disc max-w-3xl">
           <li className="py-4">
-            <div className="text-xl mb-2 ">Coin Flip Game</div>
+            <div className="text-2xl mb-2 ">Coin Flip Game</div>
             <p>
-              In this game, you will start with $100 and bet on the flip of a
-              biased coin with the probability of heads set to 60%. You can bet
-              on heads or tails and wager any amount up to your balance on each
-              flip. The app will keep track of your balance and show a plot of
-              your results compared to betting a constant $20, the kelly
-              criteria (optimal bet) and a constant 10% of your balance.
-              <br />
-              <br />
-              The coin flipgame should be played before running any coin
-              flipping simulations or reading the about section of the Coin
-              Flipping tab. That way you will be able to play the game without
-              being biased by knowing the optimal strategy.
+              In this game, you will start with $100 and bet on a biased coin
+              flip. The coin has a 60% chance of landing on heads. You can bet
+              on either heads or tails, wagering any amount up to your current
+              balance for each flip.
             </p>
+            <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
+            <ul className="list-circle list-inside ml-4">
+              <li>Minimum 20 flips required</li>
+              <li>Maximum 300 flips allowed</li>
+              <li>
+                After 20 flips, the{" "}
+                <span className="text-lg text-blue-400 font-semibold">
+                  Finish
+                </span>{" "}
+                button becomes available
+              </li>
+            </ul>
+            <div className="text-xl font-medium mb-1 mt-4">
+              When you press
+              <span className="text-blue-400 font-semibold"> Finish</span>{" "}
+            </div>
+            <ul className="list-circle list-inside ml-4 mb-4">
+              <li>Your data will be saved to a database</li>
+              <li>
+                Your performance will be compared to other betting strategies
+              </li>
+              <li>The Coin Simulation section will unlock</li>
+            </ul>
+            <p>
+              You can reset and play again, but additional games will not be
+              saved.
+            </p>
+            <Button
+              className="mt-4 mb-2 py-2 px-4 bg-blue-500"
+              href="/coinplay"
+              as={Link}
+              variant="solid"
+            >
+              Play Coin Flip Game
+            </Button>
+            <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+              <p className="font-semibold italic">
+                You must be logged in to play this game.
+              </p>
+            </div>
           </li>
           <li className="py-4">
             <div className="text-xl mb-2">Coin Flip Simulation</div>
-            <p>
-              Fix the betting strategy and run a simulation of the results to
-              compare statistics of different strategies. You can change the
-              number of flips per rounds, the number of simulations samples, the
-              bias of the coin and the betting rule.
-            </p>
+            {coin ? (
+              <p>
+                Fix the betting strategy and run a simulation of the results to
+                compare statistics of different strategies. You can change the
+                number of flips per rounds, the number of simulations samples,
+                the bias of the coin and the betting rule.
+              </p>
+            ) : (
+              <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+                <p className="font-semibold italic">
+                  Complete the Coin Flip Game to unlock the simulation
+                </p>
+              </div>
+            )}
           </li>
           <li className="py-4">
             <div className="text-xl mb-2">Dice Roll Game</div>

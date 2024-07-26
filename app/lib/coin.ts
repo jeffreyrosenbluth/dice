@@ -8,7 +8,9 @@ export type Flip = {
   value10: number;
   value20: number;
   kelly: number;
-  coin: Face;
+  betOn: Face;
+  betSize: number;
+  coinResult: Face;
 };
 
 export type FlipN = {
@@ -58,9 +60,23 @@ export function addFlip(
       value10: v1,
       value20: v2,
       kelly: vk,
-      coin: flipResult ? "heads" : "tails",
+      betOn: betOn,
+      betSize: bet,
+      coinResult: flipResult ? "heads" : "tails",
     },
   ];
+}
+
+export function toCoinGameTable(flips: Flip[]) {
+  return flips.map((f) => {
+    return {
+      flip_num: f.flip_num,
+      flip_result_heads: f.coinResult === "heads",
+      bet_on_heads: f.betOn === "heads",
+      bet_size: f.betSize,
+      balance: f.value,
+    };
+  });
 }
 
 export function mkFlipNs(flips: Flip[], gameCompleted: boolean): FlipN[] {

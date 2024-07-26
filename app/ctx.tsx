@@ -4,14 +4,16 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Assets, AssetFrame } from "@/app/lib/market";
 import { Flip, Profit, Face } from "@/app/lib/coin";
 
-const initialFlips: Flip[] = [
+export const initialFlips: Flip[] = [
   {
     flip_num: 0,
     value: 100,
     value10: 100,
     value20: 100,
     kelly: 100,
-    coin: "heads",
+    betOn: "heads",
+    betSize: 0,
+    coinResult: "heads",
   },
 ];
 

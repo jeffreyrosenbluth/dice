@@ -13,25 +13,15 @@ import {
 } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip, Flip, BIAS, Face } from "@/app/lib/coin";
+import { addFlip, flip, toCoinGameTable, BIAS, Face } from "@/app/lib/coin";
+import { initialFlips } from "@/app/ctx";
 import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
-const MINFLIPS = 20;
-
-const initialFlips: Flip[] = [
-  {
-    flip_num: 0,
-    value: 100,
-    value10: 100,
-    value20: 100,
-    kelly: 100,
-    coin: "heads",
-  },
-];
+const MINFLIPS = 5;
 
 export default function Home() {
   const { model, setModel } = useStateContext();
@@ -69,7 +59,7 @@ export default function Home() {
     } = await supabase.auth.getUser();
 
     if (user) {
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from("profiles")
         .update({ coin_complete: true })
         .eq("id", user.id)
@@ -80,6 +70,14 @@ export default function Home() {
       } else {
         setCoinComplete(true);
         console.log("Game completed successfully!");
+      }
+      let updatesArray = toCoinGameTable(model.coinPlayFlips);
+      ({ data, error } = await supabase.from("coin_game").upsert(updatesArray));
+
+      if (error) {
+        console.error("Error updating coin_game data:", error);
+      } else {
+        console.log("coin_game data updated successfully:", data);
       }
     }
   };
@@ -132,7 +130,7 @@ export default function Home() {
 
   const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
   const heads =
-    model.coinPlayFlips.filter((f) => f.coin === "heads").length - 1;
+    model.coinPlayFlips.filter((f) => f.coinResult === "heads").length - 1;
 
   return (
     <main className="flex min-h-screen flex-col space-y-6 mt-12">
@@ -143,7 +141,7 @@ export default function Home() {
         Starting Balance: $100
       </div>
       <div className="grid grid-cols-12">
-        <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-72">
+        <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-80">
           <RadioGroup
             className="flex gap-8"
             value={selected || ""}
