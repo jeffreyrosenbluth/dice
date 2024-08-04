@@ -13,12 +13,40 @@ import {
 import CoinSimPlot from "@/app/ui/coinsimplot";
 import { useStateContext } from "@/app/ctx";
 import { Profit, runCoinSim } from "@/app/lib/coin";
+import { useRouter } from "next/navigation";
+import { useSupabase } from "@/app/lib/supabase";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
+  const router = useRouter();
   const bias = model.coinSimSliders.biasSlider;
   const kellyFraction = bias * 2 - 1;
+  const supabase = useSupabase();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return router.push("/login");
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("coin_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (!data?.coin_complete) {
+        return router.push("/");
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleYearsSlider = (value: number | number[]) => {
     setModel({

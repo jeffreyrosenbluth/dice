@@ -25,9 +25,11 @@ export default function RootLayout({
     <html className="dark">
       <body className="bg-slate-700 `${inter.className} antialiased ">
         <AuthProvider>
-          <AppNavbar />
           <Providers>
-            <StateProvider>{children}</StateProvider>
+            <StateProvider>
+              <AppNavbar />
+              {children}
+            </StateProvider>
           </Providers>
         </AuthProvider>
         <Footer />

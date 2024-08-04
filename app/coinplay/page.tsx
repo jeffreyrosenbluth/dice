@@ -19,42 +19,45 @@ import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
-import { createClient } from "@/utils/supabase/client";
+import { useSupabase } from "@/app/lib/supabase";
+import { useRouter } from "next/navigation";
 
 const MINFLIPS = 20;
 const MAXFLIPS = 300;
 
 export default function Home() {
   const { model, setModel } = useStateContext();
+  const router = useRouter();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [coinComplete, setCoinComplete] = useState(false);
+  const supabase = useSupabase();
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (user) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("coin_complete")
-          .eq("id", user.id)
-          .single();
+      if (!user) {
+        return router.push("/login");
+      }
 
-        if (data && !error) {
-          setCoinComplete(data.coin_complete);
-        }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("coin_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (data && !error) {
+        setCoinComplete(data.coin_complete);
       }
     };
 
     fetchProfile();
-  }, []);
+  });
 
   const handleFinishGame = async () => {
-    const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();

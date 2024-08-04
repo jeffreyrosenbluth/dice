@@ -14,10 +14,11 @@ import {
   NavbarBrand,
   Image,
 } from "@nextui-org/react";
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
 import { Spinner } from "@nextui-org/spinner";
+import { useSupabase } from "@/app/lib/supabase";
+import { useStateContext, initialModel } from "@/app/ctx";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;
@@ -55,13 +56,38 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 };
 
 const AppNavbar: React.FC = () => {
+  const { setModel } = useStateContext();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useSupabase();
+  const [coinComplete, setCoinComplete] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("coin_complete")
+          .eq("id", user.id)
+          .single();
+
+        if (data && !error) {
+          setCoinComplete(data.coin_complete);
+        }
+      }
+    };
+
+    fetchProfile();
+  });
 
   const handleAuthClick = async () => {
     if (user) {
       await supabase.auth.signOut();
+      setModel(initialModel);
       router.push("/"); // Redirect to home page after sign out
     } else {
       router.push("/login"); // Redirect to login page
@@ -96,20 +122,23 @@ const AppNavbar: React.FC = () => {
                 Coin Flipping
               </Button>
             </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem>
+            <DropdownMenu
+              disabledKeys={
+                user && coinComplete
+                  ? []
+                  : user
+                  ? ["simulation"]
+                  : ["play", "simulation"]
+              }
+            >
+              <DropdownItem key="play">
                 <Link href="/coinplay" className="w-full h-full block">
                   Game
                 </Link>
               </DropdownItem>
-              <DropdownItem>
+              <DropdownItem key="simulation">
                 <Link href="/coinsim" className="w-full h-full block">
                   Simulation
-                </Link>
-              </DropdownItem>
-              <DropdownItem>
-                <Link href="/coinabout" className="w-full h-full block">
-                  About
                 </Link>
               </DropdownItem>
             </DropdownMenu>

@@ -3,37 +3,23 @@
 import { Image } from "@nextui-org/react";
 
 import { useCallback, useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { type User, SupabaseClient } from "@supabase/supabase-js";
 import { Link, Button } from "@nextui-org/react";
+import { useSupabase } from "@/app/lib/supabase";
 
 export default function Home() {
-  // const supabase = createClient();
-  const [loading, setLoading] = useState(true);
   const [coin, setCoin] = useState<boolean | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
-
-  useEffect(() => {
-    setSupabase(createClient());
-  }, []);
+  const supabase = useSupabase();
 
   const getProfile = useCallback(async () => {
     if (!supabase) return;
 
     try {
-      setLoading(true);
-
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      setUser(user);
-      console.log(user);
-
       if (!user) {
         console.log("No user found");
-        setLoading(false);
         return;
       }
 
@@ -53,8 +39,6 @@ export default function Home() {
       }
     } catch (error) {
       alert("Error loading user data");
-    } finally {
-      setLoading(false);
     }
   }, [supabase]);
 
@@ -71,54 +55,92 @@ export default function Home() {
       </div>
       <div className="flex flex-col place-items-center">
         <Image src="/elf_blue.svg" alt="Elf" width={96} />
-        <ul className="list-disc max-w-3xl">
+        <ul className="list-disc max-w-4xl">
           <li className="py-4">
             <div className="text-2xl mb-2 ">Coin Flip Game</div>
-            <p>
-              In this game, you will start with $100 and bet on a biased coin
-              flip. The coin has a 60% chance of landing on heads. You can bet
-              on either heads or tails, wagering any amount up to your current
-              balance for each flip.
-            </p>
-            <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
-            <ul className="list-circle list-inside ml-4">
-              <li>Minimum 20 flips required</li>
-              <li>Maximum 300 flips allowed</li>
-              <li>
-                After 20 flips, the{" "}
-                <span className="text-lg text-blue-400 font-semibold">
+            <div>
+              <p>
+                In this game, you will start with $100 and bet on a biased coin
+                flip. The coin has a 60% chance of landing on heads. You can bet
+                on either heads or tails, wagering any amount up to your current
+                balance for each flip. This game is inspired by a study from
+                Victor Haghani and Richard Dewey.
+              </p>
+              <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
+              <ul className="list-circle list-inside ml-4">
+                <li>Minimum 20 flips required</li>
+                <li>Maximum 300 flips allowed</li>
+                <li>
+                  After 20 flips, the{" "}
+                  <span className="text-lg text-blue-400 font-semibold">
+                    Finish
+                  </span>{" "}
+                  button becomes available
+                </li>
+              </ul>
+              <div className="text-xl font-medium mb-1 mt-4">
+                When you press
+                <span className="text-blue-400 font-semibold">
+                  {" "}
                   Finish
                 </span>{" "}
-                button becomes available
-              </li>
-            </ul>
-            <div className="text-xl font-medium mb-1 mt-4">
-              When you press
-              <span className="text-blue-400 font-semibold"> Finish</span>{" "}
-            </div>
-            <ul className="list-circle list-inside ml-4 mb-4">
-              <li>Your data will be saved to a database</li>
-              <li>
-                Your performance will be compared to other betting strategies
-              </li>
-              <li>The Coin Simulation section will unlock</li>
-            </ul>
-            <p>
-              You can reset and play again, but additional games will not be
-              saved.
-            </p>
-            <Button
-              className="mt-4 mb-2 py-2 px-4 bg-blue-500"
-              href="/coinplay"
-              as={Link}
-              variant="solid"
-            >
-              Play Coin Flip Game
-            </Button>
-            <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
-              <p className="font-semibold italic">
-                You must be logged in to play this game.
+              </div>
+              <ul className="list-circle list-inside ml-4 mb-4">
+                <li>Your data will be saved to a database</li>
+                <li>
+                  Your performance will be compared to other betting strategies
+                </li>
+                <li>The Coin Simulation section will unlock</li>
+              </ul>
+              <p>
+                You can reset and play again, but additional games will not be
+                saved.
               </p>
+              <Button
+                className="mt-4 mb-2 py-2 px-4 bg-blue-500"
+                href="/coinplay"
+                as={Link}
+                variant="solid"
+              >
+                Play Coin Flip Game
+              </Button>
+              <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+                <p className="font-semibold italic">
+                  You must be logged in to play this game.
+                </p>
+              </div>
+              {coin ? (
+                <div>
+                  Despite the favorable odds, many players struggle with bet
+                  sizing, revealing common behavioral biases and sub-optimal
+                  strategies. The optimal approach, based on expected utility or
+                  the Kelly criterion, suggests betting a fixed proportion of{" "}
+                  {" one's"} balance on each flip. This strategy balances risk
+                  and reward. However, most players deviate, leading to erratic
+                  betting patterns and poor outcomes.
+                  <br />
+                  <br />
+                  Through this simulation, players learn about risk management
+                  and the importance of consistent, proportional betting. They
+                  experience firsthand the challenges of maintaining discipline
+                  and the pitfalls of emotional decision-making in investment
+                  scenarios.
+                  <br />
+                  <br />
+                  <hr className="w-full border-t-2 border-slate-400" />
+                  <Link
+                    className="text-blue-300 mt-6"
+                    href="https://elmwealth.com/lessons-from-betting-on-a-biased-coin-cool-heads-and-cautionary-tales/"
+                  >
+                    Based on:
+                    <em>
+                      Lessons from Betting on a Biased Coin: Cool heads and
+                      cautionary tales{" "}
+                    </em>
+                    , by Victor Haghani and Richard Dewey
+                  </Link>
+                </div>
+              ) : null}
             </div>
           </li>
           <li className="py-4">
