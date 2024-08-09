@@ -168,11 +168,6 @@ const AppNavbar: React.FC = () => {
                   Simulation
                 </Link>
               </DropdownItem>
-              <DropdownItem>
-                <Link href="/diceabout" className="w-full h-full block">
-                  About
-                </Link>
-              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </NavbarItem>

@@ -50,14 +50,16 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
-      <div className="text-3xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
+      <div className="text-4xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
         Experiments for Learning Finance
       </div>
       <div className="flex flex-col place-items-center">
         <Image src="/elf_blue.svg" alt="Elf" width={96} />
-        <ul className="list-disc max-w-4xl">
-          <li className="py-4">
-            <div className="text-2xl mb-2 ">Coin Flip Game</div>
+        <div className="max-w-3xl">
+          <div className="py-4">
+            <div className="text-3xl text-blue-400 font-medium mb-2 ">
+              Coin Flip Game
+            </div>
             <div>
               <p>
                 In this game, you will start with $100 and bet on a biased coin
@@ -67,17 +69,17 @@ export default function Home() {
                 Victor Haghani and Richard Dewey.
               </p>
               <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
-              <ul className="list-circle list-inside ml-4">
-                <li>Minimum 20 flips required</li>
-                <li>Maximum 300 flips allowed</li>
-                <li>
+              <div className="list-circle list-inside ml-4">
+                <div>Minimum 20 flips required</div>
+                <div>Maximum 300 flips allowed</div>
+                <div>
                   After 20 flips, the{" "}
                   <span className="text-lg text-blue-400 font-semibold">
                     Finish
                   </span>{" "}
                   button becomes available
-                </li>
-              </ul>
+                </div>
+              </div>
               <div className="text-xl font-medium mb-1 mt-4">
                 When you press
                 <span className="text-blue-400 font-semibold">
@@ -85,13 +87,13 @@ export default function Home() {
                   Finish
                 </span>{" "}
               </div>
-              <ul className="list-circle list-inside ml-4 mb-4">
-                <li>Your data will be saved to a database</li>
-                <li>
+              <div className="list-circle list-inside ml-4 mb-4">
+                <div>Your data will be saved to a database</div>
+                <div>
                   Your performance will be compared to other betting strategies
-                </li>
-                <li>The Coin Simulation section will unlock</li>
-              </ul>
+                </div>
+                <div>The Coin Simulation section will unlock</div>
+              </div>
               <p>
                 You can reset and play again, but additional games will not be
                 saved.
@@ -127,24 +129,26 @@ export default function Home() {
                   scenarios.
                   <br />
                   <br />
-                  <hr className="w-full border-t-2 border-slate-400" />
+                  <hr className="w-full border-t-2 border-slate-400 mb-4" />
                   <Link
-                    className="text-blue-300 mt-6"
                     href="https://elmwealth.com/lessons-from-betting-on-a-biased-coin-cool-heads-and-cautionary-tales/"
+                    className="inline text-left text-blue-300 mt-6"
                   >
-                    Based on:
+                    <span className="whitespace-nowrap mr-1">Based on: </span>
                     <em>
                       Lessons from Betting on a Biased Coin: Cool heads and
-                      cautionary tales{" "}
+                      cautionary tales
                     </em>
                     , by Victor Haghani and Richard Dewey
                   </Link>
                 </div>
               ) : null}
             </div>
-          </li>
-          <li className="py-4">
-            <div className="text-xl mb-2">Coin Flip Simulation</div>
+          </div>
+          <div className="py-4">
+            <div className="text-3xl text-blue-400 font-medium mb-2">
+              Coin Flip Simulation
+            </div>
             {coin ? (
               <p>
                 Fix the betting strategy and run a simulation of the results to
@@ -159,9 +163,11 @@ export default function Home() {
                 </p>
               </div>
             )}
-          </li>
-          <li className="py-4">
-            <div className="text-xl mb-2">Dice Roll Game</div>
+          </div>
+          <div className="py-4">
+            <div className="text-3xl text-blue-400 font-medium mb-2">
+              Dice Roll Game
+            </div>
             <p>
               In this game, you will start with $100 and roll 3 dice. Each die
               is calibrated to represent a different investment, one the S&P
@@ -172,18 +178,250 @@ export default function Home() {
               the portfolio and plot the results. It will also plot the
               histograms of each investment compared to its trure probability
               distrtibution.
-              <br />
-              <br />
-              The dice roll game should be played before running any dice roll
-              simulations or reading the about section of the Dice Rolling tab.
-              That way you will be able to play the game without being biased by
-              knowing the optimal strategy.
             </p>
-          </li>
-          <li className="py-4">
-            <div className="text-xl mb-2">Dice Roll Simulation</div>
-          </li>
-        </ul>
+            <br />
+            <br />
+            <div className="flex place-items-center"></div>
+            <div className="text-2xl font-bold text-slate-200">
+              Risk and Return
+            </div>
+            <div className="overflow-x-auto">
+              <div className="min-w-full py-2 px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-3"></th>
+                        <th scope="col" className="px-6 py-3">
+                          Mean Return
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Standart Deviation
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Volatility Adjusted
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b dark:border-neutral-500">
+                        <td className="whitespace-nowrap px-6 py-3 font-medium text-blue-400">
+                          S&P 500
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          7.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          20.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          5.1%
+                        </td>
+                      </tr>
+                      <tr className="border-b dark:border-neutral-500">
+                        <td className="whitespace-nowrap px-6 py-3 font-medium text-orange-400">
+                          Venture Capital
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          71.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          132.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          -16.9%
+                        </td>
+                      </tr>
+                      <tr className="border-b dark:border-neutral-500">
+                        <td className="whitespace-nowrap px-6 py-3 font-medium text-green-400">
+                          Money Market
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          2.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          0.0%
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-3 text-right">
+                          2.0%
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="text-2xl font-bold text-slate-200 mt-12">
+              Investment Net Returns
+            </div>
+            <div className="flex flex-col">
+              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 mb-4">
+                <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div className="overflow-hidden">
+                    <table className="min-w-full text-left text-sm font-light">
+                      <thead className="border-b font-medium dark:border-neutral-500">
+                        <tr>
+                          <th scope="col" className="px-6 py-3">
+                            Outcome
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-blue-400">
+                            S&P 500
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-orange-400">
+                            Venture Capital
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-green-400">
+                            Money Market
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            1
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            -20%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            -95%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            2
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            -10%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            -80%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            3
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            0%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            4
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            10%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            200%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            5
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            20%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            200%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                        <tr className="border-b dark:border-neutral-500">
+                          <td className="whitespace-nowrap px-6 py-3 text-center">
+                            6
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            40%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            200%
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-3 text-right">
+                            2%
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            The dice roll game should be played before running any dice roll
+            simulations or reading the about section of the Dice Roldivng tab.
+            That way you will be able to play the game without being biased by
+            knowing the optimal strategy.
+          </div>
+          <div className="relative flex place-items-center mb-8">
+            <p className="text-justify">
+              Many students and practitioners of finance struggle to connect the
+              concepts of variance and risk. This simulation, inspired by the
+              work of Foster and Stine, aims to bridge that gap. In the game,
+              players roll virtual dice representing the returns of three
+              distinct types of investments: a risk-free money market
+              instrument, the S&P 500, and a high-risk option like venture
+              capital or meme stocks.
+              <br />
+              <br />
+              Each investment behaves differently, illustrating real-world
+              financial scenarios. As the simulation progresses, some players
+              may experience remarkable success with the high-risk investment,
+              accumulating significantly more wealth than their peers. However,
+              the majority will encounter financial ruin due to the{" "}
+              {"investment's"} extreme volatility—a phenomenon known as the{" "}
+              {'"Variance Drain"'}.
+              <br />
+              <br />
+              This stark contrast in outcomes often surprises players,
+              highlighting the difficulty in distinguishing luck from skill in
+              investment performance. Additionally, the simulation demonstrates
+              how diversifying assets within a portfolio can reduce overall risk
+              (variance). Players discover that combining two poor investments
+              can unexpectedly result in a robust portfolio performance.
+              <br />
+              <br />
+              By the end of the simulation, players gain a deeper understanding
+              of financial volatility and the importance of diversification in
+              managing investment risk.
+            </p>
+          </div>
+          <hr className="w-full border-t-2 border-slate-400 mb-4" />
+          <Link
+            href="http://deanfoster.net/research/being_warren_buffett.pdf"
+            className="inline text-left text-blue-300 mt-6"
+          >
+            <span className="whitespace-nowrap mr-1">Based on: </span>
+            <em>
+              Being Warren Buffett: A Classroom Simulation of Risk and Wealth
+              When Investing in the Stock Market
+            </em>
+            , by Dean P. Foster and Robert A. Stein.
+          </Link>
+          <div className="py-4">
+            <div className="text-3xl text-blue-400 font-medium mb-2">
+              Dice Roll Simulation
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
