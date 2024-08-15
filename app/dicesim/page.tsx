@@ -28,11 +28,11 @@ export default function Home() {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("dic_complete")
+        .select("dice_complete")
         .eq("id", user.id)
         .single();
 
-      if (!data?.dic_complete) {
+      if (!data?.dice_complete) {
         return router.push("/");
       }
     };
