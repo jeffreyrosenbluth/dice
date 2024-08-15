@@ -5,10 +5,16 @@ import ReturnPlot from "@/app/ui/returnplot";
 import Die from "@/app/ui/die";
 import Card from "@/app/ui/card";
 import { Slider, Button, Switch } from "@nextui-org/react";
-import React, { useState } from "react";
-import { addRoll, Assets } from "@/app/lib/market";
+import React, { useState, useEffect } from "react";
+import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
+import { useSupabase } from "@/app/lib/supabase";
+import { useRouter } from "next/navigation";
+import clsx from "clsx";
+
+const MINROLLS = 20;
+const MAXROLLS = 300;
 
 const initialWealth = [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }];
 const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
@@ -16,6 +22,33 @@ const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
 export default function Home() {
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
+  const [diceComplete, setDiceComplete] = useState(false);
+  const supabase = useSupabase();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return router.push("/login");
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("dice_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (data && !error) {
+        setDiceComplete(data.dice_complete);
+      }
+    };
+
+    fetchProfile();
+  });
 
   const cashPercent =
     1 -
@@ -79,6 +112,35 @@ export default function Home() {
     setModel({ ...model, includePortfolio: checked });
   };
 
+  const handleFinishGame = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      let { data, error } = await supabase
+        .from("profiles")
+        .update({ dice_complete: true })
+        .eq("id", user.id)
+        .select();
+
+      if (error) {
+        console.error("Error updating profile:", error);
+      } else {
+        setDiceComplete(true);
+        console.log("Game completed successfully!");
+      }
+      let updatesArray = toDiceGameTable(model.diceWealths);
+      ({ data, error } = await supabase.from("dice_game").upsert(updatesArray));
+
+      if (error) {
+        console.error("Error updating dice_coin_game data:", error);
+      } else {
+        console.log("dice_game data updated successfully:", data);
+      }
+    }
+  };
+
   const avgReturns = average(model.diceReturns.slice(1));
 
   return (
@@ -95,9 +157,35 @@ export default function Home() {
           >
             Roll
           </Button>
-          <Button className="py-4 mb-4 bg-blue-500" onClick={reset}>
+          {!diceComplete ? (
+            <Button
+              className={clsx(
+                "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                {
+                  "opacity-50 ": model.diceWealths.length < MINROLLS + 1,
+                },
+                {
+                  "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                    model.diceWealths.length < MINROLLS + 1,
+                },
+                "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+              )}
+              disabled={model.diceWealths.length < MINROLLS + 1}
+              onClick={handleFinishGame}
+            >
+              Finish
+            </Button>
+          ) : (
+            <Button
+              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+              onClick={reset}
+            >
+              Reset
+            </Button>
+          )}
+          {/* <Button className="py-4 mb-4 bg-blue-500" onClick={reset}>
             Reset
-          </Button>
+          </Button> */}
           <div className="flex flex-col items-center">
             <Die isRolling={isRolling} onAnimationComplete={roll} />
           </div>

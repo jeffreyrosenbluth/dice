@@ -61,6 +61,7 @@ const AppNavbar: React.FC = () => {
   const router = useRouter();
   const supabase = useSupabase();
   const [coinComplete, setCoinComplete] = useState(false);
+  const [diceComplete, setDiceComplete] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -71,12 +72,13 @@ const AppNavbar: React.FC = () => {
       if (user) {
         const { data, error } = await supabase
           .from("profiles")
-          .select("coin_complete")
+          .select("coin_complete, dice_complete")
           .eq("id", user.id)
           .single();
 
         if (data && !error) {
           setCoinComplete(data.coin_complete);
+          setDiceComplete(data.dice_complete);
         }
       }
     };
@@ -157,13 +159,21 @@ const AppNavbar: React.FC = () => {
                 Dice Rolling
               </Button>
             </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem>
+            <DropdownMenu
+              disabledKeys={
+                user && diceComplete
+                  ? []
+                  : user
+                  ? ["simulation"]
+                  : ["play", "simulation"]
+              }
+            >
+              <DropdownItem key="play">
                 <Link href="/diceplay" className="w-full h-full block">
                   Game
                 </Link>
               </DropdownItem>
-              <DropdownItem>
+              <DropdownItem key="simulation">
                 <Link href="/dicesim" className="w-full h-full block">
                   Simulation
                 </Link>

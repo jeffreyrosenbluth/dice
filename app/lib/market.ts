@@ -7,7 +7,7 @@ export type Assets = {
   portfolio: number;
 };
 
-export type AssetsN = Assets & { period: number };
+// export type AssetsN = Assets & { period: number };
 
 function mapAssets(assets: Assets, f: (input: number) => number): Assets {
   return {
@@ -115,6 +115,18 @@ export function addRoll(
     [...wealths, newWealth],
     [...returns, newReturn],
   ];
+}
+
+export function toDiceGameTable(assets: Assets[]) {
+  return assets.map((f, i) => {
+    return {
+      roll_num: i + 1,
+      sp500_percent: f.stock,
+      venture_percent: f.venture,
+      cash_percent: f.cash,
+      portfolio_percent: f.portfolio,
+    };
+  });
 }
 
 export function wealthFrame(

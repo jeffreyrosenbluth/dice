@@ -1,7 +1,7 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
-import { wealthFrame, Assets, AssetFrameN } from "@/app/lib/market";
+import { wealthFrame, Assets } from "@/app/lib/market";
 
 type WealthPlotProps = {
   wealth: Assets[];

@@ -185,20 +185,20 @@ export default function Home() {
             <div className="text-2xl font-bold text-slate-200">
               Risk and Return
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto mx-auto max-w-2xl">
               <div className="min-w-full py-2 px-6 lg:px-8">
                 <div className="overflow-hidden">
                   <table className="min-w-full text-left text-sm font-light">
                     <thead className="border-b font-medium dark:border-neutral-500">
                       <tr>
                         <th scope="col" className="px-6 py-3"></th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-right">
                           Mean Return
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-right">
                           Standart Deviation
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-right">
                           Volatility Adjusted
                         </th>
                       </tr>
@@ -255,7 +255,7 @@ export default function Home() {
               Investment Net Returns
             </div>
             <div className="flex flex-col">
-              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 mb-4">
+              <div className="overflow-x-auto mx-auto mb-4 max-w-2xl">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                   <div className="overflow-hidden">
                     <table className="min-w-full text-left text-sm font-light">
@@ -264,13 +264,22 @@ export default function Home() {
                           <th scope="col" className="px-6 py-3">
                             Outcome
                           </th>
-                          <th scope="col" className="px-6 py-3 text-blue-400">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-blue-400"
+                          >
                             S&P 500
                           </th>
-                          <th scope="col" className="px-6 py-3 text-orange-400">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-orange-400"
+                          >
                             Venture Capital
                           </th>
-                          <th scope="col" className="px-6 py-3 text-green-400">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-green-400"
+                          >
                             Money Market
                           </th>
                         </tr>
@@ -374,12 +383,11 @@ export default function Home() {
           <div className="relative flex place-items-center mb-8">
             <p className="text-justify">
               Many students and practitioners of finance struggle to connect the
-              concepts of variance and risk. This simulation, inspired by the
-              work of Foster and Stine, aims to bridge that gap. In the game,
-              players roll virtual dice representing the returns of three
-              distinct types of investments: a risk-free money market
-              instrument, the S&P 500, and a high-risk option like venture
-              capital or meme stocks.
+              concepts of variance and risk. This game, inspired by the work of
+              Foster and Stine, aims to bridge that gap. In the game, players
+              roll virtual dice representing the returns of three distinct types
+              of investments: a risk-free money market instrument, the S&P 500,
+              and a high-risk option like venture capital or meme stocks.
               <br />
               <br />
               Each investment behaves differently, illustrating real-world
@@ -399,8 +407,8 @@ export default function Home() {
               can unexpectedly result in a robust portfolio performance.
               <br />
               <br />
-              By the end of the simulation, players gain a deeper understanding
-              of financial volatility and the importance of diversification in
+              By the end of the game, players gain a deeper understanding of
+              financial volatility and the importance of diversification in
               managing investment risk.
             </p>
           </div>

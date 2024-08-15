@@ -7,10 +7,38 @@ import { Slider, Button } from "@nextui-org/react";
 import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
 import { useStateContext } from "@/app/ctx";
+import { useRouter } from "next/navigation";
+import { useSupabase } from "@/app/lib/supabase";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
+  const router = useRouter();
+  const supabase = useSupabase();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return router.push("/login");
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("dic_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (!data?.dic_complete) {
+        return router.push("/");
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleStockSlider = (value: number | number[]) => {
     setModel({
