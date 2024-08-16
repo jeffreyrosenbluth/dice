@@ -1,20 +1,25 @@
+"use client";
+
 import Link from "next/link";
-import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useAuth } from "@/app/authctx";
 
 export default function Login({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-  const signIn = async (formData: FormData) => {
-    "use server";
+  const router = useRouter();
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const supabase = createClient();
 
+  const signIn = async (formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const supabase = createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -22,19 +27,16 @@ export default function Login({
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return router.push("/login?message=Could not authenticate user");
     }
 
-    return redirect("/");
+    return router.push("/");
   };
 
   const signUp = async (formData: FormData) => {
-    "use server";
-
-    const origin = headers().get("origin");
+    const origin = window.location.origin;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const supabase = createClient();
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -45,11 +47,19 @@ export default function Login({
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return router.push("/login?message=Could not authenticate user");
     }
 
-    return redirect("/login?message=Check email to continue sign in process");
+    return router.push(
+      "/login?message=Check email to continue sign in process"
+    );
   };
+
+  // If the user is already logged in, redirect them
+  if (user) {
+    router.push("/");
+    return null;
+  }
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -74,7 +84,7 @@ export default function Login({
         Back
       </Link>
 
-      <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
         <label className="text-md" htmlFor="email">
           Email
         </label>
@@ -83,6 +93,8 @@ export default function Login({
           name="email"
           placeholder="you@example.com"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <label className="text-md" htmlFor="password">
           Password
@@ -93,21 +105,21 @@ export default function Login({
           name="password"
           placeholder="••••••••"
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <SubmitButton
+        <button
           formAction={signIn}
           className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
         >
           Sign In
-        </SubmitButton>
-        <SubmitButton
+        </button>
+        <button
           formAction={signUp}
           className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing Up..."
         >
           Sign Up
-        </SubmitButton>
+        </button>
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
