@@ -4,11 +4,11 @@ import { Image } from "@nextui-org/react";
 
 import { useCallback, useEffect, useState } from "react";
 import { Link, Button } from "@nextui-org/react";
-import { useSupabase } from "@/app/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
   const [coin, setCoin] = useState<boolean | null>(null);
-  const supabase = useSupabase();
+  const supabase = createClient();
 
   const getProfile = useCallback(async () => {
     if (!supabase) return;

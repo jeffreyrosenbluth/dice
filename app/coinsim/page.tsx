@@ -14,7 +14,7 @@ import CoinSimPlot from "@/app/ui/coinsimplot";
 import { useStateContext } from "@/app/ctx";
 import { Profit, runCoinSim } from "@/app/lib/coin";
 import { useRouter } from "next/navigation";
-import { useSupabase } from "@/app/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
@@ -22,7 +22,7 @@ export default function Home() {
   const router = useRouter();
   const bias = model.coinSimSliders.biasSlider;
   const kellyFraction = bias * 2 - 1;
-  const supabase = useSupabase();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchProfile = async () => {

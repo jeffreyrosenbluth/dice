@@ -8,13 +8,13 @@ import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
 import { useStateContext } from "@/app/ctx";
 import { useRouter } from "next/navigation";
-import { useSupabase } from "@/app/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchProfile = async () => {

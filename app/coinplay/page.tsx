@@ -19,8 +19,8 @@ import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
-import { useSupabase } from "@/app/lib/supabase";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const MINFLIPS = 20;
 const MAXFLIPS = 300;
@@ -31,7 +31,7 @@ export default function Home() {
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [coinComplete, setCoinComplete] = useState(false);
-  const supabase = useSupabase();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchProfile = async () => {

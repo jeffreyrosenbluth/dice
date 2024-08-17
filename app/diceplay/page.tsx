@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
-import { useSupabase } from "@/app/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
@@ -23,7 +23,7 @@ export default function Home() {
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
   const [diceComplete, setDiceComplete] = useState(false);
-  const supabase = useSupabase();
+  const supabase = createClient();
   const router = useRouter();
 
   useEffect(() => {

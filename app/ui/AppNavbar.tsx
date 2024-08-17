@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
 import { Spinner } from "@nextui-org/spinner";
-import { useSupabase } from "@/app/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useStateContext, initialModel } from "@/app/ctx";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
@@ -59,7 +59,7 @@ const AppNavbar: React.FC = () => {
   const { setModel } = useStateContext();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const supabase = useSupabase();
+  const supabase = createClient();
   const [coinComplete, setCoinComplete] = useState(false);
   const [diceComplete, setDiceComplete] = useState(false);
 
