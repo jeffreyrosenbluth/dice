@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   RadioGroup,
@@ -19,49 +19,20 @@ import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { useAuth } from "@/app/authctx";
 
 const MINFLIPS = 20;
 const MAXFLIPS = 300;
 
 export default function Home() {
   const { model, setModel } = useStateContext();
-  const router = useRouter();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [coinComplete, setCoinComplete] = useState(false);
+  const { user, coinComplete, setCoinComplete } = useAuth();
   const supabase = createClient();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return router.push("/login");
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("coin_complete")
-        .eq("id", user.id)
-        .single();
-
-      if (data && !error) {
-        setCoinComplete(data.coin_complete);
-      }
-    };
-
-    fetchProfile();
-  });
-
   const handleFinishGame = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     if (user) {
       let { data, error } = await supabase
         .from("profiles")

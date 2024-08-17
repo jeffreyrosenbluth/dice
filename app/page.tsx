@@ -2,51 +2,13 @@
 
 import { Image } from "@nextui-org/react";
 
-import { useCallback, useEffect, useState } from "react";
 import { Link, Button } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/authctx";
 
 export default function Home() {
-  const [coin, setCoin] = useState<boolean | null>(null);
-  const supabase = createClient();
-
-  const getProfile = useCallback(async () => {
-    if (!supabase) return;
-
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        console.log("No user found");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("coin_complete")
-        .eq("id", user.id)
-        .single();
-
-      if (error) {
-        console.log(error);
-        throw error;
-      }
-
-      if (data) {
-        setCoin(data.coin_complete);
-      }
-    } catch (error) {
-      alert("Error loading user data");
-    }
-  }, [supabase]);
-
-  useEffect(() => {
-    if (supabase) {
-      getProfile();
-    }
-  }, [supabase, getProfile]);
+  const { coinComplete, diceComplete } = useAuth();
 
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
@@ -111,7 +73,7 @@ export default function Home() {
                   You must be logged in to play this game.
                 </p>
               </div>
-              {coin ? (
+              {coinComplete ? (
                 <div>
                   Despite the favorable odds, many players struggle with bet
                   sizing, revealing common behavioral biases and sub-optimal
@@ -149,7 +111,7 @@ export default function Home() {
             <div className="text-3xl text-blue-400 font-medium mb-2">
               Coin Flip Simulation
             </div>
-            {coin ? (
+            {coinComplete ? (
               <p>
                 Fix the betting strategy and run a simulation of the results to
                 compare statistics of different strategies. You can change the

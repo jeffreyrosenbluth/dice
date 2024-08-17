@@ -8,37 +8,19 @@ import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
 import { useStateContext } from "@/app/ctx";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { useAuth } from "@/app/authctx";
 
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const { diceComplete } = useAuth();
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return router.push("/login");
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("dice_complete")
-        .eq("id", user.id)
-        .single();
-
-      if (!data?.dice_complete) {
-        return router.push("/");
-      }
-    };
-
-    fetchProfile();
-  }, []);
+    if (!diceComplete) {
+      return router.push("/");
+    }
+  }, [diceComplete, router]);
 
   const handleStockSlider = (value: number | number[]) => {
     setModel({

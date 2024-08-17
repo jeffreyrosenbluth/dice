@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Navbar,
@@ -57,34 +56,9 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 
 const AppNavbar: React.FC = () => {
   const { setModel } = useStateContext();
-  const { user, loading } = useAuth();
+  const { user, coinComplete, diceComplete, loading } = useAuth();
   const router = useRouter();
   const supabase = createClient();
-  const [coinComplete, setCoinComplete] = useState(false);
-  const [diceComplete, setDiceComplete] = useState(false);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("coin_complete, dice_complete")
-          .eq("id", user.id)
-          .single();
-
-        if (data && !error) {
-          setCoinComplete(data.coin_complete);
-          setDiceComplete(data.dice_complete);
-        }
-      }
-    };
-
-    fetchProfile();
-  });
 
   const handleAuthClick = async () => {
     if (user) {

@@ -5,13 +5,13 @@ import ReturnPlot from "@/app/ui/returnplot";
 import Die from "@/app/ui/die";
 import Card from "@/app/ui/card";
 import { Slider, Button, Switch } from "@nextui-org/react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import { useAuth } from "@/app/authctx";
 
 const MINROLLS = 20;
 const MAXROLLS = 300;
@@ -22,33 +22,8 @@ const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
 export default function Home() {
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
-  const [diceComplete, setDiceComplete] = useState(false);
+  const { user, diceComplete, setDiceComplete } = useAuth();
   const supabase = createClient();
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return router.push("/login");
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("dice_complete")
-        .eq("id", user.id)
-        .single();
-
-      if (data && !error) {
-        setDiceComplete(data.dice_complete);
-      }
-    };
-
-    fetchProfile();
-  });
 
   const cashPercent =
     1 -
@@ -113,10 +88,6 @@ export default function Home() {
   };
 
   const handleFinishGame = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     if (user) {
       let { data, error } = await supabase
         .from("profiles")
