@@ -3,8 +3,6 @@
 import { Image } from "@nextui-org/react";
 
 import { Link, Button } from "@nextui-org/react";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
 
 export default function Home() {
