@@ -1,12 +1,32 @@
 "use client";
 
 import { Image } from "@nextui-org/react";
-
 import { Link, Button } from "@nextui-org/react";
 import { useAuth } from "@/app/authctx";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { coinComplete, diceComplete } = useAuth();
+  const router = useRouter();
+  const { user, loading, refreshUser, coinComplete, diceComplete } = useAuth();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("auth") === "success") {
+        refreshUser();
+        router.replace("/"); // Remove the query parameter
+      }
+    }
+  }, [refreshUser, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <div>Please log in</div>;
+  }
 
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">

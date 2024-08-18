@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 
@@ -11,6 +17,7 @@ type AuthContextType = {
   diceComplete: boolean;
   setDiceComplete: (value: boolean) => void;
   loading: boolean;
+  refreshUser: () => Promise<void>; // Add this method
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,6 +27,7 @@ const AuthContext = createContext<AuthContextType>({
   diceComplete: false,
   setDiceComplete: () => {},
   loading: true,
+  refreshUser: async () => {}, // Add this method
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -29,32 +37,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [coinComplete, setCoinComplete] = useState(false);
   const [diceComplete, setDiceComplete] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-      if (user) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("coin_complete, dice_complete")
-          .eq("id", user.id)
-          .single();
+  const fetchUserData = useCallback(
+    async (user: User) => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("coin_complete, dice_complete")
+        .eq("id", user.id)
+        .single();
 
-        if (data && !error) {
-          setCoinComplete(data.coin_complete);
-          setDiceComplete(data.dice_complete);
-        }
+      if (data && !error) {
+        setCoinComplete(data.coin_complete);
+        setDiceComplete(data.dice_complete);
       }
-    };
+    },
+    [supabase]
+  );
 
-    fetchUser();
+  const refreshUser = useCallback(async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    setUser(user);
+    if (user) {
+      await fetchUserData(user);
+    }
+    setLoading(false);
+  }, [supabase, fetchUserData]);
+
+  useEffect(() => {
+    refreshUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setUser(session?.user ?? null);
+        if (session?.user) {
+          await fetchUserData(session.user);
+        }
         setLoading(false);
       }
     );
@@ -62,7 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, fetchUserData, refreshUser]);
 
   return (
     <AuthContext.Provider
@@ -73,6 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         diceComplete,
         setDiceComplete,
         loading,
+        refreshUser, // Include the refreshUser method
       }}
     >
       {children}
