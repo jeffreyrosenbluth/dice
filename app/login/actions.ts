@@ -19,7 +19,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/?auth=success"); // Add a query parameter
+  redirect("/?auth=success");
 }
 
 export async function signup(formData: FormData) {
@@ -37,5 +37,5 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/?auth=success"); // Add a query parameter
+  redirect("/?auth=success");
 }

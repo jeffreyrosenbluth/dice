@@ -169,7 +169,10 @@ export default function Home() {
               )}
               onClick={handleFlip}
               disabled={
-                isFlipping || selected === undefined || model.coinPlayBet === 0
+                isFlipping ||
+                selected === undefined ||
+                model.coinPlayBet === 0 ||
+                model.coinPlayFlips.length > MAXFLIPS
               }
             >
               Flip

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const { user, loading, refreshUser, coinComplete, diceComplete } = useAuth();
+  const { loading, refreshUser, coinComplete, diceComplete } = useAuth();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -23,10 +23,6 @@ export default function Home() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  // if (!user) {
-  //   return <div>Please log in</div>;
-  // }
 
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
@@ -88,7 +84,7 @@ export default function Home() {
               </Button>
               <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
                 <p className="font-semibold italic">
-                  You must be logged in to play this game.
+                  You must be signed in to play this game.
                 </p>
               </div>
               {coinComplete ? (
@@ -159,10 +155,47 @@ export default function Home() {
               histograms of each investment compared to its trure probability
               distrtibution.
             </p>
+            <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
+            <div className="list-circle list-inside ml-4">
+              <div>Minimum 20 rolls required</div>
+              <div>Maximum 100 rolls allowed</div>
+              <div>
+                After 20 rolls, the{" "}
+                <span className="text-lg text-blue-400 font-semibold">
+                  Finish
+                </span>{" "}
+                button becomes available
+              </div>
+            </div>
+            <div className="text-xl font-medium mb-1 mt-4">
+              When you press
+              <span className="text-blue-400 font-semibold"> Finish</span>{" "}
+            </div>
+            <div className="list-circle list-inside ml-4 mb-4">
+              <div>Your data will be saved to a database</div>
+              <div>The Dice Simulation section will unlock</div>
+            </div>
+            <p>
+              You can reset and play again, but additional games will not be
+              saved.
+            </p>
+            <Button
+              className="mt-4 mb-2 py-2 px-4 bg-blue-500"
+              href="/diceplay"
+              as={Link}
+              variant="solid"
+            >
+              Play Dice Roll Game
+            </Button>
+            <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+              <p className="font-semibold italic">
+                You must be signed in to play this game.
+              </p>
+            </div>
             <br />
             <br />
             <div className="flex place-items-center"></div>
-            <div className="text-2xl font-bold text-slate-200">
+            <div className="text-2xl font-bold text-slate-200 text-center">
               Risk and Return
             </div>
             <div className="overflow-x-auto mx-auto max-w-2xl">
@@ -231,7 +264,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="text-2xl font-bold text-slate-200 mt-12">
+            <div className="text-2xl font-bold text-slate-200 mt-12 text-center">
               Investment Net Returns
             </div>
             <div className="flex flex-col">
@@ -355,55 +388,63 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            The dice roll game should be played before running any dice roll
-            simulations or reading the about section of the Dice Roldivng tab.
-            That way you will be able to play the game without being biased by
-            knowing the optimal strategy.
           </div>
-          <div className="relative flex place-items-center mb-8">
-            <p className="text-justify">
-              Many students and practitioners of finance struggle to connect the
-              concepts of variance and risk. This game, inspired by the work of
-              Foster and Stine, aims to bridge that gap. In the game, players
-              roll virtual dice representing the returns of three distinct types
-              of investments: a risk-free money market instrument, the S&P 500,
-              and a high-risk option like venture capital or meme stocks.
-              <br />
-              <br />
-              Each investment behaves differently, illustrating real-world
-              financial scenarios. As the simulation progresses, some players
-              may experience remarkable success with the high-risk investment,
-              accumulating significantly more wealth than their peers. However,
-              the majority will encounter financial ruin due to the{" "}
-              {"investment's"} extreme volatility—a phenomenon known as the{" "}
-              {'"Variance Drain"'}.
-              <br />
-              <br />
-              This stark contrast in outcomes often surprises players,
-              highlighting the difficulty in distinguishing luck from skill in
-              investment performance. Additionally, the simulation demonstrates
-              how diversifying assets within a portfolio can reduce overall risk
-              (variance). Players discover that combining two poor investments
-              can unexpectedly result in a robust portfolio performance.
-              <br />
-              <br />
-              By the end of the game, players gain a deeper understanding of
-              financial volatility and the importance of diversification in
-              managing investment risk.
-            </p>
-          </div>
-          <hr className="w-full border-t-2 border-slate-400 mb-4" />
-          <Link
-            href="http://deanfoster.net/research/being_warren_buffett.pdf"
-            className="inline text-left text-blue-300 mt-6"
-          >
-            <span className="whitespace-nowrap mr-1">Based on: </span>
-            <em>
-              Being Warren Buffett: A Classroom Simulation of Risk and Wealth
-              When Investing in the Stock Market
-            </em>
-            , by Dean P. Foster and Robert A. Stein.
-          </Link>
+          {diceComplete ? (
+            <div>
+              <p className="text-justify">
+                Many students and practitioners of finance struggle to connect
+                the concepts of variance and risk. This game, inspired by the
+                work of Foster and Stine, aims to bridge that gap. In the game,
+                players roll virtual dice representing the returns of three
+                distinct types of investments: a risk-free money market
+                instrument, the S&P 500, and a high-risk option like venture
+                capital or meme stocks.
+                <br />
+                <br />
+                Each investment behaves differently, illustrating real-world
+                financial scenarios. As the simulation progresses, some players
+                may experience remarkable success with the high-risk investment,
+                accumulating significantly more wealth than their peers.
+                However, the majority will encounter financial ruin due to the{" "}
+                {"investment's"} extreme volatility—a phenomenon known as the{" "}
+                {'"Variance Drain"'}.
+                <br />
+                <br />
+                This stark contrast in outcomes often surprises players,
+                highlighting the difficulty in distinguishing luck from skill in
+                investment performance. Additionally, the simulation
+                demonstrates how diversifying assets within a portfolio can
+                reduce overall risk (variance). Players discover that combining
+                two poor investments can unexpectedly result in a robust
+                portfolio performance.
+                <br />
+                <br />
+                By the end of the game, players gain a deeper understanding of
+                financial volatility and the importance of diversification in
+                managing investment risk.
+              </p>
+              <div>
+                <hr className="w-full border-t-2 border-slate-400 mb-4 mt-4" />
+                <Link
+                  href="http://deanfoster.net/research/being_warren_buffett.pdf"
+                  className="inline text-left text-blue-300 mt-6"
+                >
+                  <span className="whitespace-nowrap mr-1">Based on: </span>
+                  <em>
+                    Being Warren Buffett: A Classroom Simulation of Risk and
+                    Wealth When Investing in the Stock Market
+                  </em>
+                  , by Dean P. Foster and Robert A. Stein.
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+              <p className="font-semibold italic">
+                Complete the Dice Roll to unlock the simulation
+              </p>
+            </div>
+          )}
           <div className="py-4">
             <div className="text-3xl text-blue-400 font-medium mb-2">
               Dice Roll Simulation

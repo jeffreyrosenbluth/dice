@@ -56,15 +56,23 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 
 const AppNavbar: React.FC = () => {
   const { setModel } = useStateContext();
-  const { user, coinComplete, diceComplete, loading } = useAuth();
+  const {
+    user,
+    coinComplete,
+    setCoinComplete,
+    diceComplete,
+    setDiceComplete,
+    loading,
+  } = useAuth();
   const router = useRouter();
   const supabase = createClient();
 
   const handleAuthClick = async () => {
     if (user) {
-      await supabase.auth.signOut();
       setModel(initialModel);
-      router.push("/"); // Redirect to home page after sign out
+      await supabase.auth.signOut();
+      setCoinComplete(false);
+      setDiceComplete(false);
     } else {
       router.push("/login"); // Redirect to login page
     }

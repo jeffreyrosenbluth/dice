@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { useAuth } from "@/app/authctx";
 
 const MINROLLS = 20;
-const MAXROLLS = 300;
+const MAXROLLS = 100;
 
 const initialWealth = [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }];
 const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
@@ -124,7 +124,7 @@ export default function Home() {
           <Button
             className="py-4 mb-2 bg-blue-500"
             onClick={handleRoll}
-            disabled={isRolling}
+            disabled={isRolling || model.diceWealths.length > MAXROLLS}
           >
             Roll
           </Button>

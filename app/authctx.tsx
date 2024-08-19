@@ -27,7 +27,7 @@ const AuthContext = createContext<AuthContextType>({
   diceComplete: false,
   setDiceComplete: () => {},
   loading: true,
-  refreshUser: async () => {}, // Add this method
+  refreshUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
