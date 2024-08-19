@@ -74,11 +74,11 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <div className="text-right mb-4">
+        {/* <div className="text-right mb-4">
           <a href="#" className="text-blue-400 hover:underline">
             Forgot password?
           </a>
-        </div>
+        </div> */}
       </form>
     </div>
   );

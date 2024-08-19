@@ -24,9 +24,9 @@ export default function Home() {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    return <div>Please log in</div>;
-  }
+  // if (!user) {
+  //   return <div>Please log in</div>;
+  // }
 
   return (
     <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">

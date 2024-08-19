@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         diceComplete,
         setDiceComplete,
         loading,
-        refreshUser, // Include the refreshUser method
+        refreshUser,
       }}
     >
       {children}
