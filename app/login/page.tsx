@@ -1,21 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { login, signup } from "./actions";
+import { login, signup, logout } from "./actions";
+import { useAuth } from "@/app/authctx";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const { user } = useAuth();
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev); // Toggle the password visibility state
+    setShowPassword((prev) => !prev);
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen ">
-      <form className="mt-20 p-8 border-small border-slate-500">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <form className="w-full max-w-md p-8 border-small border-slate-500 rounded-lg">
         <h2 className="text-2xl font-bold mb-6 text-center text-white">
           Experiments for Learning Finance
         </h2>
-
         <div className="mb-4">
           <label
             htmlFor="email"
@@ -32,7 +33,6 @@ export default function LoginPage() {
             placeholder="Enter your email"
           />
         </div>
-
         <div className="mb-6">
           <label
             htmlFor="password"
@@ -58,7 +58,6 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
-
         <div className="flex items-center justify-between mb-6">
           <button
             formAction={login}
@@ -68,18 +67,23 @@ export default function LoginPage() {
           </button>
           <button
             formAction={signup}
-            className="px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Sign up
           </button>
         </div>
-
-        {/* <div className="text-right mb-4">
-          <a href="#" className="text-blue-400 hover:underline">
-            Forgot password?
-          </a>
-        </div> */}
       </form>
+
+      {user && (
+        <form action={logout} className="mt-4">
+          <button
+            type="submit"
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          >
+            Log Out
+          </button>
+        </form>
+      )}
     </div>
   );
 }

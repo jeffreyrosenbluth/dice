@@ -18,6 +18,7 @@ import { useAuth } from "@/app/authctx";
 import { Spinner } from "@nextui-org/spinner";
 import { createClient } from "@/utils/supabase/client";
 import { useStateContext, initialModel } from "@/app/ctx";
+// import { logout } from "@/app/login/actions";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;
@@ -68,14 +69,7 @@ const AppNavbar: React.FC = () => {
   const supabase = createClient();
 
   const handleAuthClick = async () => {
-    if (user) {
-      setModel(initialModel);
-      await supabase.auth.signOut();
-      setCoinComplete(false);
-      setDiceComplete(false);
-    } else {
-      router.push("/login"); // Redirect to login page
-    }
+    router.push("/login"); // Redirect to login page
   };
 
   if (loading) {

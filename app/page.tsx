@@ -8,17 +8,11 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const { loading, refreshUser, coinComplete, diceComplete } = useAuth();
+  const { loading, user, refreshUser, coinComplete, diceComplete } = useAuth();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get("auth") === "success") {
-        refreshUser();
-        router.replace("/"); // Remove the query parameter
-      }
-    }
-  }, [refreshUser, router]);
+    refreshUser();
+  }, [refreshUser]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -79,12 +73,14 @@ export default function Home() {
                 href="/coinplay"
                 as={Link}
                 variant="solid"
+                isDisabled={!user}
               >
                 Play Coin Flip Game
               </Button>
               <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
                 <p className="font-semibold italic">
-                  You must be signed in to play this game.
+                  You must be signed in to play this game. Press the Sign In
+                  button to sign in or sign up.
                 </p>
               </div>
               {coinComplete ? (
@@ -184,6 +180,7 @@ export default function Home() {
               href="/diceplay"
               as={Link}
               variant="solid"
+              isDisabled={!user}
             >
               Play Dice Roll Game
             </Button>
