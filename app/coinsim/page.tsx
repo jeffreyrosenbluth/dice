@@ -189,12 +189,12 @@ export default function Home() {
             value={model.coinSimBoxes}
             onValueChange={handleCheckbox}
           >
-            <Checkbox
+            {/* <Checkbox
               classNames={{ label: "text-xs md:text-sm" }}
               value="player"
             >
               {`Constant ${Math.trunc(100 * model.coinSimSliders.betSlider)}%`}
-            </Checkbox>
+            </Checkbox> */}
             <Checkbox
               classNames={{ label: "text-xs md:text-sm" }}
               value="constant"

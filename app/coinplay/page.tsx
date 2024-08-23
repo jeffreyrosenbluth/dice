@@ -112,8 +112,8 @@ export default function Home() {
       <div className="flex flex-row justify-center text-3xl text-slate-200">
         Coin Flipping Game
       </div>
-      <div className="flex flex-row justify-center text-slate-200">
-        Starting Balance: $100
+      <div className="flex flex-row text-xl justify-center text-blue-300">
+        Balance: ${balance.toFixed(0)}
       </div>
       <div className="grid grid-cols-12">
         <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-80">
@@ -211,16 +211,16 @@ export default function Home() {
               onAnimationComplete={handleFlipComplete}
             />
           </div>
-          <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
+          {/* <div className="text-base md:text-lg flex flex-col text-blue-400 items-center">
             Balance: {balance.toFixed(2)}
-          </div>
-          <Card className="bg-zinc-800">
+          </div> */}
+          <Card className="bg-zinc-800 mt-6">
             <CardHeader className="text-sm md:text-base justify-center">
               Statistics
             </CardHeader>
             <Divider />
             <CardBody className="flex flex-row text-slate-200 text-xs md:text-sm gap-6 justify-stretch">
-              <div className="text-red-500">Heads {heads}</div>
+              <div className="text-yellow-600">Heads {heads}</div>
               <div className="text-zinc-400">
                 Tails {model.coinPlayFlips.length - heads - 1}
               </div>

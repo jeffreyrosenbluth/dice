@@ -33,10 +33,10 @@ export default function HTPlot({ flips, className = "" }: HTPlotProps) {
           x2: (d, i) => i + 1,
           y1: 0.0,
           y2: 0.5,
-          fill: (d) => (d.coinResult === "heads" ? "#dc2626" : "#a1a1aa"),
+          fill: (d) => (d.coinResult === "heads" ? "#ca8a04" : "#a1a1aa"),
           stroke: "black",
           strokeOpacity: 0.7,
-          strokeWidth: 1.0,
+          strokeWidth: 2.0,
         }),
       ],
     });
