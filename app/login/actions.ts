@@ -42,3 +42,41 @@ export async function logout() {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+export async function signInWithGoogle() {
+  const supabase = createClient();
+  console.log("Initiating Google sign-in process");
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      console.error("Supabase returned an error:", error);
+      throw error;
+    }
+
+    console.log("Supabase response:", data);
+
+    if (!data.url) {
+      console.error("No URL returned from Supabase");
+      throw new Error("No URL returned from Supabase");
+    }
+
+    return {
+      success: true,
+      url: data.url,
+      provider: data.provider,
+    };
+  } catch (error) {
+    console.error("Error in signInWithGoogle:", error);
+    return {
+      success: false,
+      error: "Failed to sign in with Google",
+      message: error instanceof Error ? error.message : String(error),
+    };
+  }
+}

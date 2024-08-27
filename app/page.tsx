@@ -62,6 +62,7 @@ export default function Home() {
                 <div>
                   Your performance will be compared to other betting strategies
                 </div>
+                <div>A discussion of this game will be shown below </div>
                 <div>The Coin Simulation section will unlock</div>
               </div>
               <p>
@@ -84,14 +85,16 @@ export default function Home() {
                 </p>
               </div>
               {coinComplete ? (
-                <div>
+                <div className="text-orange-400">
                   Despite the favorable odds, many players struggle with bet
                   sizing, revealing common behavioral biases and sub-optimal
                   strategies. The optimal approach, based on expected utility or
                   the Kelly criterion, suggests betting a fixed proportion of{" "}
-                  {" one's"} balance on each flip. This strategy balances risk
-                  and reward. However, most players deviate, leading to erratic
-                  betting patterns and poor outcomes.
+                  {" one's"} balance on each flip. In this game the Kelly
+                  proportion is 20%. This strategy balances risk and reward.
+                  However, most players deviate, leading to erratic betting
+                  patterns and poor outcomes. We recommend reading the note
+                  referenced below for a more detailed discussion.
                   <br />
                   <br />
                   Through this simulation, players learn about risk management
@@ -169,6 +172,7 @@ export default function Home() {
             </div>
             <div className="list-circle list-inside ml-4 mb-4">
               <div>Your data will be saved to a database</div>
+              <div>A discussion of the Dice Game will appear below</div>
               <div>The Dice Simulation section will unlock</div>
             </div>
             <p>
@@ -387,7 +391,7 @@ export default function Home() {
             </div>
           </div>
           {diceComplete ? (
-            <div>
+            <div className="text-orange-400">
               <p className="text-justify">
                 Many students and practitioners of finance struggle to connect
                 the concepts of variance and risk. This game, inspired by the
@@ -446,6 +450,20 @@ export default function Home() {
             <div className="text-3xl text-blue-400 font-medium mb-2">
               Dice Roll Simulation
             </div>
+            {diceComplete ? (
+              <p>
+                Set the portfolio weights, rolls per sample, and number of
+                samples. Then run a simulation of the results to compare
+                statistics of the different investments. Including the
+                arithmetic, geometric mean returns and the volatility drag.
+              </p>
+            ) : (
+              <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+                <p className="font-semibold italic">
+                  Complete the Dice Roll Game to unlock the simulation
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

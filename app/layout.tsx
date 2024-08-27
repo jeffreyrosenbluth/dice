@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html className="dark">
-      <body className="bg-slate-700 `${inter.className} antialiased ">
+      <body className="bg-slate-950 `${inter.className} antialiased ">
         <AuthProvider>
           <Providers>
             <StateProvider>

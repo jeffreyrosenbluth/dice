@@ -1,7 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { login, signup, logout } from "./actions";
+import { login, signup, logout, signInWithGoogle } from "./actions";
 import { useAuth } from "@/app/authctx";
+
+const handleGoogleSignin = async () => {
+  try {
+    const result = await signInWithGoogle();
+    console.log("Sign-in result:", result);
+    if (result.success && result.url) {
+      console.log("Redirecting to:", result.url);
+      window.location.href = result.url;
+    } else {
+      console.error("Sign-in failed:", result.error || "Unknown error");
+    }
+  } catch (err) {
+    console.error("Error during sign-in:", err);
+  }
+};
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -84,6 +99,9 @@ export default function LoginPage() {
           </button>
         </form>
       )}
+      <div>
+        <button onClick={handleGoogleSignin}>Sign in with Google</button>
+      </div>
     </div>
   );
 }
