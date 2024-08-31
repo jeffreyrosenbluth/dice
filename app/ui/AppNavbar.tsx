@@ -16,9 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
 import { Spinner } from "@nextui-org/spinner";
-import { createClient } from "@/utils/supabase/client";
-import { useStateContext, initialModel } from "@/app/ctx";
-// import { logout } from "@/app/login/actions";
+import { useStateContext } from "@/app/ctx";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;
@@ -56,17 +54,21 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 };
 
 const AppNavbar: React.FC = () => {
-  const { setModel } = useStateContext();
+  // const { setModel } = useStateContext();
   const {
     user,
     coinComplete,
     setCoinComplete,
     diceComplete,
     setDiceComplete,
+    coinGameEnabled,
+    coinSimEnabled,
+    diceGameEnabled,
+    diceSimEnabled,
     loading,
   } = useAuth();
+
   const router = useRouter();
-  const supabase = createClient();
 
   const handleAuthClick = async () => {
     router.push("/login"); // Redirect to login page
@@ -75,6 +77,24 @@ const AppNavbar: React.FC = () => {
   if (loading) {
     return <Spinner />;
   }
+
+  const coinDisabledKeys = () => {
+    const play = user && coinGameEnabled;
+    const sim = user && coinSimEnabled && coinComplete;
+    if (play && sim) return [];
+    if (play) return ["simulation"];
+    if (sim) return ["play"];
+    return ["play", "simulation"];
+  };
+
+  const diceDisabledKeys = () => {
+    const play = user && diceGameEnabled;
+    const sim = user && diceSimEnabled && diceComplete;
+    if (play && sim) return [];
+    if (play) return ["simulation"];
+    if (sim) return ["play"];
+    return ["play", "simulation"];
+  };
 
   return (
     <Navbar className="bg-slate-950 border-b border-gray-700">
@@ -100,15 +120,7 @@ const AppNavbar: React.FC = () => {
                 Coin Flipping
               </Button>
             </DropdownTrigger>
-            <DropdownMenu
-              disabledKeys={
-                user && coinComplete
-                  ? []
-                  : user
-                  ? ["simulation"]
-                  : ["play", "simulation"]
-              }
-            >
+            <DropdownMenu disabledKeys={coinDisabledKeys()}>
               <DropdownItem key="play">
                 <Link href="/coinplay" className="w-full h-full block">
                   Game
@@ -135,15 +147,7 @@ const AppNavbar: React.FC = () => {
                 Dice Rolling
               </Button>
             </DropdownTrigger>
-            <DropdownMenu
-              disabledKeys={
-                user && diceComplete
-                  ? []
-                  : user
-                  ? ["simulation"]
-                  : ["play", "simulation"]
-              }
-            >
+            <DropdownMenu disabledKeys={diceDisabledKeys()}>
               <DropdownItem key="play">
                 <Link href="/diceplay" className="w-full h-full block">
                   Game

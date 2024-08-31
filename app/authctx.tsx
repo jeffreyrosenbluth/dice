@@ -1,4 +1,5 @@
 "use client";
+
 import React, {
   createContext,
   useState,
@@ -15,6 +16,14 @@ type AuthContextType = {
   setCoinComplete: (value: boolean) => void;
   diceComplete: boolean;
   setDiceComplete: (value: boolean) => void;
+  coinGameEnabled: boolean;
+  coinGameMinFlips: number;
+  coinGameMaxFlips: number;
+  coinSimEnabled: boolean;
+  diceGameEnabled: boolean;
+  diceGameMinRolls: number;
+  diceGameMaxRolls: number;
+  diceSimEnabled: boolean;
   loading: boolean;
   refreshUser: () => Promise<void>;
 };
@@ -25,9 +34,28 @@ const AuthContext = createContext<AuthContextType>({
   setCoinComplete: () => {},
   diceComplete: false,
   setDiceComplete: () => {},
+  coinGameEnabled: true,
+  coinGameMinFlips: 20,
+  coinGameMaxFlips: 300,
+  coinSimEnabled: false,
+  diceGameEnabled: false,
+  diceGameMinRolls: 20,
+  diceGameMaxRolls: 100,
+  diceSimEnabled: false,
   loading: true,
   refreshUser: async () => {},
 });
+
+export type Config = {
+  coin_game_enabled: boolean;
+  coin_game_min_flips: number;
+  coin_game_max_flips: number;
+  coin_sim_enabled: boolean;
+  dice_game_enabled: boolean;
+  dice_game_min_rolls: number;
+  dice_game_max_rolls: number;
+  dice_sim_enabled: boolean;
+};
 
 function useSupabaseAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -79,6 +107,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, supabase, refreshUser } = useSupabaseAuth();
   const [coinComplete, setCoinComplete] = useState(false);
   const [diceComplete, setDiceComplete] = useState(false);
+  const [config, setConfig] = useState<Config | null>(null);
 
   const fetchUserData = useCallback(
     async (user: User) => {
@@ -105,6 +134,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user, fetchUserData]);
 
+  const fetchConfigurations = useCallback(async (): Promise<Config | null> => {
+    if (!supabase) return null;
+    const { data, error } = await supabase
+      .from("config")
+      .select("*")
+      .single<Config>();
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    return data;
+  }, [supabase]);
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      const configData = await fetchConfigurations();
+      setConfig(configData);
+    };
+
+    loadConfig();
+  }, [fetchConfigurations]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -113,6 +165,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCoinComplete,
         diceComplete,
         setDiceComplete,
+        coinGameEnabled: config?.coin_game_enabled ?? false,
+        coinGameMinFlips: config?.coin_game_min_flips ?? 0,
+        coinGameMaxFlips: config?.coin_game_max_flips ?? 0,
+        coinSimEnabled: config?.coin_sim_enabled ?? false,
+        diceGameEnabled: config?.dice_game_enabled ?? false,
+        diceGameMinRolls: config?.dice_game_min_rolls ?? 0,
+        diceGameMaxRolls: config?.dice_game_max_rolls ?? 0,
+        diceSimEnabled: config?.dice_sim_enabled ?? false,
         loading,
         refreshUser,
       }}

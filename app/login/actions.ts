@@ -45,7 +45,6 @@ export async function logout() {
 
 export async function signInWithGoogle() {
   const supabase = createClient();
-  console.log("Initiating Google sign-in process");
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",

@@ -22,14 +22,17 @@ import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 import { useAuth } from "@/app/authctx";
 
-const MINFLIPS = 20;
-const MAXFLIPS = 300;
-
 export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const { user, coinComplete, setCoinComplete } = useAuth();
+  const {
+    user,
+    coinComplete,
+    setCoinComplete,
+    coinGameMinFlips,
+    coinGameMaxFlips,
+  } = useAuth();
   const supabase = createClient();
 
   const handleFinishGame = async () => {
@@ -172,7 +175,7 @@ export default function Home() {
                 isFlipping ||
                 selected === undefined ||
                 model.coinPlayBet === 0 ||
-                model.coinPlayFlips.length > MAXFLIPS
+                model.coinPlayFlips.length > coinGameMaxFlips
               }
             >
               Flip
@@ -182,15 +185,16 @@ export default function Home() {
                 className={clsx(
                   "text-sm md:text-base py-2 mb-1 bg-blue-500",
                   {
-                    "opacity-50 ": model.coinPlayFlips.length < MINFLIPS + 1,
+                    "opacity-50 ":
+                      model.coinPlayFlips.length < coinGameMinFlips + 1,
                   },
                   {
                     "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
-                      model.coinPlayFlips.length < MINFLIPS + 1,
+                      model.coinPlayFlips.length < coinGameMinFlips + 1,
                   },
                   "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
                 )}
-                disabled={model.coinPlayFlips.length < MINFLIPS + 1}
+                disabled={model.coinPlayFlips.length < coinGameMinFlips + 1}
                 onClick={handleFinishGame}
               >
                 Finish

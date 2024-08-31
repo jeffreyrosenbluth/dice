@@ -22,13 +22,13 @@ export default function Home() {
   const router = useRouter();
   const bias = model.coinSimSliders.biasSlider;
   const kellyFraction = bias * 2 - 1;
-  const { coinComplete } = useAuth();
+  const { coinComplete, coinSimEnabled } = useAuth();
 
   useEffect(() => {
-    if (!coinComplete) {
+    if (!(coinComplete && coinSimEnabled)) {
       return router.push("/");
     }
-  }, [coinComplete, router]);
+  }, [coinComplete, coinSimEnabled, router]);
 
   const handleYearsSlider = (value: number | number[]) => {
     setModel({
@@ -189,12 +189,6 @@ export default function Home() {
             value={model.coinSimBoxes}
             onValueChange={handleCheckbox}
           >
-            {/* <Checkbox
-              classNames={{ label: "text-xs md:text-sm" }}
-              value="player"
-            >
-              {`Constant ${Math.trunc(100 * model.coinSimSliders.betSlider)}%`}
-            </Checkbox> */}
             <Checkbox
               classNames={{ label: "text-xs md:text-sm" }}
               value="constant"

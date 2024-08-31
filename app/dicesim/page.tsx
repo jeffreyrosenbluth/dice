@@ -14,10 +14,10 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const router = useRouter();
-  const { diceComplete } = useAuth();
+  const { diceGameEnabled, diceComplete } = useAuth();
 
   useEffect(() => {
-    if (!diceComplete) {
+    if (!(diceComplete && diceGameEnabled)) {
       return router.push("/");
     }
   }, [diceComplete, router]);
