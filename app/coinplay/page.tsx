@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   RadioGroup,
@@ -10,6 +10,12 @@ import {
   CardHeader,
   Divider,
   CardBody,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
@@ -26,6 +32,9 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [timeRemaining, setTimeRemaining] = useState(30); // 30 minutes in seconds
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     user,
     coinComplete,
@@ -34,6 +43,32 @@ export default function Home() {
     coinGameMaxFlips,
   } = useAuth();
   const supabase = createClient();
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isTimerRunning && timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeRemaining === 0) {
+      setIsTimerRunning(false);
+      handleFinishGame();
+      onOpen();
+    }
+
+    return () => clearInterval(timer);
+  }, [isTimerRunning, timeRemaining]);
+
+  const startTimer = () => {
+    setIsTimerRunning(true);
+  };
+
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
 
   const handleFinishGame = async () => {
     if (user) {
@@ -115,9 +150,41 @@ export default function Home() {
       <div className="flex flex-row justify-center text-3xl text-slate-200">
         Coin Flipping Game
       </div>
+      {!coinComplete ? (
+        !isTimerRunning ? (
+          <div className="flex flex-row justify-evenly">
+            <Button
+              className="text-sm md:text-base py-2 mb-1 bg-green-600"
+              onClick={startTimer}
+            >
+              Start
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-row justify-evenly text-xl text-green-500 font-medium">
+            Time Remaining: {formatTime(timeRemaining)}
+          </div>
+        )
+      ) : null}
       <div className="flex flex-row text-xl justify-center text-blue-300">
         Balance: ${balance.toFixed(0)}
       </div>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>
+            <p className="text-red-600">Time's Up!</p>
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              The simulation time has ended and your results have been
+              submitted. You can contiune playing or press Reset to play againe.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onPress={onClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <div className="grid grid-cols-12">
         <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-80">
           <RadioGroup
@@ -162,11 +229,15 @@ export default function Home() {
                 "text-sm md:text-base py-2 mb-1 bg-blue-500",
                 {
                   "opacity-50 ":
-                    selected === undefined || model.coinPlayBet === 0,
+                    selected === undefined ||
+                    model.coinPlayBet === 0 ||
+                    (!coinComplete && !isTimerRunning),
                 },
                 {
                   "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
-                    selected === undefined || model.coinPlayBet === 0,
+                    selected === undefined ||
+                    model.coinPlayBet === 0 ||
+                    (!coinComplete && !isTimerRunning),
                 },
                 "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
               )}
@@ -175,7 +246,8 @@ export default function Home() {
                 isFlipping ||
                 selected === undefined ||
                 model.coinPlayBet === 0 ||
-                model.coinPlayFlips.length > coinGameMaxFlips
+                model.coinPlayFlips.length > coinGameMaxFlips ||
+                (!coinComplete && !isTimerRunning)
               }
             >
               Flip
