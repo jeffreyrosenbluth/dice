@@ -87,6 +87,9 @@ export default function Home() {
         const medianPlayer = d3.median(playerProfits.map((b) => b.value))!;
         const medianConstant = d3.median(constantProfits.map((b) => b.value))!;
         const medianKelly = d3.median(kellyProfits.map((b) => b.value))!;
+        const sdPlayer = d3.deviation(playerProfits.map((b) => b.value))!;
+        const sdConstant = d3.deviation(constantProfits.map((b) => b.value))!;
+        const sdKelly = d3.deviation(kellyProfits.map((b) => b.value))!;
         return [
           {
             player: avgPlayer,
@@ -98,13 +101,15 @@ export default function Home() {
             constant: medianConstant,
             kelly: medianKelly,
           },
+          { player: sdPlayer, constant: sdConstant, kelly: sdKelly },
         ];
       };
-      const [avg, median] = averages(model.coinSim);
+      const [avg, median, sd] = averages(model.coinSim);
       setModel({
         ...model,
         coinAvgReturns: avg,
         coinMedianReturns: median,
+        coinStandardDeviations: sd,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +132,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col space-y-6 mt-12">
       <div className="flex flex-row justify-center text-3xl text-slate-200">
-        Coin Simulation
+        Coin Flipping Simulation
       </div>
       <div className="flex flex-row justify-center text-slate-200">
         Starting Balance: $100
@@ -226,6 +231,10 @@ export default function Home() {
                 Median Return:
                 {d3.format("10.2%")(model.coinMedianReturns.player)}
               </p>
+              <p>
+                Standard Deviation:
+                {d3.format("10.2%")(model.coinStandardDeviations.player)}
+              </p>
             </Card>
             <Card className="text-orange-400 bg-inherit">
               <p>
@@ -235,6 +244,10 @@ export default function Home() {
                 Median Return:
                 {d3.format("10.2%")(model.coinMedianReturns.constant)}
               </p>
+              <p>
+                Standard Deviation:
+                {d3.format("10.2%")(model.coinStandardDeviations.constant)}
+              </p>
             </Card>
             <Card className="text-white bg-inherit">
               <p>
@@ -243,6 +256,10 @@ export default function Home() {
               <p>
                 Median Return:
                 {d3.format("10.2%")(model.coinMedianReturns.kelly)}
+              </p>
+              <p>
+                Standard Deviation:
+                {d3.format("10.2%")(model.coinStandardDeviations.kelly)}
               </p>
             </Card>
           </div>

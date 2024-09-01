@@ -32,8 +32,9 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [timeRemaining, setTimeRemaining] = useState(30); // 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(1200); // 30 minutes in seconds
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [gameEnded, setGameEnded] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     user,
@@ -51,14 +52,12 @@ export default function Home() {
       timer = setInterval(() => {
         setTimeRemaining((prevTime) => prevTime - 1);
       }, 1000);
-    } else if (timeRemaining === 0) {
-      setIsTimerRunning(false);
+    } else if (timeRemaining === 0 && !gameEnded) {
       handleFinishGame();
-      onOpen();
     }
 
     return () => clearInterval(timer);
-  }, [isTimerRunning, timeRemaining]);
+  }, [isTimerRunning, timeRemaining, gameEnded]);
 
   const startTimer = () => {
     setIsTimerRunning(true);
@@ -77,21 +76,23 @@ export default function Home() {
         .update({ coin_complete: true })
         .eq("id", user.id)
         .select();
-
       if (error) {
         console.error("Error updating profile:", error);
       } else {
         setCoinComplete(true);
         console.log("Game completed successfully!");
       }
+
       let updatesArray = toCoinGameTable(model.coinPlayFlips);
       ({ data, error } = await supabase.from("coin_game").upsert(updatesArray));
-
       if (error) {
         console.error("Error updating coin_game data:", error);
       } else {
         console.log("coin_game data updated successfully:", data);
       }
+      setIsTimerRunning(false);
+      setGameEnded(true);
+      onOpen();
     }
   };
 
@@ -176,8 +177,8 @@ export default function Home() {
           </ModalHeader>
           <ModalBody>
             <p>
-              The simulation time has ended and your results have been
-              submitted. You can contiune playing or press Reset to play againe.
+              The simulation has ended and your results have been submitted. You
+              can contiune playing or press Reset to play againe.
             </p>
           </ModalBody>
           <ModalFooter>

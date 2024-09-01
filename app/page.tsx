@@ -63,6 +63,7 @@ const Page = () => {
               <div className="list-circle list-inside ml-4">
                 <div>Minimum {coinGameMinFlips} flips required</div>
                 <div>Maximum {coinGameMaxFlips} flips allowed</div>
+                <div>You have a 20 minutes to complete the game</div>
                 <div>
                   After {coinGameMinFlips} flips, the{" "}
                   <span className="text-lg text-blue-400 font-semibold">
@@ -73,10 +74,8 @@ const Page = () => {
               </div>
               <div className="text-xl font-medium mb-1 mt-4">
                 When you press
-                <span className="text-blue-400 font-semibold">
-                  {" "}
-                  Finish
-                </span>{" "}
+                <span className="text-blue-400 font-semibold"> Finish</span> or
+                run out of time
               </div>
               <div className="list-circle list-inside ml-4 mb-4">
                 <div>Your data will be saved to a database</div>

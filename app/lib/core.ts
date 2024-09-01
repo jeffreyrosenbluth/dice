@@ -1,13 +1,13 @@
-export type Config = {
-  coin_game_enabled: boolean;
-  coin_game_min_flips: number;
-  coin_game_max_flips: number;
-  coin_sim_enabled: boolean;
-  dice_game_enabled: boolean;
-  dice_game_min_rolls: number;
-  dice_game_max_rolls: number;
-  dice_sim_enabled: boolean;
-};
+// export type Config = {
+//   coin_game_enabled: boolean;
+//   coin_game_min_flips: number;
+//   coin_game_max_flips: number;
+//   coin_sim_enabled: boolean;
+//   dice_game_enabled: boolean;
+//   dice_game_min_rolls: number;
+//   dice_game_max_rolls: number;
+//   dice_sim_enabled: boolean;
+// };
 
 // const BIAS = 0.6;
 

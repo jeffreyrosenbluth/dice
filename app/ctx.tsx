@@ -34,6 +34,7 @@ type Model = {
   coinSim: Profit[];
   coinAvgReturns: { player: number; constant: number; kelly: number };
   coinMedianReturns: { player: number; constant: number; kelly: number };
+  coinStandardDeviations: { player: number; constant: number; kelly: number };
 };
 
 interface StateContextProps {
@@ -69,7 +70,8 @@ export const initialModel: Model = {
   coinSim: [],
   coinAvgReturns: { player: 0, constant: 0, kelly: 0 },
   coinMedianReturns: { player: 0, constant: 0, kelly: 0 },
-  coinSimBoxes: ["player", "constant", "kelly"],
+  coinStandardDeviations: { player: 0, constant: 0, kelly: 0 },
+  coinSimBoxes: ["player", "kelly"],
 };
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
