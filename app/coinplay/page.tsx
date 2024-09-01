@@ -172,7 +172,7 @@ export default function Home() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>
-            <p className="text-red-600">Time's Up!</p>
+            <p className="text-red-600">Time{"'"}s Up!</p>
           </ModalHeader>
           <ModalBody>
             <p>
