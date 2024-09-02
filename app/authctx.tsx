@@ -19,7 +19,11 @@ type AuthContextType = {
   coinGameEnabled: boolean;
   coinGameMinFlips: number;
   coinGameMaxFlips: number;
+  coinGameBias: number;
+  coinGameMinutes: number;
   coinSimEnabled: boolean;
+  coinSimMaxSamples: number;
+  coinSimMaxFlips: number;
   diceGameEnabled: boolean;
   diceGameMinRolls: number;
   diceGameMaxRolls: number;
@@ -37,7 +41,11 @@ const AuthContext = createContext<AuthContextType>({
   coinGameEnabled: true,
   coinGameMinFlips: 20,
   coinGameMaxFlips: 300,
+  coinGameBias: 0.6,
+  coinGameMinutes: 20,
   coinSimEnabled: false,
+  coinSimMaxSamples: 10000,
+  coinSimMaxFlips: 100,
   diceGameEnabled: false,
   diceGameMinRolls: 20,
   diceGameMaxRolls: 100,
@@ -55,6 +63,10 @@ export type Config = {
   dice_game_min_rolls: number;
   dice_game_max_rolls: number;
   dice_sim_enabled: boolean;
+  coin_game_bias: number;
+  coin_game_minutes: number;
+  coin_sim_max_samples: number;
+  coin_sim_max_flips: number;
 };
 
 function useSupabaseAuth() {
@@ -168,7 +180,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         coinGameEnabled: config?.coin_game_enabled ?? false,
         coinGameMinFlips: config?.coin_game_min_flips ?? 0,
         coinGameMaxFlips: config?.coin_game_max_flips ?? 0,
+        coinGameBias: config?.coin_game_bias ?? 0.0,
+        coinGameMinutes: config?.coin_game_minutes ?? 0,
         coinSimEnabled: config?.coin_sim_enabled ?? false,
+        coinSimMaxFlips: config?.coin_sim_max_flips ?? 0,
+        coinSimMaxSamples: config?.coin_sim_max_samples ?? 0,
         diceGameEnabled: config?.dice_game_enabled ?? false,
         diceGameMinRolls: config?.dice_game_min_rolls ?? 0,
         diceGameMaxRolls: config?.dice_game_max_rolls ?? 0,

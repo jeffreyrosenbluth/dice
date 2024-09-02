@@ -32,7 +32,6 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping, setIsFlipping] = useState(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [timeRemaining, setTimeRemaining] = useState(1200); // 30 minutes in seconds
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -42,7 +41,10 @@ export default function Home() {
     setCoinComplete,
     coinGameMinFlips,
     coinGameMaxFlips,
+    coinGameBias,
+    coinGameMinutes,
   } = useAuth();
+  const [timeRemaining, setTimeRemaining] = useState(coinGameMinutes * 60);
   const supabase = createClient();
 
   useEffect(() => {
@@ -194,10 +196,10 @@ export default function Home() {
             onValueChange={handleRadio}
           >
             <Radio classNames={{ label: "text-xs md:text-base" }} value="heads">
-              Heads (probability = 0.6)
+              Heads (probability = {coinGameBias})
             </Radio>
             <Radio classNames={{ label: "text-xs md:text-base" }} value="tails">
-              Tails (probability = 0.4)
+              Tails (probability = {1 - coinGameBias})
             </Radio>
           </RadioGroup>
           <div>

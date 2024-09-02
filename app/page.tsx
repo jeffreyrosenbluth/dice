@@ -16,6 +16,8 @@ const Page = () => {
     diceComplete,
     coinGameMinFlips,
     coinGameMaxFlips,
+    coinGameBias,
+    coinGameMinutes,
     diceGameEnabled,
     diceGameMinRolls,
     diceGameMaxRolls,
@@ -54,16 +56,18 @@ const Page = () => {
             <div>
               <p>
                 In this game, you will start with $100 and bet on a biased coin
-                flip. The coin has a 60% chance of landing on heads. You can bet
-                on either heads or tails, wagering any amount up to your current
-                balance for each flip. This game is inspired by a study from
-                Victor Haghani and Richard Dewey.
+                flip. The coin has a {coinGameBias * 100}% chance of landing on
+                heads. You can bet on either heads or tails, wagering any amount
+                up to your current balance for each flip. This game is inspired
+                by a study from Victor Haghani and Richard Dewey.
               </p>
               <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
               <div className="list-circle list-inside ml-4">
                 <div>Minimum {coinGameMinFlips} flips required</div>
                 <div>Maximum {coinGameMaxFlips} flips allowed</div>
-                <div>You have a 20 minutes to complete the game</div>
+                <div>
+                  You have a {coinGameMinutes} minutes to complete the game
+                </div>
                 <div>
                   After {coinGameMinFlips} flips, the{" "}
                   <span className="text-lg text-blue-400 font-semibold">
