@@ -272,7 +272,7 @@ const Page = () => {
                             Mean Return
                           </th>
                           <th scope="col" className="px-6 py-3 text-right">
-                            Standart Deviation
+                            Standard Deviation
                           </th>
                           <th scope="col" className="px-6 py-3 text-right">
                             Volatility Adjusted

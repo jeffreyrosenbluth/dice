@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import Card from "@/app/ui/card";
 import React, { useState, useEffect } from "react";
-import { Slider, Button } from "@nextui-org/react";
+import { Slider, Button, Checkbox, CheckboxGroup } from "@nextui-org/react";
 import { AssetFrame, simulate } from "@/app/lib/market";
 import SimPlot from "@/app/ui/simplot";
 import { useStateContext } from "@/app/ctx";
@@ -54,6 +54,10 @@ export default function Home() {
         samplesSlider: value as number,
       },
     });
+  };
+
+  const handleCheckbox = (value: string[]) => {
+    setModel({ ...model, diceSimBoxes: value });
   };
 
   const cashPercent =
@@ -170,10 +174,35 @@ export default function Home() {
               <span> {(100 * cashPercent).toFixed(0)}%</span>
             </div>
           </div>
+          <CheckboxGroup
+            className="border border-dotted border-gray-400 p-2"
+            label="Plot"
+            value={model.diceSimBoxes}
+            onValueChange={handleCheckbox}
+          >
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm text-blue-400" }}
+              value="stock"
+            >
+              Stocks
+            </Checkbox>
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm text-orange-400" }}
+              value="crypto"
+            >
+              Crypto
+            </Checkbox>
+            <Checkbox
+              classNames={{ label: "text-xs md:text-sm" }}
+              value="portfolio"
+            >
+              Portfolio
+            </Checkbox>
+          </CheckboxGroup>
         </div>
         <div className="col-span-5 ml-12">
           {model.diceSim.length > 1 && !isCalculating ? (
-            <SimPlot data={model.diceSim} />
+            <SimPlot data={model.diceSim} toPlot={model.diceSimBoxes} />
           ) : (
             <div className="text-9xl flex justify-center mt-24 mr-24">🎲</div>
           )}

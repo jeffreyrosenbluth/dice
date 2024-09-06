@@ -25,6 +25,7 @@ type Model = {
   diceSimSliders: { [key: string]: number };
   diceAvgReturns: { stock: number; crypto: number; portfolio: number };
   diceSim: AssetFrame;
+  diceSimBoxes: string[];
   coinSimSliders: { [key: string]: number };
   coinSimBoxes: string[];
   coinPlayFlips: Flip[];
@@ -57,6 +58,7 @@ export const initialModel: Model = {
   },
   diceAvgReturns: { stock: 0, crypto: 0, portfolio: 0 },
   diceSim: [],
+  diceSimBoxes: ["stock", "crypto", "portfolio"],
   coinSimSliders: {
     yearsSlider: 20,
     samplesSlider: 1000,
