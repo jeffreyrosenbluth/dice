@@ -3,8 +3,19 @@
 import WealthPlot from "@/app/ui/wealthplot";
 import ReturnPlot from "@/app/ui/returnplot";
 import Die from "@/app/ui/die";
+import DiceButton from "@/app/ui/button";
 import Card from "@/app/ui/card";
-import { Slider, Button, Switch } from "@nextui-org/react";
+import {
+  Slider,
+  Button,
+  Switch,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  useDisclosure,
+} from "@nextui-org/react";
 import React, { useState, useEffect, use } from "react";
 import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
@@ -21,13 +32,13 @@ export default function Home() {
   const router = useRouter();
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
+  const { onClose, isOpen, onOpen } = useDisclosure();
   const {
     user,
     diceComplete,
     diceGameEnabled,
     setDiceComplete,
-    diceGameMinRolls,
-    diceGameMaxRolls,
+    diceGameRolls,
   } = useAuth();
 
   const supabase = createClient();
@@ -123,80 +134,68 @@ export default function Home() {
         console.log("dice_game data updated successfully:", data);
       }
     }
+    onOpen();
   };
+
+  useEffect(() => {
+    if (model.diceWealths.length === diceGameRolls + 1) {
+      handleFinishGame();
+    }
+  }, [model.diceWealths]);
 
   const avgReturns = average(model.diceReturns.slice(1));
 
   return (
-    <main className="flex min-h-screen flex-col space-y-24 mt-12">
-      <div className="flex fles-row text-3xl text-slate-200 justify-center">
+    <main className="flex min-h-screen flex-col mt-12">
+      <div className="flex flex-row text-3xl text-slate-200 justify-center">
         Dice Game
       </div>
-      <div className="grid grid-cols-9">
+      <div className="flex flex-row text-slate-200 justify-center text-lg">
+        Rolls: {model.diceWealths.length - 1}
+      </div>
+      <Modal isOpen={isOpen} onClose={onClose} isDismissable={false}>
+        <ModalContent>
+          <ModalHeader>
+            <p className="text-red-600">Game Complete!</p>
+          </ModalHeader>
+          <ModalBody>
+            <p>The dice game is complete. You can press Reset to play again.</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onPress={onClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <div className="grid grid-cols-9 mt-16">
         <div className="flex flex-col gap-4 col-span-2 px-8 max-w-56 md:min-w-56">
-          <Button
-            className="py-4 mb-2 bg-blue-500"
-            onClick={handleRoll}
-            disabled={isRolling || model.diceWealths.length > diceGameMaxRolls}
-          >
-            Roll
-          </Button>
-          {!diceComplete ? (
-            <Button
-              className={clsx(
-                "text-sm md:text-base py-2 mb-1 bg-blue-500",
-                {
-                  "opacity-50 ":
-                    model.diceWealths.length < diceGameMinRolls + 1,
-                },
-                {
-                  "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
-                    model.diceWealths.length < diceGameMinRolls + 1,
-                },
-                "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
-              )}
-              disabled={model.diceWealths.length < diceGameMinRolls + 1}
-              onClick={handleFinishGame}
+          {model.diceWealths.length !== diceGameRolls + 1 ? (
+            <DiceButton
+              onClick={handleRoll}
+              disabled={
+                isRolling || model.diceWealths.length === diceGameRolls + 1
+              }
             >
-              Finish
-            </Button>
+              Roll
+            </DiceButton>
           ) : (
-            <Button
-              className="text-sm md:text-base py-2 mb-1 bg-blue-500"
-              onClick={reset}
-            >
-              Reset
-            </Button>
+            <DiceButton onClick={reset}>Reset</DiceButton>
           )}
           <div className="flex flex-col items-center">
             <Die isRolling={isRolling} onAnimationComplete={roll} />
           </div>
-          <div className="border p-2 mb-6 border-dotted border-gray-400">
-            <Slider
-              label="Stocks"
-              className="text-blue-400 pb-4"
-              value={model.dicePlaySliders.stockSlider}
-              minValue={0}
-              maxValue={2}
-              hideThumb={true}
-              onChange={handleStockSlider}
-              step={0.01}
-              defaultValue={0}
-              formatOptions={{ style: "percent" }}
-            />
-            <Slider
-              label="Crypto"
-              className="text-orange-400 pb-4"
-              value={model.dicePlaySliders.cryptoSlider}
-              minValue={0}
-              maxValue={2}
-              hideThumb={true}
-              onChange={handleCryptoSlider}
-              step={0.01}
-              defaultValue={0.5}
-              formatOptions={{ style: "percent" }}
-            />
-            <div className="flex text-sm justify-between text-green-400 text-left">
+          <div className="flex flex-row justify-center mt-4">Portfolio</div>
+          <div className="border-y pt-2 mb-6 border-gray-200">
+            <div className="flex text-sm justify-between text-blue-400 text-left py-2">
+              <div>Stocks</div>
+              <div>{(100 * model.dicePlaySliders.stockSlider).toFixed(0)}%</div>
+            </div>
+            <div className="flex text-sm justify-between text-orange-400 text-left py-2">
+              <div>Crypto</div>
+              <div>
+                {(100 * model.dicePlaySliders.cryptoSlider).toFixed(0)}%
+              </div>
+            </div>
+            <div className="flex text-sm justify-between text-green-400 text-left py-2">
               <div>Bond</div>
               <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>

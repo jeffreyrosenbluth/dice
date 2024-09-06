@@ -19,8 +19,7 @@ const Page = () => {
     coinGameBias,
     coinGameMinutes,
     diceGameEnabled,
-    diceGameMinRolls,
-    diceGameMaxRolls,
+    diceGameRolls,
     diceSimEnabled,
   } = useAuth();
 
@@ -215,22 +214,10 @@ const Page = () => {
               </p>
               <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
               <div className="list-circle list-inside ml-4">
-                <div>Minimum {diceGameMinRolls} rolls required</div>
-                <div>Maximum {diceGameMaxRolls} rolls allowed</div>
-                <div>
-                  After {diceGameMinRolls} rolls, the{" "}
-                  <span className="text-lg text-blue-400 font-semibold">
-                    Finish
-                  </span>{" "}
-                  button becomes available
-                </div>
+                <div>{diceGameRolls} rolls required</div>
               </div>
               <div className="text-xl font-medium mb-1 mt-4">
-                When you press
-                <span className="text-blue-400 font-semibold">
-                  {" "}
-                  Finish
-                </span>{" "}
+                After {diceGameRolls} rolls
               </div>
               <div className="list-circle list-inside ml-4 mb-4">
                 <div>Your data will be saved to a database</div>
@@ -509,30 +496,33 @@ const Page = () => {
           ) : diceSimEnabled ? (
             <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
               <p className="font-semibold italic">
-                Complete the Dice Roll to unlock the simulation
+                Complete the Dice Roll Game to unlock the simulation
               </p>
             </div>
           ) : null}
           <div className="py-4">
-            {diceComplete && diceSimEnabled ? (
-              <>
-                <div className="text-3xl text-blue-400 font-medium mb-2">
-                  Dice Roll Simulation
-                </div>
-                <p>
-                  Set the portfolio weights, rolls per sample, and number of
-                  samples. Then run a simulation of the results to compare
-                  statistics of the different investments. Including the
-                  arithmetic, geometric mean returns and the volatility drag.
-                </p>
-              </>
-            ) : diceSimEnabled ? (
-              <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
-                <p className="font-semibold italic">
-                  Complete the Dice Roll Game to unlock the simulation
-                </p>
-              </div>
-            ) : null}
+            {
+              diceComplete && diceSimEnabled && (
+                <>
+                  <div className="text-3xl text-blue-400 font-medium mb-2">
+                    Dice Roll Simulation
+                  </div>
+                  <p>
+                    Set the portfolio weights, rolls per sample, and number of
+                    samples. Then run a simulation of the results to compare
+                    statistics of the different investments. Including the
+                    arithmetic, geometric mean returns and the volatility drag.
+                  </p>
+                </>
+              )
+              // : diceSimEnabled ? (
+              //   <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+              //     <p className="font-semibold italic">
+              //       Complete the Dice Roll Game to unlock the simulation
+              //     </p>
+              //   </div>
+              // ) : null}
+            }
           </div>
         </div>
       </div>

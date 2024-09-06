@@ -22,7 +22,7 @@ export default function Home() {
   const router = useRouter();
   const bias = model.coinSimSliders.biasSlider;
   const kellyFraction = bias * 2 - 1;
-  const { coinComplete, coinSimEnabled } = useAuth();
+  const { coinComplete, coinSimEnabled, coinSimMaxSamples } = useAuth();
 
   useEffect(() => {
     if (!(coinComplete && coinSimEnabled)) {
@@ -158,11 +158,11 @@ export default function Home() {
             label="Samples"
             value={model.coinSimSliders.samplesSlider}
             minValue={100}
-            maxValue={10000}
+            maxValue={coinSimMaxSamples}
             step={10}
             hideThumb={true}
             onChange={handleSamplesSlider}
-            defaultValue={1000}
+            defaultValue={10000}
           />
           <Slider
             className="text-slate-200 pb-1"

@@ -24,6 +24,7 @@ type Model = {
   dicePlaySliders: { [key: string]: number };
   diceSimSliders: { [key: string]: number };
   diceAvgReturns: { stock: number; crypto: number; portfolio: number };
+  diceStandardDeviations: { stock: number; crypto: number; portfolio: number };
   diceSim: AssetFrame;
   diceSimBoxes: string[];
   coinSimSliders: { [key: string]: number };
@@ -52,16 +53,17 @@ export const initialModel: Model = {
   dicePlaySliders: { stockSlider: 0, cryptoSlider: 0.5 },
   diceSimSliders: {
     yearsSlider: 20,
-    samplesSlider: 1000,
+    samplesSlider: 10000,
     stockSlider: 0,
     cryptoSlider: 0.5,
   },
   diceAvgReturns: { stock: 0, crypto: 0, portfolio: 0 },
+  diceStandardDeviations: { stock: 0, crypto: 0, portfolio: 0 },
   diceSim: [],
   diceSimBoxes: ["stock", "crypto", "portfolio"],
   coinSimSliders: {
     yearsSlider: 20,
-    samplesSlider: 1000,
+    samplesSlider: 10000,
     biasSlider: 0.6,
     betSlider: 0.1,
   },

@@ -14,7 +14,7 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const router = useRouter();
-  const { diceGameEnabled, diceComplete } = useAuth();
+  const { diceGameEnabled, diceComplete, diceSimMaxSamples } = useAuth();
 
   useEffect(() => {
     if (!(diceComplete && diceGameEnabled)) {
@@ -94,7 +94,24 @@ export default function Home() {
           portfolio: avgPortfolio,
         };
       };
-      setModel({ ...model, diceAvgReturns: averages(model.diceSim) });
+      const stockSD = d3.deviation(
+        model.diceSim.filter((b) => b.key === "stock").map((b) => b.value)
+      );
+      const cryptoSD = d3.deviation(
+        model.diceSim.filter((b) => b.key === "crypto").map((b) => b.value)
+      );
+      const portfolioSD = d3.deviation(
+        model.diceSim.filter((b) => b.key === "portfolio").map((b) => b.value)
+      );
+      setModel({
+        ...model,
+        diceAvgReturns: averages(model.diceSim),
+        diceStandardDeviations: {
+          stock: stockSD!,
+          crypto: cryptoSD!,
+          portfolio: portfolioSD!,
+        },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCalculating, model.diceSimSliders.samplesSlider, model.diceSim]);
@@ -138,11 +155,11 @@ export default function Home() {
             label="Samples"
             value={model.diceSimSliders.samplesSlider}
             minValue={100}
-            maxValue={10000}
+            maxValue={diceSimMaxSamples}
             step={10}
             hideThumb={true}
             onChange={handleSamplesSlider}
-            defaultValue={1000}
+            defaultValue={10000}
           />
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
@@ -175,25 +192,31 @@ export default function Home() {
             </div>
           </div>
           <CheckboxGroup
-            className="border border-dotted border-gray-400 p-2"
+            className="border border-dotted border-gray-400 p-4"
             label="Plot"
             value={model.diceSimBoxes}
             onValueChange={handleCheckbox}
           >
             <Checkbox
-              classNames={{ label: "text-xs md:text-sm text-blue-400" }}
+              classNames={{
+                label: "text-xs md:text-sm text-blue-400",
+                base: "pb-4",
+              }}
               value="stock"
             >
               Stocks
             </Checkbox>
             <Checkbox
-              classNames={{ label: "text-xs md:text-sm text-orange-400" }}
+              classNames={{
+                label: "text-xs md:text-sm text-orange-400",
+                base: "pb-4",
+              }}
               value="crypto"
             >
               Crypto
             </Checkbox>
             <Checkbox
-              classNames={{ label: "text-xs md:text-sm" }}
+              classNames={{ label: "text-xs md:text-sm", base: "pb-4" }}
               value="portfolio"
             >
               Portfolio
@@ -218,6 +241,10 @@ export default function Home() {
                 Geometric Mean: {d3.format("10.2%")(model.diceAvgReturns.stock)}
               </p>
               <p>
+                Standard Deviation:{" "}
+                {d3.format("10.2%")(model.diceStandardDeviations.stock)}
+              </p>
+              <p>
                 Volatility Drag:{" "}
                 {d3.format("10.2%")(0.07 - model.diceAvgReturns.stock)}
               </p>
@@ -230,6 +257,10 @@ export default function Home() {
                 {d3.format("10.2%")(model.diceAvgReturns.crypto)}
               </p>
               <p>
+                Standard Deviation:{" "}
+                {d3.format("10.2%")(model.diceStandardDeviations.crypto)}
+              </p>
+              <p>
                 Volatility Drag:{" "}
                 {d3.format("10.2%")(0.708 - model.diceAvgReturns.crypto)}
               </p>
@@ -240,6 +271,10 @@ export default function Home() {
               <p>
                 Geometric Mean:{" "}
                 {d3.format("10.2%")(model.diceAvgReturns.portfolio)}
+              </p>
+              <p>
+                Standard Deviation:{" "}
+                {d3.format("10.2%")(model.diceStandardDeviations.portfolio)}
               </p>
               <p>
                 Volatility Drag:{" "}
