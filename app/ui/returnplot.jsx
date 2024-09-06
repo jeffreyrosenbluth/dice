@@ -20,7 +20,7 @@ export default function ReturnPlot({ returns, includePortfolio }) {
       },
       y: { inset: 10, label: null },
       color: {
-        domain: ["stock", "venture", "portfolio"],
+        domain: ["stock", "crypto", "portfolio"],
         range: ["#60a5fa", "#fb923c", "white"],
       },
       facet: { data: data, y: "key", label: null },

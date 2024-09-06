@@ -34,7 +34,8 @@ export default function Home() {
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const timerModal = useDisclosure();
+  const finishModal = useDisclosure();
   const {
     user,
     coinComplete,
@@ -94,7 +95,7 @@ export default function Home() {
       }
       setIsTimerRunning(false);
       setGameEnded(true);
-      onOpen();
+      timerModal.onOpen();
     }
   };
 
@@ -172,19 +173,19 @@ export default function Home() {
       <div className="flex flex-row text-xl justify-center text-blue-300">
         Balance: ${balance.toFixed(0)}
       </div>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={timerModal.isOpen} onClose={timerModal.onClose}>
         <ModalContent>
           <ModalHeader>
-            <p className="text-red-600">Time{"'"}s Up!</p>
+            <p className="text-red-600">Game Complete!</p>
           </ModalHeader>
           <ModalBody>
             <p>
-              The simulation has ended and your results have been submitted. You
-              can contiune playing or press Reset to play againe.
+              The game has ended and your results have been submitted. You can
+              contiune playing or press Reset to play again from scratch.
             </p>
           </ModalBody>
           <ModalFooter>
-            <Button onPress={onClose}>Close</Button>
+            <Button onPress={timerModal.onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -256,24 +257,46 @@ export default function Home() {
               Flip
             </Button>
             {!coinComplete ? (
-              <Button
-                className={clsx(
-                  "text-sm md:text-base py-2 mb-1 bg-blue-500",
-                  {
-                    "opacity-50 ":
-                      model.coinPlayFlips.length < coinGameMinFlips + 1,
-                  },
-                  {
-                    "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
-                      model.coinPlayFlips.length < coinGameMinFlips + 1,
-                  },
-                  "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
-                )}
-                disabled={model.coinPlayFlips.length < coinGameMinFlips + 1}
-                onClick={handleFinishGame}
-              >
-                Finish
-              </Button>
+              <>
+                <Button
+                  className={clsx(
+                    "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                    {
+                      "opacity-50 ":
+                        model.coinPlayFlips.length < coinGameMinFlips + 1,
+                    },
+                    {
+                      "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
+                        model.coinPlayFlips.length < coinGameMinFlips + 1,
+                    },
+                    "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
+                  )}
+                  disabled={model.coinPlayFlips.length < coinGameMinFlips + 1}
+                  onClick={finishModal.onOpen}
+                >
+                  Finish
+                </Button>
+                <Modal
+                  isOpen={finishModal.isOpen}
+                  onClose={finishModal.onClose}
+                >
+                  <ModalContent>
+                    <ModalHeader>
+                      <p className="text-red-600">Are you sure?</p>
+                    </ModalHeader>
+                    <ModalBody>
+                      <p>
+                        The game will end and your results will be submitted.
+                        You cannot undo this action.
+                      </p>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button onPress={handleFinishGame}>Finish</Button>
+                      <Button onPress={finishModal.onClose}>Close</Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </>
             ) : (
               <Button
                 className="text-sm md:text-base py-2 mb-1 bg-blue-500"

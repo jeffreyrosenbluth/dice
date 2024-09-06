@@ -204,14 +204,14 @@ const Page = () => {
               </div>
               <p>
                 In this game, you will start with $100 and roll 3 dice. Each die
-                is calibrated to represent a different investment, one the S&P
-                500, one a venture capital investment, and one a money market
-                investment. You will also create a portfolio of these
-                investments with up to 2x levearge in the stock and venture
-                investments. The app will keep track of cummulative balance for
-                each investment and the portfolio and plot the results. It will
-                also plot the histograms of each investment compared to its
-                trure probability distrtibution.
+                is calibrated to represent a different investment, one stocks ,
+                one a crypto investment, and one a bond investment. You will
+                also create a portfolio of these investments with up to 2x
+                levearge in the stock and crypto investments. The app will keep
+                track of cummulative balance for each investment and the
+                portfolio and plot the results. It will also plot the histograms
+                of each investment compared to its trure probability
+                distrtibution.
               </p>
               <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
               <div className="list-circle list-inside ml-4">
@@ -282,7 +282,7 @@ const Page = () => {
                       <tbody>
                         <tr className="border-b dark:border-neutral-500">
                           <td className="whitespace-nowrap px-6 py-3 font-medium text-blue-400">
-                            S&P 500
+                            Stocks
                           </td>
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             7.0%
@@ -296,7 +296,7 @@ const Page = () => {
                         </tr>
                         <tr className="border-b dark:border-neutral-500">
                           <td className="whitespace-nowrap px-6 py-3 font-medium text-orange-400">
-                            Venture Capital
+                            Crypto
                           </td>
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             71.0%
@@ -310,7 +310,7 @@ const Page = () => {
                         </tr>
                         <tr className="border-b dark:border-neutral-500">
                           <td className="whitespace-nowrap px-6 py-3 font-medium text-green-400">
-                            Money Market
+                            Bond
                           </td>
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             2.0%
@@ -344,19 +344,19 @@ const Page = () => {
                               scope="col"
                               className="px-6 py-3 text-right text-blue-400"
                             >
-                              S&P 500
+                              Stocks
                             </th>
                             <th
                               scope="col"
                               className="px-6 py-3 text-right text-orange-400"
                             >
-                              Venture Capital
+                              Crypto
                             </th>
                             <th
                               scope="col"
                               className="px-6 py-3 text-right text-green-400"
                             >
-                              Money Market
+                              Bond
                             </th>
                           </tr>
                         </thead>
@@ -464,9 +464,8 @@ const Page = () => {
                   the concepts of variance and risk. This game, inspired by the
                   work of Foster and Stine, aims to bridge that gap. In the
                   game, players roll virtual dice representing the returns of
-                  three distinct types of investments: a risk-free money market
-                  instrument, the S&P 500, and a high-risk option like venture
-                  capital or meme stocks.
+                  three distinct types of investments: a risk-free bond, stocks,
+                  and a high-risk option like crypto or meme stocks.
                   <br />
                   <br />
                   Each investment behaves differently, illustrating real-world

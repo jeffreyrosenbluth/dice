@@ -16,7 +16,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
 import { Spinner } from "@nextui-org/spinner";
-import { useStateContext } from "@/app/ctx";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;

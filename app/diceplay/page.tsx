@@ -14,8 +14,8 @@ import clsx from "clsx";
 import { useAuth } from "@/app/authctx";
 import { useRouter } from "next/navigation";
 
-const initialWealth = [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }];
-const initialReturns = [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }];
+const initialWealth = [{ stock: 100, crypto: 100, cash: 100, portfolio: 100 }];
+const initialReturns = [{ stock: 0, crypto: 0, cash: 0, portfolio: 0 }];
 
 export default function Home() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function Home() {
 
   const cashPercent =
     1 -
-    (model.dicePlaySliders.stockSlider + model.dicePlaySliders.ventureSlider);
+    (model.dicePlaySliders.stockSlider + model.dicePlaySliders.cryptoSlider);
 
   const handleRoll = () => {
     if (!isRolling) {
@@ -53,7 +53,7 @@ export default function Home() {
     const [w, r] = addRoll(
       {
         stock: model.dicePlaySliders.stockSlider,
-        venture: model.dicePlaySliders.ventureSlider,
+        crypto: model.dicePlaySliders.cryptoSlider,
         cash: cashPercent,
       },
       model.diceWealths,
@@ -86,12 +86,12 @@ export default function Home() {
     });
   };
 
-  const handleVentureSlider = (value: number | number[]) => {
+  const handleCryptoSlider = (value: number | number[]) => {
     setModel({
       ...model,
       dicePlaySliders: {
         ...model.dicePlaySliders,
-        ventureSlider: value as number,
+        cryptoSlider: value as number,
       },
     });
   };
@@ -173,7 +173,7 @@ export default function Home() {
           </div>
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
-              label="S&P 500"
+              label="Stocks"
               className="text-blue-400 pb-4"
               value={model.dicePlaySliders.stockSlider}
               minValue={0}
@@ -185,19 +185,19 @@ export default function Home() {
               formatOptions={{ style: "percent" }}
             />
             <Slider
-              label="Venture Capital"
+              label="Crypto"
               className="text-orange-400 pb-4"
-              value={model.dicePlaySliders.ventureSlider}
+              value={model.dicePlaySliders.cryptoSlider}
               minValue={0}
               maxValue={2}
               hideThumb={true}
-              onChange={handleVentureSlider}
+              onChange={handleCryptoSlider}
               step={0.01}
               defaultValue={0.5}
               formatOptions={{ style: "percent" }}
             />
             <div className="flex text-sm justify-between text-green-400 text-left">
-              <div>Money Market</div>
+              <div>Bond</div>
               <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>
           </div>
@@ -251,25 +251,25 @@ export default function Home() {
             <p>
               Wealth:{" "}
               {d3.format("$,.0f")(
-                model.diceWealths[model.diceWealths.length - 1].venture
+                model.diceWealths[model.diceWealths.length - 1].crypto
               )}{" "}
             </p>
             <p>
               Last Return:
               {d3.format("10.0%")(
-                model.diceReturns[model.diceReturns.length - 1].venture - 1
+                model.diceReturns[model.diceReturns.length - 1].crypto - 1
               )}
             </p>
             <p>
               Annual Return:{" "}
               {d3.format("10.0%")(
                 annualize(
-                  model.diceWealths[model.diceWealths.length - 1].venture,
+                  model.diceWealths[model.diceWealths.length - 1].crypto,
                   model.diceWealths.length - 1
                 )
               )}
             </p>
-            <p>Average Return: {d3.format("10.0%")(avgReturns.venture - 1)}</p>
+            <p>Average Return: {d3.format("10.0%")(avgReturns.crypto - 1)}</p>
           </Card>
           <Card className="text-green-400 bg-inherit">
             <p>
@@ -338,22 +338,22 @@ function annualize(wealth: number, years: number): number {
 
 function average(returns: Assets[]): Assets {
   if (returns.length === 0) {
-    return { stock: 1, venture: 1, cash: 1, portfolio: 1 };
+    return { stock: 1, crypto: 1, cash: 1, portfolio: 1 };
   }
   const sum = returns.reduce(
     (acc, r) => {
       acc.stock += r.stock;
-      acc.venture += r.venture;
+      acc.crypto += r.crypto;
       acc.cash += r.cash;
       acc.portfolio += r.portfolio;
       return acc;
     },
-    { stock: 0, venture: 0, cash: 0, portfolio: 0 }
+    { stock: 0, crypto: 0, cash: 0, portfolio: 0 }
   );
 
   return {
     stock: sum.stock / returns.length,
-    venture: sum.venture / returns.length,
+    crypto: sum.crypto / returns.length,
     cash: sum.cash / returns.length,
     portfolio: sum.portfolio / returns.length,
   };

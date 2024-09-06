@@ -32,7 +32,7 @@ const WealthPlot: React.FC<WealthPlotProps> = ({
       },
       y: { label: null },
       color: {
-        domain: ["stock", "venture", "cash", "portfolio"],
+        domain: ["stock", "crypto", "cash", "portfolio"],
         range: ["#60a5fa", "#fb923c", "#4ade80", "white"],
       },
       title: "Value of $100 Invested",
@@ -84,7 +84,7 @@ const WealthPlot: React.FC<WealthPlotProps> = ({
         Plot.text(
           data,
           Plot.selectLast({
-            filter: (d) => d.key === "venture",
+            filter: (d) => d.key === "crypto",
             x: "period",
             y: "value",
             fill: "#fb923c",

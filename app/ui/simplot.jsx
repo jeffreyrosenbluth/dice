@@ -17,7 +17,7 @@ export default function SimPlot({ data }) {
             },
             y: { tickFormat: (d) => d3.format(".0%")(d) },
             color: {
-                domain: ["stock", "venture", "portfolio"],
+                domain: ["stock", "crypto", "portfolio"],
                 range: ["#60a5fa", "#fb923c", "white"],
             },
             marks: [

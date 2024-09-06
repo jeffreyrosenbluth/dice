@@ -23,7 +23,7 @@ type Model = {
   includePortfolio: boolean;
   dicePlaySliders: { [key: string]: number };
   diceSimSliders: { [key: string]: number };
-  diceAvgReturns: { stock: number; venture: number; portfolio: number };
+  diceAvgReturns: { stock: number; crypto: number; portfolio: number };
   diceSim: AssetFrame;
   coinSimSliders: { [key: string]: number };
   coinSimBoxes: string[];
@@ -45,17 +45,17 @@ interface StateContextProps {
 const StateContext = createContext<StateContextProps | undefined>(undefined);
 
 export const initialModel: Model = {
-  diceWealths: [{ stock: 100, venture: 100, cash: 100, portfolio: 100 }],
-  diceReturns: [{ stock: 0, venture: 0, cash: 0, portfolio: 0 }],
+  diceWealths: [{ stock: 100, crypto: 100, cash: 100, portfolio: 100 }],
+  diceReturns: [{ stock: 0, crypto: 0, cash: 0, portfolio: 0 }],
   includePortfolio: false,
-  dicePlaySliders: { stockSlider: 0, ventureSlider: 0.5 },
+  dicePlaySliders: { stockSlider: 0, cryptoSlider: 0.5 },
   diceSimSliders: {
     yearsSlider: 20,
     samplesSlider: 1000,
     stockSlider: 0,
-    ventureSlider: 0.5,
+    cryptoSlider: 0.5,
   },
-  diceAvgReturns: { stock: 0, venture: 0, portfolio: 0 },
+  diceAvgReturns: { stock: 0, crypto: 0, portfolio: 0 },
   diceSim: [],
   coinSimSliders: {
     yearsSlider: 20,

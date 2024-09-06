@@ -29,12 +29,12 @@ export default function Home() {
     });
   };
 
-  const handleVentureSlider = (value: number | number[]) => {
+  const handleCryptoSlider = (value: number | number[]) => {
     setModel({
       ...model,
       diceSimSliders: {
         ...model.diceSimSliders,
-        ventureSlider: value as number,
+        cryptoSlider: value as number,
       },
     });
   };
@@ -57,14 +57,14 @@ export default function Home() {
   };
 
   const cashPercent =
-    1 - (model.diceSimSliders.stockSlider + model.diceSimSliders.ventureSlider);
+    1 - (model.diceSimSliders.stockSlider + model.diceSimSliders.cryptoSlider);
   const weights = {
     stock: model.diceSimSliders.stockSlider,
-    venture: model.diceSimSliders.ventureSlider,
+    crypto: model.diceSimSliders.cryptoSlider,
     cash: cashPercent,
   };
   const portfolioReturn =
-    0.07 * weights.stock + 0.708 * weights.venture + 0.02 * weights.cash;
+    0.07 * weights.stock + 0.708 * weights.crypto + 0.02 * weights.cash;
 
   useEffect(() => {
     if (!isCalculating) {
@@ -74,9 +74,9 @@ export default function Home() {
             .filter((b) => b.key === "stock")
             .reduce((acc, b) => acc + b.value, 0) /
           model.diceSimSliders.samplesSlider;
-        const avgVenture =
+        const avgCrypto =
           af
-            .filter((b) => b.key === "venture")
+            .filter((b) => b.key === "crypto")
             .reduce((acc, b) => acc + b.value, 0) /
           model.diceSimSliders.samplesSlider;
         const avgPortfolio =
@@ -86,7 +86,7 @@ export default function Home() {
           model.diceSimSliders.samplesSlider;
         return {
           stock: avgStocks,
-          venture: avgVenture,
+          crypto: avgCrypto,
           portfolio: avgPortfolio,
         };
       };
@@ -143,7 +143,7 @@ export default function Home() {
           <div className="border p-2 mb-6 border-dotted border-gray-400">
             <Slider
               className="text-blue-400 pb-4"
-              label="S&P 500"
+              label="Stocks"
               value={model.diceSimSliders.stockSlider}
               minValue={0}
               maxValue={2}
@@ -155,18 +155,18 @@ export default function Home() {
             />
             <Slider
               className="text-orange-400 pb-4"
-              label="Venture Capital"
-              value={model.diceSimSliders.ventureSlider}
+              label="Crypto"
+              value={model.diceSimSliders.cryptoSlider}
               minValue={0}
               maxValue={2}
               step={0.01}
               formatOptions={{ style: "percent" }}
               hideThumb={true}
               defaultValue={0.5}
-              onChange={handleVentureSlider}
+              onChange={handleCryptoSlider}
             />
             <div className="flex text-sm justify-between text-green-400 text-left">
-              <span>Money Market</span>
+              <span>Bond</span>
               <span> {(100 * cashPercent).toFixed(0)}%</span>
             </div>
           </div>
@@ -198,11 +198,11 @@ export default function Home() {
               <p>Arithmetic Mean: {d3.format("10.2%")(0.708)}</p>
               <p>
                 Geometric Mean:{" "}
-                {d3.format("10.2%")(model.diceAvgReturns.venture)}
+                {d3.format("10.2%")(model.diceAvgReturns.crypto)}
               </p>
               <p>
                 Volatility Drag:{" "}
-                {d3.format("10.2%")(0.708 - model.diceAvgReturns.venture)}
+                {d3.format("10.2%")(0.708 - model.diceAvgReturns.crypto)}
               </p>
               <p>Drag Estimate: {d3.format("10.2%")(0.8777)}</p>
             </Card>
