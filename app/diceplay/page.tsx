@@ -21,7 +21,6 @@ import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
 import { createClient } from "@/utils/supabase/client";
-import clsx from "clsx";
 import { useAuth } from "@/app/authctx";
 import { useRouter } from "next/navigation";
 
@@ -33,13 +32,7 @@ export default function Home() {
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
   const { onClose, isOpen, onOpen } = useDisclosure();
-  const {
-    user,
-    diceComplete,
-    diceGameEnabled,
-    setDiceComplete,
-    diceGameRolls,
-  } = useAuth();
+  const { user, diceGameEnabled, setDiceComplete, diceGameRolls } = useAuth();
 
   const supabase = createClient();
 

@@ -261,9 +261,6 @@ const Page = () => {
                           <th scope="col" className="px-6 py-3 text-right">
                             Standard Deviation
                           </th>
-                          <th scope="col" className="px-6 py-3 text-right">
-                            Volatility Adjusted
-                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -277,9 +274,6 @@ const Page = () => {
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             20.0%
                           </td>
-                          <td className="whitespace-nowrap px-6 py-3 text-right">
-                            5.1%
-                          </td>
                         </tr>
                         <tr className="border-b dark:border-neutral-500">
                           <td className="whitespace-nowrap px-6 py-3 font-medium text-orange-400">
@@ -291,9 +285,6 @@ const Page = () => {
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             132.0%
                           </td>
-                          <td className="whitespace-nowrap px-6 py-3 text-right">
-                            -16.9%
-                          </td>
                         </tr>
                         <tr className="border-b dark:border-neutral-500">
                           <td className="whitespace-nowrap px-6 py-3 font-medium text-green-400">
@@ -304,9 +295,6 @@ const Page = () => {
                           </td>
                           <td className="whitespace-nowrap px-6 py-3 text-right">
                             0.0%
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-3 text-right">
-                            2.0%
                           </td>
                         </tr>
                       </tbody>

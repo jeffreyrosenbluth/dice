@@ -27,7 +27,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start mt-24 min-h-screen p-4">
+    <div className="flex flex-col items-center justify-start mt-20 min-h-screen p-4">
+      <h2 className="text-3xl font-bold mb-8 text-center text-white">
+        Experiments for Learning Finance
+      </h2>
       <button className="gsi-material-button mb-6" onClick={handleGoogleSignin}>
         <div className="gsi-material-button-state"></div>
         <div className="gsi-material-button-content-wrapper">
@@ -64,10 +67,12 @@ export default function LoginPage() {
           <span style={{ display: "none" }}>Sign in with Google</span>
         </div>
       </button>
-      <form className="w-full max-w-md p-8 border-small border-slate-500 rounded-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">
-          Experiments for Learning Finance
-        </h2>
+      <div className="flex items-center w-full max-w-lg mb-6">
+        <div className="border-t border-slate-400 flex-grow"></div>
+        <span className="mx-4 text-slate-300">or</span>
+        <div className="border-t border-slate-400 flex-grow"></div>
+      </div>
+      <form className="w-full max-w-md p-8 mb-8">
         <div className="mb-4">
           <label
             htmlFor="email"
@@ -124,6 +129,11 @@ export default function LoginPage() {
           </button>
         </div>
       </form>
+      <div className="flex items-center w-full max-w-lg mb-6">
+        <div className="border-t border-slate-400 flex-grow"></div>
+        {/* <span className="mx-4 text-slate-300">or</span> */}
+        {/* <div className="border-t border-slate-400 flex-grow"></div> */}
+      </div>
 
       {user && (
         <form action={logout} className="mt-4">
