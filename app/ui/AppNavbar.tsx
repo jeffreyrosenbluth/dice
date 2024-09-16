@@ -160,6 +160,9 @@ const AppNavbar: React.FC = () => {
             </DropdownMenu>
           </Dropdown>
         </NavbarItem>
+        {/* <NavbarItem>
+          <Link href="/trackrec">Track Record</Link>
+        </NavbarItem> */}
       </NavbarContent>
       <NavbarContent className="sm:flex hidden" justify="end">
         <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>

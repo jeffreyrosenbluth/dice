@@ -31,7 +31,8 @@ export default function Home() {
   const router = useRouter();
   const [isRolling, setIsRolling] = useState(false);
   const { model, setModel } = useStateContext();
-  const { onClose, isOpen, onOpen } = useDisclosure();
+  const resetModal = useDisclosure();
+  const finishModal = useDisclosure();
   const { user, diceGameEnabled, setDiceComplete, diceGameRolls } = useAuth();
 
   const supabase = createClient();
@@ -127,7 +128,7 @@ export default function Home() {
         console.log("dice_game data updated successfully:", data);
       }
     }
-    onOpen();
+    finishModal.onOpen();
   };
 
   useEffect(() => {
@@ -146,7 +147,11 @@ export default function Home() {
       <div className="flex flex-row text-slate-200 justify-center text-lg">
         Rolls: {model.diceWealths.length - 1}
       </div>
-      <Modal isOpen={isOpen} onClose={onClose} isDismissable={false}>
+      <Modal
+        isOpen={finishModal.isOpen}
+        onClose={finishModal.onClose}
+        isDismissable={false}
+      >
         <ModalContent>
           <ModalHeader>
             <p className="text-red-600">Game Complete!</p>
@@ -155,7 +160,7 @@ export default function Home() {
             <p>The dice game is complete. You can press Reset to play again.</p>
           </ModalBody>
           <ModalFooter>
-            <Button onPress={onClose}>Close</Button>
+            <Button onPress={finishModal.onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -171,7 +176,23 @@ export default function Home() {
               Roll
             </DiceButton>
           ) : (
-            <DiceButton onClick={reset}>Reset</DiceButton>
+            <>
+              <DiceButton onClick={resetModal.onOpen}>Reset</DiceButton>
+              <Modal isOpen={resetModal.isOpen} onClose={resetModal.onClose}>
+                <ModalContent>
+                  <ModalHeader>
+                    <p className="text-red-600">Are you sure?</p>
+                  </ModalHeader>
+                  <ModalBody>
+                    <p>You cannot undo this action.</p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button onPress={reset}>Reset</Button>
+                    <Button onPress={resetModal.onClose}>Close</Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </>
           )}
           <div className="flex flex-col items-center">
             <Die isRolling={isRolling} onAnimationComplete={roll} />

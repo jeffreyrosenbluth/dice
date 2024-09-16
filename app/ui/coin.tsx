@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 interface CoinProps {
+  headsImage: string;
+  tailsImage: string;
   isFlipping: boolean;
   landedOn: number;
   onAnimationComplete: () => void;
 }
 
 const Coin: React.FC<CoinProps> = ({
+  headsImage,
+  tailsImage,
   isFlipping,
   landedOn: result,
   onAnimationComplete,
@@ -36,13 +40,13 @@ const Coin: React.FC<CoinProps> = ({
         style={{ transformStyle: "preserve-3d" }}
       >
         <motion.img
-          src="/heads.png"
+          src={headsImage}
           alt="Heads"
           className="absolute w-full h-full"
           style={{ backfaceVisibility: "hidden" }}
         />
         <motion.img
-          src="/tails.png"
+          src={tailsImage}
           alt="Tails"
           className="absolute w-full h-full"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}

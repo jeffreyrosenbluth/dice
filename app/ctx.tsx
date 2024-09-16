@@ -37,6 +37,10 @@ type Model = {
   coinAvgReturns: { player: number; constant: number; kelly: number };
   coinMedianReturns: { player: number; constant: number; kelly: number };
   coinStandardDeviations: { player: number; constant: number; kelly: number };
+  trackFlipResult1: Face;
+  trackFlipResult2: Face;
+  trackFlipFaces1: Face[];
+  trackFlipFaces2: Face[];
 };
 
 interface StateContextProps {
@@ -76,6 +80,10 @@ export const initialModel: Model = {
   coinMedianReturns: { player: 0, constant: 0, kelly: 0 },
   coinStandardDeviations: { player: 0, constant: 0, kelly: 0 },
   coinSimBoxes: ["player", "kelly"],
+  trackFlipResult1: "heads",
+  trackFlipResult2: "heads",
+  trackFlipFaces1: [],
+  trackFlipFaces2: [],
 };
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {

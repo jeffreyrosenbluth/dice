@@ -131,3 +131,28 @@ export function runCoinSim(
   }
   return profit;
 }
+
+export function toss(bias: number): Face {
+  return d3.randomBernoulli(bias)() ? "heads" : "tails";
+}
+
+export function addToss(tosses: Face[], toss: Face): Face[] {
+  return [...tosses, toss];
+}
+
+export function trackRecProbability(
+  n: number,
+  m: number,
+  k: number,
+  j: number,
+  p: number,
+  q: number = 0.5
+): number {
+  const a = p ** k * (1 - p) ** (n - k) * q ** j * (1 - q) ** (m - j);
+  const b = p ** j * (1 - p) ** (m - j) * q ** k * (1 - q) ** (n - k);
+  return a / (a + b);
+}
+
+export function entropy(p: number): number {
+  return -p * Math.log2(p) - (1 - p) * Math.log2(1 - p);
+}

@@ -308,6 +308,8 @@ export default function Home() {
           </div>
           <div className="px-8 brightness-90">
             <Coin
+              headsImage="../heads.png"
+              tailsImage="../tails.png"
               isFlipping={isFlipping}
               landedOn={model.coinPlayFlipResult}
               onAnimationComplete={handleFlipComplete}
