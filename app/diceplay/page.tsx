@@ -33,7 +33,13 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const resetModal = useDisclosure();
   const finishModal = useDisclosure();
-  const { user, diceGameEnabled, setDiceComplete, diceGameRolls } = useAuth();
+  const {
+    user,
+    diceGameEnabled,
+    diceComplete,
+    setDiceComplete,
+    diceGameRolls,
+  } = useAuth();
 
   const supabase = createClient();
 
@@ -106,6 +112,10 @@ export default function Home() {
   };
 
   const handleFinishGame = async () => {
+    if (diceComplete) {
+      finishModal.onOpen();
+      return;
+    }
     if (user) {
       let { data, error } = await supabase
         .from("profiles")
@@ -113,20 +123,11 @@ export default function Home() {
         .eq("id", user.id)
         .select();
 
-      if (error) {
-        console.error("Error updating profile:", error);
-      } else {
-        setDiceComplete(true);
-        console.log("Game completed successfully!");
-      }
       let updatesArray = toDiceGameTable(model.diceWealths);
       ({ data, error } = await supabase.from("dice_game").upsert(updatesArray));
 
-      if (error) {
-        console.error("Error updating dice_coin_game data:", error);
-      } else {
-        console.log("dice_game data updated successfully:", data);
-      }
+      setDiceComplete(true);
+      console.log("Game completed successfully!");
     }
     finishModal.onOpen();
   };
