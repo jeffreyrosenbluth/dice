@@ -199,7 +199,37 @@ export default function Home() {
             <Die isRolling={isRolling} onAnimationComplete={roll} />
           </div>
           <div className="flex flex-row justify-center mt-4">Portfolio</div>
-          <div className="border-y pt-2 mb-6 border-gray-200">
+          <div className="border p-2 mb-6 border-dotted border-gray-400">
+            <Slider
+              label="Stocks"
+              className="text-blue-400 pb-4"
+              value={model.dicePlaySliders.stockSlider}
+              minValue={0}
+              maxValue={2}
+              hideThumb={true}
+              onChange={handleStockSlider}
+              step={0.01}
+              defaultValue={0}
+              formatOptions={{ style: "percent" }}
+            />
+            <Slider
+              label="Crypto"
+              className="text-orange-400 pb-4"
+              value={model.dicePlaySliders.ventureSlider}
+              minValue={0}
+              maxValue={2}
+              hideThumb={true}
+              onChange={handleCryptoSlider}
+              step={0.01}
+              defaultValue={0.5}
+              formatOptions={{ style: "percent" }}
+            />
+            <div className="flex text-sm justify-between text-green-400 text-left">
+              <div>Bond</div>
+              <div>{(100 * cashPercent).toFixed(0)}%</div>
+            </div>
+          </div>
+          {/* <div className="border-y pt-2 mb-6 border-gray-200">
             <div className="flex text-sm justify-between text-blue-400 text-left py-2">
               <div>Stocks</div>
               <div>{(100 * model.dicePlaySliders.stockSlider).toFixed(0)}%</div>
@@ -214,7 +244,7 @@ export default function Home() {
               <div>Bond</div>
               <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>
-          </div>
+          </div> */}
           <Switch
             isSelected={model.includePortfolio}
             onValueChange={handlePortfolio}
