@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Link,
   useDisclosure,
 } from "@nextui-org/react";
 import DiceButton from "@/app/ui/button";
@@ -64,15 +65,37 @@ export default function Home() {
   const handleChange = (questionKey: keyof typeof answers, value: number) => {
     setAnswers((prevAnswers) => {
       const currentAnswers = prevAnswers[questionKey];
-      const newAnswers = currentAnswers.includes(value)
-        ? currentAnswers.filter((answer) => answer !== value)
-        : [...currentAnswers, value];
-
-      return { ...prevAnswers, [questionKey]: newAnswers };
+      // Check if the value is already selected
+      if (currentAnswers.includes(value)) {
+        // Remove the value if already selected
+        return {
+          ...prevAnswers,
+          [questionKey]: currentAnswers.filter((answer) => answer !== value),
+        };
+      } else {
+        // Allow adding the value only if fewer than 2 selections have been made
+        if (currentAnswers.length < 2) {
+          return { ...prevAnswers, [questionKey]: [...currentAnswers, value] };
+        } else {
+          return prevAnswers;
+        }
+      }
     });
   };
 
   const handleSubmit = async () => {
+    if (answers.question1.length === 0) {
+      alert("Please select at least one option for Question 1.");
+      return;
+    }
+    if (answers.question2.length === 0) {
+      alert("Please select at least one option for Question 2.");
+      return;
+    }
+    if (answers.question3.length === 0) {
+      alert("Please select at least one option for Question 3.");
+      return;
+    }
     if (!user || calibrationComplete) {
       onOpen();
       return;
@@ -101,7 +124,9 @@ export default function Home() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      <h4 className="mb-4 text-center text-3xl ">CRRA Utility Calibration</h4>
+      <h4 className="mb-4 text-center text-3xl ">
+        CRRA Utility Calibration<sup className="text-base">1</sup>
+      </h4>
 
       <div className="mb-6">
         <p className="mb-4 text-slate-200 ">
@@ -168,7 +193,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-2">
         <p className="mb-4  text-slate-200">
           <span className="font-bold">3. </span>Still flipping a fair coin. Now
           imagine that if it comes up heads, your wealth will increase 5-fold.
@@ -194,7 +219,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div className="flex  justify-center mt-8">
+      <div className="flex  justify-center my-4">
         <DiceButton onClick={handleSubmit}>Submit</DiceButton>
       </div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -218,6 +243,15 @@ export default function Home() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <hr className="w-full border-t-2 border-slate-400 mb-4" />
+      <Link
+        href="https://elmwealth.com/measuring-the-fabric-of-felicity/"
+        className="inline text-left text-blue-300 mt-6"
+      >
+        <span className="whitespace-nowrap mr-1">1. From</span>
+        <em>Measuring the Fabric of Felicity</em>, by Victor Haghani and James
+        White
+      </Link>
     </div>
   );
 }
