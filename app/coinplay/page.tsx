@@ -45,6 +45,7 @@ export default function Home() {
     coinGameBias,
     coinGameMinutes,
   } = useAuth();
+
   const [timeRemaining, setTimeRemaining] = useState(coinGameMinutes * 60);
   const supabase = createClient();
 

@@ -160,6 +160,9 @@ const AppNavbar: React.FC = () => {
             </DropdownMenu>
           </Dropdown>
         </NavbarItem>
+        <NavbarItem>
+          <Link href="/calibrate">Calibrate Utility</Link>
+        </NavbarItem>
         {/* <NavbarItem>
           <Link href="/trackrec">Track Record</Link>
         </NavbarItem> */}

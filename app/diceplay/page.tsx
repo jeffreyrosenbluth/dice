@@ -16,7 +16,7 @@ import {
   ModalBody,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";

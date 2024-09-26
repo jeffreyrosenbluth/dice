@@ -28,6 +28,8 @@ type AuthContextType = {
   diceGameRolls: number;
   diceSimEnabled: boolean;
   diceSimMaxSamples: number;
+  calibrationComplete: boolean;
+  setCalibrationComplete: (value: boolean) => void;
   loading: boolean;
   refreshUser: () => Promise<void>;
 };
@@ -50,6 +52,8 @@ const AuthContext = createContext<AuthContextType>({
   diceGameRolls: 100,
   diceSimEnabled: false,
   diceSimMaxSamples: 100000,
+  calibrationComplete: false,
+  setCalibrationComplete: () => {},
   loading: true,
   refreshUser: async () => {},
 });
@@ -119,6 +123,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, supabase, refreshUser } = useSupabaseAuth();
   const [coinComplete, setCoinComplete] = useState(false);
   const [diceComplete, setDiceComplete] = useState(false);
+  const [calibrationComplete, setCalibrationComplete] = useState(false);
   const [config, setConfig] = useState<Config | null>(null);
 
   const fetchUserData = useCallback(
@@ -126,12 +131,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!supabase) return;
       const { data, error } = await supabase
         .from("profiles")
-        .select("coin_complete, dice_complete")
+        .select("coin_complete, dice_complete, calibration_complete")
         .eq("id", user.id)
         .single();
       if (data && !error) {
         setCoinComplete(data.coin_complete);
         setDiceComplete(data.dice_complete);
+        setCalibrationComplete(data.calibration_complete);
       }
     },
     [supabase]
@@ -143,6 +149,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       setCoinComplete(false);
       setDiceComplete(false);
+      setCalibrationComplete;
     }
   }, [user, fetchUserData]);
 
@@ -189,6 +196,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         diceGameRolls: config?.dice_game_rolls ?? 0,
         diceSimEnabled: config?.dice_sim_enabled ?? false,
         diceSimMaxSamples: config?.dice_sim_max_samples ?? 0,
+        calibrationComplete,
+        setCalibrationComplete,
         loading,
         refreshUser,
       }}
