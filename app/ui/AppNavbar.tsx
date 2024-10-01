@@ -163,9 +163,9 @@ const AppNavbar: React.FC = () => {
         <NavbarItem>
           <Link href="/calibrate">Calibrate Utility</Link>
         </NavbarItem>
-        {/* <NavbarItem>
+        <NavbarItem>
           <Link href="/trackrec">Track Record</Link>
-        </NavbarItem> */}
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent className="sm:flex hidden" justify="end">
         <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>

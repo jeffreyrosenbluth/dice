@@ -127,6 +127,7 @@ export default function Home() {
               model.trackFlipFaces1.length
             ).toFixed(2)}
           </div>
+          <div>Probability Biased = {(100 * prior).toFixed(2)}</div>
         </div>
         <div className="col-span-5 col-start-7 flex flex-col items-center gap-8">
           <Coin
@@ -147,14 +148,14 @@ export default function Home() {
               model.trackFlipFaces2.length
             ).toFixed(2)}
           </div>
+          <div>Probability Biased = {(100 * (1 - prior)).toFixed(2)}</div>
         </div>
       </div>
-      <div>Probability Coin 1 Biased ={(100 * prior).toFixed(4)}</div>
-      <div>Expected Entropy Coin 1 = {(100 * entropy1).toFixed(4)}</div>
+      {/* <div>Expected Entropy Coin 1 = {(100 * entropy1).toFixed(4)}</div>
       <div>Expected Entropy Coin 2 = {(100 * entropy2).toFixed(4)}</div>
       <div className="text-lg font-semibold text-yellow-500">
         Choose --- Coin {entropy1 <= entropy2 ? 1 : 2} --- for next flip
-      </div>
+      </div> */}
     </main>
   );
 }
