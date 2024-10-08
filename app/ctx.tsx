@@ -41,6 +41,7 @@ type Model = {
   trackFlipResult2: Face;
   trackFlipFaces1: Face[];
   trackFlipFaces2: Face[];
+  trackBias: number;
 };
 
 interface StateContextProps {
@@ -49,6 +50,7 @@ interface StateContextProps {
 }
 
 const StateContext = createContext<StateContextProps | undefined>(undefined);
+const trackCoin1 = Math.random() < 0.5;
 
 export const initialModel: Model = {
   diceWealths: [{ stock: 100, crypto: 100, cash: 100, portfolio: 100 }],
@@ -84,6 +86,7 @@ export const initialModel: Model = {
   trackFlipResult2: "heads",
   trackFlipFaces1: [],
   trackFlipFaces2: [],
+  trackBias: 0.6,
 };
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {

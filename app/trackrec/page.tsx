@@ -1,7 +1,7 @@
 "use client";
 
 import Coin from "@/app/ui/coin";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useStateContext } from "@/app/ctx";
 import DiceButton from "@/app/ui/button";
 import {
@@ -11,9 +11,9 @@ import {
   trackRecProbability,
   entropy,
 } from "@/app/lib/coin";
+import { Slider } from "@nextui-org/react";
+import clsx from "clsx";
 
-const COIN1_HEADS_BIAS = 0.6;
-const COIN1_TAILS_BIAS = 1 - COIN1_HEADS_BIAS;
 const COIN2_HEADS_BIAS = 0.5;
 const COIN2_TAILS_BIAS = 1 - COIN2_HEADS_BIAS;
 
@@ -29,6 +29,7 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isFlipping1, setIsFlipping1] = useState(false);
   const [isFlipping2, setIsFlipping2] = useState(false);
+  const tailBias = 1 - model.trackBias;
 
   // Calculate the prior probability of coin 1 being biased
   const prior = trackRecProbability(
@@ -36,28 +37,27 @@ export default function Home() {
     model.trackFlipFaces2.length,
     countHeads(model.trackFlipFaces1),
     countHeads(model.trackFlipFaces2),
-    COIN1_HEADS_BIAS
+    model.trackBias
   );
 
   // Calculate the posterior probabilities of coin 1 and coin 2 being biased
   // given heads and given tails.
   const posterior1H =
-    (prior * COIN1_HEADS_BIAS) /
-    (prior * COIN1_HEADS_BIAS + (1 - prior) * COIN2_HEADS_BIAS);
+    (prior * model.trackBias) /
+    (prior * model.trackBias + (1 - prior) * COIN2_HEADS_BIAS);
   const posterior1T =
-    (prior * COIN1_TAILS_BIAS) /
-    (prior * COIN1_TAILS_BIAS + (1 - prior) * COIN2_TAILS_BIAS);
+    (prior * tailBias) / (prior * tailBias + (1 - prior) * COIN2_TAILS_BIAS);
   const posterior2H =
-    ((1 - prior) * COIN1_HEADS_BIAS) /
-    ((1 - prior) * COIN1_HEADS_BIAS + prior * COIN2_HEADS_BIAS);
+    ((1 - prior) * model.trackBias) /
+    ((1 - prior) * model.trackBias + prior * COIN2_HEADS_BIAS);
   const posterior2T =
-    ((1 - prior) * COIN1_TAILS_BIAS) /
-    ((1 - prior) * COIN1_TAILS_BIAS + prior * COIN2_TAILS_BIAS);
+    ((1 - prior) * tailBias) /
+    ((1 - prior) * tailBias + prior * COIN2_TAILS_BIAS);
 
   // Calculate the expected entropy of coin 1 and coin 2
-  const p_heads1 = prior * COIN1_HEADS_BIAS + (1 - prior) * COIN2_HEADS_BIAS;
+  const p_heads1 = prior * model.trackBias + (1 - prior) * COIN2_HEADS_BIAS;
   const p_tails1 = 1 - p_heads1;
-  const p_heads2 = (1 - prior) * COIN1_HEADS_BIAS + prior * COIN2_HEADS_BIAS;
+  const p_heads2 = (1 - prior) * model.trackBias + prior * COIN2_HEADS_BIAS;
   const p_tails2 = 1 - p_heads2;
   const entropy1H = entropy(posterior1H);
   const entropy1T = entropy(posterior1T);
@@ -65,6 +65,8 @@ export default function Home() {
   const entropy2T = entropy(posterior2T);
   const entropy1 = p_heads1 * entropy1H + p_tails1 * entropy1T;
   const entropy2 = p_heads2 * entropy2H + p_tails2 * entropy2T;
+
+  const trackCoin1 = useRef(Math.random() < 0.5);
 
   const handleFlipComplete1 = () => {
     setIsFlipping1(false);
@@ -87,7 +89,7 @@ export default function Home() {
       setIsFlipping1(true);
       setModel((prevModel) => ({
         ...prevModel,
-        trackFlipResult1: toss(COIN1_HEADS_BIAS),
+        trackFlipResult1: toss(model.trackBias),
       }));
     }
   };
@@ -97,9 +99,13 @@ export default function Home() {
       setIsFlipping2(true);
       setModel((prevModel) => ({
         ...prevModel,
-        trackFlipResult2: toss(COIN1_TAILS_BIAS),
+        trackFlipResult2: toss(COIN2_HEADS_BIAS),
       }));
     }
+  };
+
+  const handleSlider = (value: number | number[]) => {
+    setModel((prevModel) => ({ ...prevModel, trackBias: value as number }));
   };
 
   return (
@@ -108,7 +114,26 @@ export default function Home() {
         Track Record Game
       </div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-5 col-start-2 flex flex-col items-center gap-8">
+        <div className="col-span-2 col-start-2 flex flex-col items-center gap-4">
+          <Slider
+            label="Coin Bias"
+            value={model.trackBias}
+            minValue={0.5}
+            maxValue={1.0}
+            hideThumb={true}
+            onChange={handleSlider}
+            step={0.01}
+            formatOptions={{ style: "percent" }}
+            defaultValue={0.6}
+          />
+        </div>
+        <div></div>
+        <div
+          className={clsx(
+            "col-span-3 flex flex-col items-center gap-8",
+            trackCoin1.current ? "order-1" : "order-2"
+          )}
+        >
           <Coin
             headsImage="../heads_gold.png"
             tailsImage="../tails_gold.png"
@@ -122,14 +147,21 @@ export default function Home() {
           <div>Tails: {countTails(model.trackFlipFaces1)}</div>
           <div>
             % Heads:{" "}
-            {(
-              (100 * countHeads(model.trackFlipFaces1)) /
-              model.trackFlipFaces1.length
-            ).toFixed(2)}
+            {model.trackFlipFaces1.length <= 0
+              ? "0"
+              : (
+                  (100 * countHeads(model.trackFlipFaces1)) /
+                  model.trackFlipFaces1.length
+                ).toFixed(2)}
           </div>
           <div>Probability Biased = {(100 * prior).toFixed(2)}</div>
         </div>
-        <div className="col-span-5 col-start-7 flex flex-col items-center gap-8">
+        <div
+          className={clsx(
+            "col-span-3 flex flex-col items-center gap-8",
+            trackCoin1.current ? "order-2" : "order-1"
+          )}
+        >
           <Coin
             headsImage="../heads_silver.png"
             tailsImage="../tails_silver.png"
@@ -143,10 +175,12 @@ export default function Home() {
           <div>Tails: {countTails(model.trackFlipFaces2)}</div>
           <div>
             % Heads:{" "}
-            {(
-              (100 * countHeads(model.trackFlipFaces2)) /
-              model.trackFlipFaces2.length
-            ).toFixed(2)}
+            {model.trackFlipFaces2.length <= 0
+              ? "0"
+              : (
+                  (100 * countHeads(model.trackFlipFaces2)) /
+                  model.trackFlipFaces2.length
+                ).toFixed(2)}
           </div>
           <div>Probability Biased = {(100 * (1 - prior)).toFixed(2)}</div>
         </div>
