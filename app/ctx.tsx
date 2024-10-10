@@ -42,6 +42,7 @@ type Model = {
   trackFlipFaces1: Face[];
   trackFlipFaces2: Face[];
   trackBias: number;
+  trackEntropy: boolean;
 };
 
 interface StateContextProps {
@@ -87,6 +88,7 @@ export const initialModel: Model = {
   trackFlipFaces1: [],
   trackFlipFaces2: [],
   trackBias: 0.6,
+  trackEntropy: false,
 };
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {

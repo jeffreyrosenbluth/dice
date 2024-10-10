@@ -11,7 +11,7 @@ import {
   trackRecProbability,
   entropy,
 } from "@/app/lib/coin";
-import { Slider } from "@nextui-org/react";
+import { Slider, Switch } from "@nextui-org/react";
 import clsx from "clsx";
 
 const COIN2_HEADS_BIAS = 0.5;
@@ -68,6 +68,24 @@ export default function Home() {
 
   const trackCoin1 = useRef(Math.random() < 0.5);
 
+  const handleSwitch = () => {
+    setModel((prevModel) => ({
+      ...prevModel,
+      trackEntropy: !model.trackEntropy,
+    }));
+  };
+
+  const handleReset = () => {
+    trackCoin1.current = Math.random() < 0.5;
+    setModel((prevModel) => ({
+      ...prevModel,
+      trackFlipFaces1: [],
+      trackFlipFaces2: [],
+      trackFlipResult1: "heads",
+      trackFlipResult2: "heads",
+    }));
+  };
+
   const handleFlipComplete1 = () => {
     setIsFlipping1(false);
     setModel((prevModel) => ({
@@ -114,9 +132,12 @@ export default function Home() {
         Track Record Game
       </div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-2 col-start-2 flex flex-col items-center gap-4">
+        <div className="col-span-2 col-start-2 flex flex-col items-left gap-8">
           <Slider
             label="Coin Bias"
+            isDisabled={
+              model.trackFlipFaces1.length + model.trackFlipFaces2.length > 0
+            }
             value={model.trackBias}
             minValue={0.5}
             maxValue={1.0}
@@ -126,6 +147,10 @@ export default function Home() {
             formatOptions={{ style: "percent" }}
             defaultValue={0.6}
           />
+          <Switch isSelected={model.trackEntropy} onValueChange={handleSwitch}>
+            <span className="text-slate-200">Show Entropy</span>
+          </Switch>
+          <DiceButton onClick={handleReset}>Reset</DiceButton>
         </div>
         <div></div>
         <div
@@ -135,8 +160,8 @@ export default function Home() {
           )}
         >
           <Coin
-            headsImage="../heads_gold.png"
-            tailsImage="../tails_gold.png"
+            headsImage="../heads.png"
+            tailsImage="../tails.png"
             isFlipping={isFlipping1}
             landedOn={model.trackFlipResult1 === "heads" ? 1 : 0}
             onAnimationComplete={handleFlipComplete1}
@@ -155,6 +180,9 @@ export default function Home() {
                 ).toFixed(2)}
           </div>
           <div>Probability Biased = {(100 * prior).toFixed(2)}</div>
+          {model.trackEntropy ? (
+            <div>Expected Entropy = {(100 * entropy1).toFixed(4)}%</div>
+          ) : null}
         </div>
         <div
           className={clsx(
@@ -163,8 +191,8 @@ export default function Home() {
           )}
         >
           <Coin
-            headsImage="../heads_silver.png"
-            tailsImage="../tails_silver.png"
+            headsImage="../heads.png"
+            tailsImage="../tails.png"
             isFlipping={isFlipping2}
             landedOn={model.trackFlipResult2 === "heads" ? 1 : 0}
             onAnimationComplete={handleFlipComplete2}
@@ -183,6 +211,9 @@ export default function Home() {
                 ).toFixed(2)}
           </div>
           <div>Probability Biased = {(100 * (1 - prior)).toFixed(2)}</div>
+          {model.trackEntropy ? (
+            <div>Expected Entropy = {(100 * entropy2).toFixed(4)}%</div>
+          ) : null}
         </div>
       </div>
       {/* <div>Expected Entropy Coin 1 = {(100 * entropy1).toFixed(4)}</div>
