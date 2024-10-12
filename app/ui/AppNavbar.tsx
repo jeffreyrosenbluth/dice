@@ -160,10 +160,10 @@ const AppNavbar: React.FC = () => {
             </DropdownMenu>
           </Dropdown>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="text-small font-semibold">
           <Link href="/calibrate">Calibrate Utility</Link>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="text-small font-semibold">
           <Link href="/trackrec">Track Record</Link>
         </NavbarItem>
       </NavbarContent>

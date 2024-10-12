@@ -13,6 +13,7 @@ import {
 } from "@/app/lib/coin";
 import { Slider, Switch } from "@nextui-org/react";
 import clsx from "clsx";
+import { mode } from "d3";
 
 const COIN2_HEADS_BIAS = 0.5;
 const COIN2_TAILS_BIAS = 1 - COIN2_HEADS_BIAS;
@@ -68,10 +69,17 @@ export default function Home() {
 
   const trackCoin1 = useRef(Math.random() < 0.5);
 
-  const handleSwitch = () => {
+  const handleEntropySwitch = () => {
     setModel((prevModel) => ({
       ...prevModel,
       trackEntropy: !model.trackEntropy,
+    }));
+  };
+
+  const handleReveal = () => {
+    setModel((prevModel) => ({
+      ...prevModel,
+      trackReveal: !model.trackReveal,
     }));
   };
 
@@ -147,8 +155,14 @@ export default function Home() {
             formatOptions={{ style: "percent" }}
             defaultValue={0.6}
           />
-          <Switch isSelected={model.trackEntropy} onValueChange={handleSwitch}>
+          <Switch
+            isSelected={model.trackEntropy}
+            onValueChange={handleEntropySwitch}
+          >
             <span className="text-slate-200">Show Entropy</span>
+          </Switch>
+          <Switch isSelected={model.trackReveal} onValueChange={handleReveal}>
+            <span className="text-slate-200">Reveal Biased</span>
           </Switch>
           <DiceButton onClick={handleReset}>Reset</DiceButton>
         </div>
@@ -181,7 +195,13 @@ export default function Home() {
           </div>
           <div>Probability Biased = {(100 * prior).toFixed(2)}</div>
           {model.trackEntropy ? (
-            <div>Expected Entropy = {(100 * entropy1).toFixed(4)}%</div>
+            <div>
+              Expected Entropy ={" "}
+              {(100 * (isNaN(entropy1) ? 0 : entropy1)).toFixed(4)}%
+            </div>
+          ) : null}
+          {model.trackReveal ? (
+            <div className="text-amber-400 text-5xl">✸</div>
           ) : null}
         </div>
         <div
@@ -212,7 +232,10 @@ export default function Home() {
           </div>
           <div>Probability Biased = {(100 * (1 - prior)).toFixed(2)}</div>
           {model.trackEntropy ? (
-            <div>Expected Entropy = {(100 * entropy2).toFixed(4)}%</div>
+            <div>
+              Expected Entropy ={" "}
+              {(100 * (isNaN(entropy2) ? 0 : entropy2)).toFixed(4)}%
+            </div>
           ) : null}
         </div>
       </div>
