@@ -22,7 +22,15 @@ export default function Home() {
   const router = useRouter();
   const bias = model.coinSimSliders.biasSlider;
   const kellyFraction = bias * 2 - 1;
-  const { coinComplete, coinSimEnabled, coinSimMaxSamples } = useAuth();
+  const {
+    coinComplete,
+    coinSimEnabled,
+    coinSimMaxSamples,
+    override,
+    setCoinComplete,
+  } = useAuth();
+
+  setCoinComplete(override || coinComplete);
 
   useEffect(() => {
     if (!(coinComplete && coinSimEnabled)) {

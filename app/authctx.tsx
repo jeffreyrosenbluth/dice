@@ -1,5 +1,7 @@
 "use client";
 
+const OVERRIDE: boolean = true;
+
 import React, {
   createContext,
   useState,
@@ -32,6 +34,7 @@ type AuthContextType = {
   setCalibrationComplete: (value: boolean) => void;
   loading: boolean;
   refreshUser: () => Promise<void>;
+  override: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -56,6 +59,7 @@ const AuthContext = createContext<AuthContextType>({
   setCalibrationComplete: () => {},
   loading: true,
   refreshUser: async () => {},
+  override: OVERRIDE,
 });
 
 export type Config = {
@@ -200,6 +204,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCalibrationComplete,
         loading,
         refreshUser,
+        override: OVERRIDE,
       }}
     >
       {children}

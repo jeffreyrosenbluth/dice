@@ -14,7 +14,15 @@ export default function Home() {
   const { model, setModel } = useStateContext();
   const [isCalculating, setIsCalculating] = useState(false);
   const router = useRouter();
-  const { diceGameEnabled, diceComplete, diceSimMaxSamples } = useAuth();
+  const {
+    diceGameEnabled,
+    diceComplete,
+    diceSimMaxSamples,
+    setDiceComplete,
+    override,
+  } = useAuth();
+
+  setDiceComplete(override || diceComplete);
 
   useEffect(() => {
     if (!(diceComplete && diceGameEnabled)) {

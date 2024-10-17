@@ -39,7 +39,10 @@ export default function Home() {
     diceComplete,
     setDiceComplete,
     diceGameRolls,
+    override,
   } = useAuth();
+
+  setDiceComplete(override || diceComplete);
 
   const supabase = createClient();
 

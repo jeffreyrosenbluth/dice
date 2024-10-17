@@ -44,7 +44,10 @@ export default function Home() {
     coinGameMaxFlips,
     coinGameBias,
     coinGameMinutes,
+    override,
   } = useAuth();
+
+  setCoinComplete(override || coinComplete);
 
   const [timeRemaining, setTimeRemaining] = useState(coinGameMinutes * 60);
   const supabase = createClient();
@@ -74,6 +77,10 @@ export default function Home() {
   };
 
   const handleFinishGame = async () => {
+    if (override) {
+      setGameEnded(true);
+      return;
+    }
     if (user) {
       let { data, error } = await supabase
         .from("profiles")

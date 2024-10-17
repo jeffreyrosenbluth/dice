@@ -1,7 +1,7 @@
 "use client";
 
 import { Image } from "@nextui-org/react";
-import { Link, Button } from "@nextui-org/react";
+import { Link, Button, Accordion, AccordionItem } from "@nextui-org/react";
 import { useAuth } from "@/app/authctx";
 import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -18,10 +18,16 @@ const Page = () => {
     coinGameMaxFlips,
     coinGameBias,
     coinGameMinutes,
+    setCoinComplete,
     diceGameEnabled,
     diceGameRolls,
     diceSimEnabled,
+    setDiceComplete,
+    override,
   } = useAuth();
+
+  setCoinComplete(override || coinComplete);
+  setDiceComplete(override || diceComplete);
 
   useEffect(() => {
     refreshUser();
@@ -30,6 +36,7 @@ const Page = () => {
   const ctx = useStateContext();
   const searchParams = useSearchParams();
   const authParam = searchParams.get("auth");
+
   useEffect(() => {
     if (authParam === "success") {
       ctx.setModel(initialModel);
@@ -60,13 +67,15 @@ const Page = () => {
                 up to your current balance for each flip. This game is inspired
                 by a study from Victor Haghani and Richard Dewey.
               </p>
-              <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
+              {/* <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
               <div className="list-circle list-inside ml-4">
                 <div>Minimum {coinGameMinFlips} flips required</div>
                 <div>Maximum {coinGameMaxFlips} flips allowed</div>
-                <div>
-                  You have a {coinGameMinutes} minutes to complete the game
-                </div>
+                {!override ? (
+                  <div>
+                    You have a {coinGameMinutes} minutes to complete the game
+                  </div>
+                ) : null}
                 <div>
                   After {coinGameMinFlips} flips, the{" "}
                   <span className="text-lg text-blue-400 font-semibold">
@@ -90,7 +99,7 @@ const Page = () => {
               <p>
                 You can reset and play again, but additional games will not be
                 saved.
-              </p>
+              </p> */}
               <div className="text-blue-400 mt-2 mb-2">
                 To play choose <code className="text-white">Game</code> from the{" "}
                 <code className="text-white">Coin Flipping</code> menu.
@@ -104,7 +113,7 @@ const Page = () => {
               >
                 Play Coin Flip Game
               </Button> */}
-              {!user ? (
+              {!user && !override ? (
                 <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
                   <p className="font-semibold italic">
                     You must be signed in to play this game. Press the Sign In
@@ -117,45 +126,52 @@ const Page = () => {
                     here
                   </Link>
                 </div>
-              ) : null}
+              ) : (
+                <div className="mb=8">
+                  It is recommend to play the coin flip game before reading the
+                  discussion and playing the simulation.
+                </div>
+              )}
               {coinComplete ? (
-                <>
-                  <div className=" text-orange-400 text-xl font-medium mb-1 mt-4">
-                    Discussion
-                  </div>
-                  <div className="text-orange-400">
-                    Despite the favorable odds, many players struggle with bet
-                    sizing, revealing common behavioral biases and sub-optimal
-                    strategies. The optimal approach, based on expected utility
-                    or the Kelly criterion, suggests betting a fixed proportion
-                    of {" one's"} balance on each flip. In this game the Kelly
-                    proportion is 20%. This strategy balances risk and reward.
-                    However, most players deviate, leading to erratic betting
-                    patterns and poor outcomes. We recommend reading the note
-                    referenced below for a more detailed discussion.
-                    <br />
-                    <br />
-                    Through this game, you will learn about risk management and
-                    the importance of consistent, proportional betting. You will
-                    experience firsthand the challenges of maintaining
-                    discipline and the pitfalls of emotional decision-making in
-                    investment scenarios.
-                    <br />
-                    <br />
-                    <hr className="w-full border-t-2 border-slate-400 mb-4" />
-                    <Link
-                      href="https://elmwealth.com/lessons-from-betting-on-a-biased-coin-cool-heads-and-cautionary-tales/"
-                      className="inline text-left text-blue-300 mt-6"
-                    >
-                      <span className="whitespace-nowrap mr-1">Based on: </span>
-                      <em>
-                        Lessons from Betting on a Biased Coin: Cool heads and
-                        cautionary tales
-                      </em>
-                      , by Victor Haghani and Richard Dewey
-                    </Link>
-                  </div>
-                </>
+                <Accordion variant="bordered">
+                  <AccordionItem title="Discussion">
+                    <div className="text-orange-400">
+                      Despite the favorable odds, many players struggle with bet
+                      sizing, revealing common behavioral biases and sub-optimal
+                      strategies. The optimal approach, based on expected
+                      utility or the Kelly criterion, suggests betting a fixed
+                      proportion of {" one's"} balance on each flip. In this
+                      game the Kelly proportion is 20%. This strategy balances
+                      risk and reward. However, most players deviate, leading to
+                      erratic betting patterns and poor outcomes. We recommend
+                      reading the note referenced below for a more detailed
+                      discussion.
+                      <br />
+                      <br />
+                      Through this game, you will learn about risk management
+                      and the importance of consistent, proportional betting.
+                      You will experience firsthand the challenges of
+                      maintaining discipline and the pitfalls of emotional
+                      decision-making in investment scenarios.
+                      <br />
+                      <br />
+                      <hr className="w-full border-t-2 border-slate-400 mb-4" />
+                      <Link
+                        href="https://elmwealth.com/lessons-from-betting-on-a-biased-coin-cool-heads-and-cautionary-tales/"
+                        className="inline text-left text-blue-300 mt-6"
+                      >
+                        <span className="whitespace-nowrap mr-1">
+                          Based on:{" "}
+                        </span>
+                        <em>
+                          Lessons from Betting on a Biased Coin: Cool heads and
+                          cautionary tales
+                        </em>
+                        , by Victor Haghani and Richard Dewey
+                      </Link>
+                    </div>
+                  </AccordionItem>
+                </Accordion>
               ) : null}
             </div>
           </div>
@@ -228,7 +244,7 @@ const Page = () => {
                 You can reset and play again, but additional games will not be
                 saved.
               </p>
-              <Button
+              {/* <Button
                 className="mt-4 mb-2 py-2 px-4 bg-blue-500"
                 href="/diceplay"
                 as={Link}
@@ -236,12 +252,12 @@ const Page = () => {
                 isDisabled={!user}
               >
                 Play Dice Roll Game
-              </Button>
-              <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
+              </Button> */}
+              {/* <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
                 <p className="font-semibold italic">
                   You must be signed in to play this game.
                 </p>
-              </div>
+              </div> */}
               <br />
               <br />
               <div className="flex place-items-center"></div>
@@ -429,58 +445,58 @@ const Page = () => {
             </div>
           ) : null}
           {diceComplete && diceGameEnabled ? (
-            <>
-              <div className=" text-orange-400 text-xl font-medium mb-1 mt-4">
-                Discussion
-              </div>
-              <div className="text-orange-400">
-                <p className="text-justify">
-                  Many students and practitioners of finance struggle to connect
-                  the concepts of variance and risk. This game, inspired by the
-                  work of Foster and Stine, aims to bridge that gap. In the
-                  game, players roll virtual dice representing the returns of
-                  three distinct types of investments: a risk-free bond, stocks,
-                  and a high-risk option like crypto or meme stocks.
-                  <br />
-                  <br />
-                  Each investment behaves differently, illustrating real-world
-                  financial scenarios. As the simulation progresses, some
-                  players may experience remarkable success with the high-risk
-                  investment, accumulating significantly more wealth than their
-                  peers. However, the majority will encounter financial ruin due
-                  to the {"investment's"} extreme volatility—a phenomenon known
-                  as the {'"Variance Drain"'}.
-                  <br />
-                  <br />
-                  This stark contrast in outcomes often surprises players,
-                  highlighting the difficulty in distinguishing luck from skill
-                  in investment performance. Additionally, the simulation
-                  demonstrates how diversifying assets within a portfolio can
-                  reduce overall risk (variance). Players discover that
-                  combining two poor investments can unexpectedly result in a
-                  robust portfolio performance.
-                  <br />
-                  <br />
-                  By the end of the game, players gain a deeper understanding of
-                  financial volatility and the importance of diversification in
-                  managing investment risk.
-                </p>
-                <div>
-                  <hr className="w-full border-t-2 border-slate-400 mb-4 mt-4" />
-                  <Link
-                    href="http://deanfoster.net/research/being_warren_buffett.pdf"
-                    className="inline text-left text-blue-300 mt-6"
-                  >
-                    <span className="whitespace-nowrap mr-1">Based on: </span>
-                    <em>
-                      Being Warren Buffett: A Classroom Simulation of Risk and
-                      Wealth When Investing in the Stock Market
-                    </em>
-                    , by Dean P. Foster and Robert A. Stein.
-                  </Link>
+            <Accordion variant="bordered">
+              <AccordionItem title="Discussion">
+                <div className="text-orange-400">
+                  <p className="text-justify">
+                    Many students and practitioners of finance struggle to
+                    connect the concepts of variance and risk. This game,
+                    inspired by the work of Foster and Stine, aims to bridge
+                    that gap. In the game, players roll virtual dice
+                    representing the returns of three distinct types of
+                    investments: a risk-free bond, stocks, and a high-risk
+                    option like crypto or meme stocks.
+                    <br />
+                    <br />
+                    Each investment behaves differently, illustrating real-world
+                    financial scenarios. As the simulation progresses, some
+                    players may experience remarkable success with the high-risk
+                    investment, accumulating significantly more wealth than
+                    their peers. However, the majority will encounter financial
+                    ruin due to the {"investment's"} extreme volatility—a
+                    phenomenon known as the {'"Variance Drain"'}.
+                    <br />
+                    <br />
+                    This stark contrast in outcomes often surprises players,
+                    highlighting the difficulty in distinguishing luck from
+                    skill in investment performance. Additionally, the
+                    simulation demonstrates how diversifying assets within a
+                    portfolio can reduce overall risk (variance). Players
+                    discover that combining two poor investments can
+                    unexpectedly result in a robust portfolio performance.
+                    <br />
+                    <br />
+                    By the end of the game, players gain a deeper understanding
+                    of financial volatility and the importance of
+                    diversification in managing investment risk.
+                  </p>
+                  <div>
+                    <hr className="w-full border-t-2 border-slate-400 mb-4 mt-4" />
+                    <Link
+                      href="http://deanfoster.net/research/being_warren_buffett.pdf"
+                      className="inline text-left text-blue-300 mt-6"
+                    >
+                      <span className="whitespace-nowrap mr-1">Based on: </span>
+                      <em>
+                        Being Warren Buffett: A Classroom Simulation of Risk and
+                        Wealth When Investing in the Stock Market
+                      </em>
+                      , by Dean P. Foster and Robert A. Stein.
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </>
+              </AccordionItem>
+            </Accordion>
           ) : diceSimEnabled ? (
             <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
               <p className="font-semibold italic">

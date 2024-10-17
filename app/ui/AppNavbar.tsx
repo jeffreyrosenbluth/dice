@@ -65,6 +65,7 @@ const AppNavbar: React.FC = () => {
     diceGameEnabled,
     diceSimEnabled,
     loading,
+    override,
   } = useAuth();
 
   const router = useRouter();
@@ -78,6 +79,7 @@ const AppNavbar: React.FC = () => {
   }
 
   const coinDisabledKeys = () => {
+    if (override) return [];
     const play = user && coinGameEnabled;
     const sim = user && coinSimEnabled && coinComplete;
     if (play && sim) return [];
@@ -87,6 +89,7 @@ const AppNavbar: React.FC = () => {
   };
 
   const diceDisabledKeys = () => {
+    if (override) return [];
     const play = user && diceGameEnabled;
     const sim = user && diceSimEnabled && diceComplete;
     if (play && sim) return [];
@@ -167,20 +170,22 @@ const AppNavbar: React.FC = () => {
           <Link href="/trackrec">Track Record</Link>
         </NavbarItem>
       </NavbarContent>
-      <NavbarContent className="sm:flex hidden" justify="end">
-        <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>
-        <NavbarItem>
-          {!user ? (
-            <Button variant="flat" onClick={handleAuthClick}>
-              Sign In
-            </Button>
-          ) : (
-            <Button isIconOnly variant="light" onClick={handleAuthClick}>
-              <Image src="/user.svg" alt="User" width={32} />
-            </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
+      {!override ? (
+        <NavbarContent className="sm:flex hidden" justify="end">
+          <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>
+          <NavbarItem>
+            {!user ? (
+              <Button variant="flat" onClick={handleAuthClick}>
+                Sign In
+              </Button>
+            ) : (
+              <Button isIconOnly variant="light" onClick={handleAuthClick}>
+                <Image src="/user.svg" alt="User" width={32} />
+              </Button>
+            )}
+          </NavbarItem>
+        </NavbarContent>
+      ) : null}
     </Navbar>
   );
 };
