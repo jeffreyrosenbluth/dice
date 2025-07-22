@@ -117,7 +117,7 @@ export function addRoll(
   ];
 }
 
-export function toDiceGameTable(assets: Assets[]) {
+export function toDiceGameTable(assets: Assets[], userId?: string) {
   return assets.map((f, i) => {
     return {
       roll_num: i + 1,
@@ -125,6 +125,7 @@ export function toDiceGameTable(assets: Assets[]) {
       crypto_percent: f.crypto,
       cash_percent: f.cash,
       portfolio_percent: f.portfolio,
+      user_id: userId,
     };
   });
 }

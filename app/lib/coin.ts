@@ -67,7 +67,7 @@ export function addFlip(
   ];
 }
 
-export function toCoinGameTable(flips: Flip[]) {
+export function toCoinGameTable(flips: Flip[], userId?: string) {
   return flips.map((f) => {
     return {
       flip_num: f.flip_num,
@@ -75,6 +75,7 @@ export function toCoinGameTable(flips: Flip[]) {
       bet_on_heads: f.betOn === "heads",
       bet_size: f.betSize,
       balance: f.value,
+      user_id: userId,
     };
   });
 }

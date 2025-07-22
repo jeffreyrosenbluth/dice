@@ -26,8 +26,10 @@ const Page = () => {
     override,
   } = useAuth();
 
-  setCoinComplete(override || coinComplete);
-  setDiceComplete(override || diceComplete);
+  useEffect(() => {
+    setCoinComplete(override || coinComplete);
+    setDiceComplete(override || diceComplete);
+  }, [override, coinComplete, diceComplete, setCoinComplete, setDiceComplete]);
 
   useEffect(() => {
     refreshUser();
