@@ -42,11 +42,12 @@ export default function Home() {
     question1: number;
     question2: number;
     question3: number;
-  }) => {
+  }, userId?: string) => {
     return {
       L10: averages.question1,
       L20: averages.question2,
       G5: averages.question3,
+      user_id: userId,
     };
   };
 
@@ -110,7 +111,7 @@ export default function Home() {
     } else {
       setCalibrationComplete(true);
     }
-    let updatesArray = toCalibrationTable(averages);
+    let updatesArray = toCalibrationTable(averages, user?.id);
     ({ data, error } = await supabase
       .from("crra_calibration")
       .upsert(updatesArray));

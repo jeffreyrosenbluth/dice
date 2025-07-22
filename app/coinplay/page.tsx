@@ -94,7 +94,7 @@ export default function Home() {
         console.log("Game completed successfully!");
       }
 
-      let updatesArray = toCoinGameTable(model.coinPlayFlips);
+      let updatesArray = toCoinGameTable(model.coinPlayFlips, user.id);
       ({ data, error } = await supabase.from("coin_game").upsert(updatesArray));
       if (error) {
         console.error("Error updating coin_game data:", error);

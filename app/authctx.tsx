@@ -1,6 +1,6 @@
 "use client";
 
-const OVERRIDE: boolean = true;
+const OVERRIDE: boolean = false;
 
 import React, {
   createContext,
@@ -103,7 +103,7 @@ function useSupabaseAuth() {
       async (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
-      }
+      },
     );
 
     return () => {
@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCalibrationComplete(data.calibration_complete);
       }
     },
-    [supabase]
+    [supabase],
   );
 
   useEffect(() => {

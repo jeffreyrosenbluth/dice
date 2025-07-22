@@ -126,7 +126,7 @@ export default function Home() {
         .eq("id", user.id)
         .select();
 
-      let updatesArray = toDiceGameTable(model.diceWealths);
+      let updatesArray = toDiceGameTable(model.diceWealths, user.id);
       ({ data, error } = await supabase.from("dice_game").upsert(updatesArray));
 
       setDiceComplete(true);
