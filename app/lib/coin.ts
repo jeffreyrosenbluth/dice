@@ -75,7 +75,7 @@ export function toCoinGameTable(flips: Flip[], userId?: string) {
       bet_on_heads: f.betOn === "heads",
       bet_size: f.betSize,
       balance: f.value,
-      user_id: userId,
+      player_id: userId,
     };
   });
 }
