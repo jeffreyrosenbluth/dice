@@ -20,7 +20,6 @@ import React, { useState, useEffect } from "react";
 import { addRoll, Assets, toDiceGameTable } from "@/app/lib/market";
 import * as d3 from "d3";
 import { useStateContext } from "@/app/ctx";
-import { createClient } from "@/utils/supabase/client";
 import { useAuth } from "@/app/authctx";
 import { useRouter } from "next/navigation";
 
@@ -30,21 +29,17 @@ const initialReturns = [{ stock: 0, crypto: 0, cash: 0, portfolio: 0 }];
 export default function Home() {
   const router = useRouter();
   const [isRolling, setIsRolling] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { model, setModel } = useStateContext();
   const resetModal = useDisclosure();
   const finishModal = useDisclosure();
-  const {
-    user,
-    diceGameEnabled,
-    diceComplete,
-    setDiceComplete,
-    diceGameRolls,
-    override,
-  } = useAuth();
+  const { diceGameEnabled, diceComplete, setDiceComplete, diceGameRolls } =
+    useAuth();
 
-  setDiceComplete(override || diceComplete);
-
-  const supabase = createClient();
+  // Track when component has mounted on client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!diceGameEnabled) {
@@ -114,24 +109,12 @@ export default function Home() {
     setModel({ ...model, includePortfolio: checked });
   };
 
-  const handleFinishGame = async () => {
+  const handleFinishGame = () => {
     if (diceComplete) {
       finishModal.onOpen();
       return;
     }
-    if (user) {
-      let { data, error } = await supabase
-        .from("profiles")
-        .update({ dice_complete: true })
-        .eq("id", user.id)
-        .select();
-
-      let updatesArray = toDiceGameTable(model.diceWealths);
-      ({ data, error } = await supabase.from("dice_game").upsert(updatesArray));
-
-      setDiceComplete(true);
-      console.log("Game completed successfully!");
-    }
+    setDiceComplete(true);
     finishModal.onOpen();
   };
 
@@ -142,6 +125,19 @@ export default function Home() {
   }, [model.diceWealths]);
 
   const avgReturns = average(model.diceReturns.slice(1));
+
+  if (!mounted) {
+    return (
+      <main className="flex min-h-screen flex-col mt-12">
+        <div className="flex flex-row text-3xl text-slate-200 justify-center">
+          Dice Game
+        </div>
+        <div className="flex flex-row text-slate-200 justify-center text-lg">
+          Loading...
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col mt-12">
@@ -232,22 +228,6 @@ export default function Home() {
               <div>{(100 * cashPercent).toFixed(0)}%</div>
             </div>
           </div>
-          {/* <div className="border-y pt-2 mb-6 border-gray-200">
-            <div className="flex text-sm justify-between text-blue-400 text-left py-2">
-              <div>Stocks</div>
-              <div>{(100 * model.dicePlaySliders.stockSlider).toFixed(0)}%</div>
-            </div>
-            <div className="flex text-sm justify-between text-orange-400 text-left py-2">
-              <div>Crypto</div>
-              <div>
-                {(100 * model.dicePlaySliders.cryptoSlider).toFixed(0)}%
-              </div>
-            </div>
-            <div className="flex text-sm justify-between text-green-400 text-left py-2">
-              <div>Bond</div>
-              <div>{(100 * cashPercent).toFixed(0)}%</div>
-            </div>
-          </div> */}
           <Switch
             isSelected={model.includePortfolio}
             onValueChange={handlePortfolio}

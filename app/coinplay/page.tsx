@@ -25,7 +25,6 @@ import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
-import { createClient } from "@/utils/supabase/client";
 import { useAuth } from "@/app/authctx";
 
 export default function Home() {
@@ -34,26 +33,38 @@ export default function Home() {
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [gameEnded, setGameEnded] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
   const timerModal = useDisclosure();
   const finishModal = useDisclosure();
   const {
-    user,
     coinComplete,
     setCoinComplete,
     coinGameMinFlips,
     coinGameMaxFlips,
     coinGameBias,
     coinGameMinutes,
-    override,
+    setCoinFinalBalance,
   } = useAuth();
 
-  setCoinComplete(override || coinComplete);
-
   const [timeRemaining, setTimeRemaining] = useState(coinGameMinutes * 60);
-  const supabase = createClient();
+
+  // Calculate current balance
+  const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
+
+  // Track when component has mounted on client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
+    // Check if player is bankrupt
+    if (balance <= 0 && isTimerRunning && !gameEnded) {
+      setTimeRemaining(0);
+      handleFinishGame();
+      return;
+    }
 
     if (isTimerRunning && timeRemaining > 0) {
       timer = setInterval(() => {
@@ -64,7 +75,7 @@ export default function Home() {
     }
 
     return () => clearInterval(timer);
-  }, [isTimerRunning, timeRemaining, gameEnded]);
+  }, [isTimerRunning, timeRemaining, gameEnded, balance]);
 
   const startTimer = () => {
     setIsTimerRunning(true);
@@ -76,35 +87,12 @@ export default function Home() {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
-  const handleFinishGame = async () => {
-    if (override) {
-      setGameEnded(true);
-      return;
-    }
-    if (user) {
-      let { data, error } = await supabase
-        .from("profiles")
-        .update({ coin_complete: true })
-        .eq("id", user.id)
-        .select();
-      if (error) {
-        console.error("Error updating profile:", error);
-      } else {
-        setCoinComplete(true);
-        console.log("Game completed successfully!");
-      }
-
-      let updatesArray = toCoinGameTable(model.coinPlayFlips);
-      ({ data, error } = await supabase.from("coin_game").upsert(updatesArray));
-      if (error) {
-        console.error("Error updating coin_game data:", error);
-      } else {
-        console.log("coin_game data updated successfully:", data);
-      }
-      setIsTimerRunning(false);
-      setGameEnded(true);
-      timerModal.onOpen();
-    }
+  const handleFinishGame = () => {
+    setCoinComplete(true);
+    setCoinFinalBalance(balance);
+    setIsTimerRunning(false);
+    setGameEnded(true);
+    timerModal.onOpen();
   };
 
   const handleFlip = () => {
@@ -153,9 +141,21 @@ export default function Home() {
     setSelected(value as string);
   };
 
-  const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
   const heads =
     model.coinPlayFlips.filter((f) => f.coinResult === "heads").length - 1;
+
+  if (!mounted) {
+    return (
+      <main className="flex min-h-screen flex-col space-y-6 mt-12">
+        <div className="flex flex-row justify-center text-3xl text-slate-200">
+          Coin Flipping Game
+        </div>
+        <div className="flex flex-row text-xl justify-center text-blue-300">
+          Loading...
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col space-y-6 mt-12">
@@ -187,10 +187,17 @@ export default function Home() {
             <p className="text-red-600">Game Complete!</p>
           </ModalHeader>
           <ModalBody>
-            <p>
-              The game has ended and your results have been submitted. You can
-              contiune playing or press Reset to play again from scratch.
-            </p>
+            {balance <= 0 ? (
+              <p>
+                You went bankrupt! The game has ended. You can continue playing
+                or press Reset to play again from scratch.
+              </p>
+            ) : (
+              <p>
+                The game has ended. You can continue playing or press Reset to
+                play again from scratch.
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button onPress={timerModal.onClose}>Close</Button>
@@ -216,13 +223,16 @@ export default function Home() {
             <CurrencyInput
               id="bet-input"
               name="bet-input"
-              placeholder="Bet Size"
+              placeholder="Enter bet amount"
               prefix={"$ "}
-              decimalsLimit={2}
+              decimalsLimit={0}
               step={1}
-              value={model.coinPlayBet}
+              value={model.coinPlayBet === 0 ? "" : model.coinPlayBet}
               onValueChange={handleInput}
-              className="text-sm md:text-base w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none "
+              onFocus={(e) => e.target.select()}
+              className="text-sm md:text-base w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              allowNegativeValue={false}
+              max={balance}
             />
             <Slider
               className="text-orange-400 pb-4"

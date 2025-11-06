@@ -27,15 +27,6 @@ const ErrorPage: React.FC = () => {
         >
           Try Again
         </button>
-
-        {/* <div className="mt-6 text-sm">
-          <p className="text-gray-500">
-            Forgot your password?{" "}
-            <a href="/reset-password" className="text-red-500 hover:underline">
-              Reset it here.
-            </a>
-          </p>
-        </div> */}
       </div>
     </div>
   );

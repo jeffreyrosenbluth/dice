@@ -1,49 +1,31 @@
 "use client";
 
+
 import { Image } from "@nextui-org/react";
-import { Link, Button, Accordion, AccordionItem } from "@nextui-org/react";
+import { Link, Accordion, AccordionItem } from "@nextui-org/react";
 import { useAuth } from "@/app/authctx";
-import { useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { useStateContext, initialModel } from "@/app/ctx";
+import { Suspense, useState, useEffect } from "react";
 
 const Page = () => {
+  const [mounted, setMounted] = useState(false);
   const {
     loading,
-    user,
-    refreshUser,
     coinComplete,
     diceComplete,
     coinGameMinFlips,
     coinGameMaxFlips,
     coinGameBias,
     coinGameMinutes,
-    setCoinComplete,
     diceGameEnabled,
     diceGameRolls,
     diceSimEnabled,
-    setDiceComplete,
-    override,
   } = useAuth();
 
-  setCoinComplete(override || coinComplete);
-  setDiceComplete(override || diceComplete);
-
   useEffect(() => {
-    refreshUser();
-  }, [refreshUser]);
+    setMounted(true);
+  }, []);
 
-  const ctx = useStateContext();
-  const searchParams = useSearchParams();
-  const authParam = searchParams.get("auth");
-
-  useEffect(() => {
-    if (authParam === "success") {
-      ctx.setModel(initialModel);
-    }
-  }, [authParam]);
-
-  if (loading) {
+  if (!mounted || loading) {
     return <div>Loading...</div>;
   }
 
@@ -67,39 +49,7 @@ const Page = () => {
                 up to your current balance for each flip. This game is inspired
                 by a study from Victor Haghani and Richard Dewey.
               </p>
-              {/* <div className="text-xl font-medium mb-1 mt-4">Game Rules</div>
-              <div className="list-circle list-inside ml-4">
-                <div>Minimum {coinGameMinFlips} flips required</div>
-                <div>Maximum {coinGameMaxFlips} flips allowed</div>
-                {!override ? (
-                  <div>
-                    You have a {coinGameMinutes} minutes to complete the game
-                  </div>
-                ) : null}
-                <div>
-                  After {coinGameMinFlips} flips, the{" "}
-                  <span className="text-lg text-blue-400 font-semibold">
-                    Finish
-                  </span>{" "}
-                  button becomes available
-                </div>
-              </div>
-              <div className="text-xl font-medium mb-1 mt-4">
-                When you press
-                <span className="text-blue-400 font-semibold"> Finish</span> or
-                run out of time
-              </div>
-              <div className="list-circle list-inside ml-4 mb-4">
-                <div>Your data will be saved to a database</div>
-                <div>
-                  Your performance will be compared to other betting strategies
-                </div>
-                <div>A discussion of this game will be shown below </div>
-              </div>
-              <p>
-                You can reset and play again, but additional games will not be
-                saved.
-              </p> */}
+              {/* Game rules section removed */}
               <div className="text-blue-400 mt-2 mb-2">
                 To play choose <code className="text-white">Game</code> from the{" "}
                 <code className="text-white">Coin Flipping</code> menu.
@@ -109,29 +59,13 @@ const Page = () => {
                 href="/coinplay"
                 as={Link}
                 variant="solid"
-                isDisabled={!user}
               >
                 Play Coin Flip Game
               </Button> */}
-              {!user && !override ? (
-                <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
-                  <p className="font-semibold italic">
-                    You must be signed in to play this game. Press the Sign In
-                    button to sign in or sign up. Or click
-                  </p>
-                  <Link
-                    href="/login"
-                    className="text-blue-400 font-semibold underline"
-                  >
-                    here
-                  </Link>
-                </div>
-              ) : (
-                <div className="mb=8">
-                  It is recommend to play the coin flip game before reading the
-                  discussion and playing the simulation.
-                </div>
-              )}
+              <div className="mb=8">
+                It is recommend to play the coin flip game before reading the
+                discussion and playing the simulation.
+              </div>
               {coinComplete ? (
                 <Accordion variant="bordered">
                   <AccordionItem title="Discussion">
@@ -244,20 +178,6 @@ const Page = () => {
                 You can reset and play again, but additional games will not be
                 saved.
               </p>
-              {/* <Button
-                className="mt-4 mb-2 py-2 px-4 bg-blue-500"
-                href="/diceplay"
-                as={Link}
-                variant="solid"
-                isDisabled={!user}
-              >
-                Play Dice Roll Game
-              </Button> */}
-              {/* <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
-                <p className="font-semibold italic">
-                  You must be signed in to play this game.
-                </p>
-              </div> */}
               <br />
               <br />
               <div className="flex place-items-center"></div>
@@ -505,28 +425,19 @@ const Page = () => {
             </div>
           ) : null}
           <div className="py-4">
-            {
-              diceComplete && diceSimEnabled && (
-                <>
-                  <div className="text-3xl text-blue-400 font-medium mb-2">
-                    Dice Roll Simulation
-                  </div>
-                  <p>
-                    Set the portfolio weights, rolls per sample, and number of
-                    samples. Then run a simulation of the results to compare
-                    statistics of the different investments. Including the
-                    arithmetic, geometric mean returns and the volatility drag.
-                  </p>
-                </>
-              )
-              // : diceSimEnabled ? (
-              //   <div className="border-1 border-l-8 border-orange-500 p-4 mb-4 mt-4">
-              //     <p className="font-semibold italic">
-              //       Complete the Dice Roll Game to unlock the simulation
-              //     </p>
-              //   </div>
-              // ) : null}
-            }
+            {diceComplete && diceSimEnabled && (
+              <>
+                <div className="text-3xl text-blue-400 font-medium mb-2">
+                  Dice Roll Simulation
+                </div>
+                <p>
+                  Set the portfolio weights, rolls per sample, and number of
+                  samples. Then run a simulation of the results to compare
+                  statistics of the different investments. Including the
+                  arithmetic, geometric mean returns and the volatility drag.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

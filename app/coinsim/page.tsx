@@ -26,11 +26,7 @@ export default function Home() {
     coinComplete,
     coinSimEnabled,
     coinSimMaxSamples,
-    override,
-    setCoinComplete,
   } = useAuth();
-
-  setCoinComplete(override || coinComplete);
 
   useEffect(() => {
     if (!(coinComplete && coinSimEnabled)) {

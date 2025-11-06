@@ -18,11 +18,7 @@ export default function Home() {
     diceGameEnabled,
     diceComplete,
     diceSimMaxSamples,
-    setDiceComplete,
-    override,
   } = useAuth();
-
-  setDiceComplete(override || diceComplete);
 
   useEffect(() => {
     if (!(diceComplete && diceGameEnabled)) {

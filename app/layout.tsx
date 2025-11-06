@@ -10,12 +10,6 @@ import { Providers } from "@/app/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata: Metadata = {
-//   title: "Investment Dice Simulation",
-//   description:
-//     "A Simulation of Risk and Wealth When Investing in the Stock Market",
-// };
-
 export default function RootLayout({
   children,
 }: Readonly<{

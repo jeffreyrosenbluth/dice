@@ -13,9 +13,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import DiceButton from "@/app/ui/button";
-import { createClient } from "@/utils/supabase/client";
 import { useAuth } from "@/app/authctx";
-import { on } from "events";
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,21 +36,7 @@ export default function Home() {
     return sum / values.length;
   };
 
-  const toCalibrationTable = (averages: {
-    question1: number;
-    question2: number;
-    question3: number;
-  }) => {
-    return {
-      L10: averages.question1,
-      L20: averages.question2,
-      G5: averages.question3,
-    };
-  };
-
-  const { user, calibrationComplete, setCalibrationComplete } = useAuth();
-
-  const supabase = createClient();
+  const { calibrationComplete, setCalibrationComplete } = useAuth();
 
   useEffect(() => {
     setAverages({
@@ -83,7 +67,7 @@ export default function Home() {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (answers.question1.length === 0) {
       alert("Please select at least one option for Question 1.");
       return;
@@ -96,29 +80,7 @@ export default function Home() {
       alert("Please select at least one option for Question 3.");
       return;
     }
-    if (!user || calibrationComplete) {
-      onOpen();
-      return;
-    }
-    let { data, error } = await supabase
-      .from("profiles")
-      .update({ calibration_complete: true })
-      .eq("id", user.id)
-      .select();
-    if (error) {
-      console.error("Error updating profile:", error);
-    } else {
-      setCalibrationComplete(true);
-    }
-    let updatesArray = toCalibrationTable(averages);
-    ({ data, error } = await supabase
-      .from("crra_calibration")
-      .upsert(updatesArray));
-    if (error) {
-      console.error("Error updating crra_calibration data:", error);
-    } else {
-      console.log("crra_calibration data updated successfully:", data);
-    }
+    setCalibrationComplete(true);
     onOpen();
   };
 

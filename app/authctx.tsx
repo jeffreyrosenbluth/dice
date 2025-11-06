@@ -1,19 +1,24 @@
 "use client";
 
-const OVERRIDE: boolean = true;
+import React, { createContext, useState, useEffect, useContext } from "react";
 
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-} from "react";
-import { createClient } from "@/utils/supabase/client";
-import { User, SupabaseClient } from "@supabase/supabase-js";
+// Hardcoded configuration values - EDIT THESE TO CHANGE GAME SETTINGS
+const CONFIG = {
+  coinGameEnabled: true,
+  coinGameMinFlips: 20,
+  coinGameMaxFlips: 300,
+  coinGameBias: 0.6,
+  coinGameMinutes: 15,
+  coinSimEnabled: true,
+  coinSimMaxSamples: 100000,
+  coinSimMaxFlips: 100,
+  diceGameEnabled: true,
+  diceGameRolls: 100,
+  diceSimEnabled: true,
+  diceSimMaxSamples: 100000,
+};
 
-type AuthContextType = {
-  user: User | null;
+type ConfigContextType = {
   coinComplete: boolean;
   setCoinComplete: (value: boolean) => void;
   diceComplete: boolean;
@@ -32,184 +37,123 @@ type AuthContextType = {
   diceSimMaxSamples: number;
   calibrationComplete: boolean;
   setCalibrationComplete: (value: boolean) => void;
+  coinFinalBalance: number | null;
+  setCoinFinalBalance: (value: number) => void;
   loading: boolean;
-  refreshUser: () => Promise<void>;
-  override: boolean;
 };
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
+const ConfigContext = createContext<ConfigContextType>({
   coinComplete: false,
   setCoinComplete: () => {},
   diceComplete: false,
   setDiceComplete: () => {},
-  coinGameEnabled: true,
-  coinGameMinFlips: 20,
-  coinGameMaxFlips: 300,
-  coinGameBias: 0.6,
-  coinGameMinutes: 20,
-  coinSimEnabled: false,
-  coinSimMaxSamples: 100000,
-  coinSimMaxFlips: 100,
-  diceGameEnabled: false,
-  diceGameRolls: 100,
-  diceSimEnabled: false,
-  diceSimMaxSamples: 100000,
+  coinGameEnabled: CONFIG.coinGameEnabled,
+  coinGameMinFlips: CONFIG.coinGameMinFlips,
+  coinGameMaxFlips: CONFIG.coinGameMaxFlips,
+  coinGameBias: CONFIG.coinGameBias,
+  coinGameMinutes: CONFIG.coinGameMinutes,
+  coinSimEnabled: CONFIG.coinSimEnabled,
+  coinSimMaxSamples: CONFIG.coinSimMaxSamples,
+  coinSimMaxFlips: CONFIG.coinSimMaxFlips,
+  diceGameEnabled: CONFIG.diceGameEnabled,
+  diceGameRolls: CONFIG.diceGameRolls,
+  diceSimEnabled: CONFIG.diceSimEnabled,
+  diceSimMaxSamples: CONFIG.diceSimMaxSamples,
   calibrationComplete: false,
   setCalibrationComplete: () => {},
-  loading: true,
-  refreshUser: async () => {},
-  override: OVERRIDE,
+  coinFinalBalance: null,
+  setCoinFinalBalance: () => {},
+  loading: false,
 });
 
-export type Config = {
-  coin_game_enabled: boolean;
-  coin_game_min_flips: number;
-  coin_game_max_flips: number;
-  coin_sim_enabled: boolean;
-  dice_game_enabled: boolean;
-  dice_game_rolls: number;
-  dice_sim_enabled: boolean;
-  coin_game_bias: number;
-  coin_game_minutes: number;
-  coin_sim_max_samples: number;
-  coin_sim_max_flips: number;
-  dice_sim_max_samples: number;
+// Helper function to load initial state from localStorage
+const getInitialState = (key: string, defaultValue: boolean): boolean => {
+  if (typeof window === 'undefined') return defaultValue;
+  try {
+    const saved = localStorage.getItem(key);
+    return saved !== null ? JSON.parse(saved) : defaultValue;
+  } catch (error) {
+    console.error(`Error loading ${key} from localStorage:`, error);
+    return defaultValue;
+  }
 };
 
-function useSupabaseAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
-
-  useEffect(() => {
-    setSupabase(createClient());
-  }, []);
-
-  useEffect(() => {
-    if (!supabase) return;
-
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase]);
-
-  const refreshUser = useCallback(async () => {
-    if (!supabase) return;
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    setUser(user);
-    setLoading(false);
-  }, [supabase]);
-
-  return { user, loading, supabase, refreshUser };
-}
+// Helper function to load initial number from localStorage
+const getInitialNumber = (key: string, defaultValue: number | null): number | null => {
+  if (typeof window === 'undefined') return defaultValue;
+  try {
+    const saved = localStorage.getItem(key);
+    return saved !== null ? JSON.parse(saved) : defaultValue;
+  } catch (error) {
+    console.error(`Error loading ${key} from localStorage:`, error);
+    return defaultValue;
+  }
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, supabase, refreshUser } = useSupabaseAuth();
-  const [coinComplete, setCoinComplete] = useState(false);
-  const [diceComplete, setDiceComplete] = useState(false);
-  const [calibrationComplete, setCalibrationComplete] = useState(false);
-  const [config, setConfig] = useState<Config | null>(null);
-
-  const fetchUserData = useCallback(
-    async (user: User) => {
-      if (!supabase) return;
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("coin_complete, dice_complete, calibration_complete")
-        .eq("id", user.id)
-        .single();
-      if (data && !error) {
-        setCoinComplete(data.coin_complete);
-        setDiceComplete(data.dice_complete);
-        setCalibrationComplete(data.calibration_complete);
-      }
-    },
-    [supabase]
+  const [coinComplete, setCoinCompleteState] = useState(() =>
+    getInitialState("coinComplete", false)
+  );
+  const [diceComplete, setDiceCompleteState] = useState(() =>
+    getInitialState("diceComplete", false)
+  );
+  const [calibrationComplete, setCalibrationCompleteState] = useState(() =>
+    getInitialState("calibrationComplete", false)
+  );
+  const [coinFinalBalance, setCoinFinalBalanceState] = useState<number | null>(() =>
+    getInitialNumber("coinFinalBalance", null)
   );
 
-  useEffect(() => {
-    if (user) {
-      fetchUserData(user);
-    } else {
-      setCoinComplete(false);
-      setDiceComplete(false);
-      setCalibrationComplete;
-    }
-  }, [user, fetchUserData]);
+  // Wrapper functions to save to localStorage when state changes
+  const setCoinComplete = (value: boolean) => {
+    setCoinCompleteState(value);
+    localStorage.setItem("coinComplete", JSON.stringify(value));
+  };
 
-  const fetchConfigurations = useCallback(async (): Promise<Config | null> => {
-    if (!supabase) return null;
-    const { data, error } = await supabase
-      .from("config")
-      .select("*")
-      .single<Config>();
+  const setDiceComplete = (value: boolean) => {
+    setDiceCompleteState(value);
+    localStorage.setItem("diceComplete", JSON.stringify(value));
+  };
 
-    if (error) {
-      console.error(error);
-      return null;
-    }
-    return data;
-  }, [supabase]);
+  const setCalibrationComplete = (value: boolean) => {
+    setCalibrationCompleteState(value);
+    localStorage.setItem("calibrationComplete", JSON.stringify(value));
+  };
 
-  useEffect(() => {
-    const loadConfig = async () => {
-      const configData = await fetchConfigurations();
-      setConfig(configData);
-    };
-
-    loadConfig();
-  }, [fetchConfigurations]);
+  const setCoinFinalBalance = (value: number) => {
+    setCoinFinalBalanceState(value);
+    localStorage.setItem("coinFinalBalance", JSON.stringify(value));
+  };
 
   return (
-    <AuthContext.Provider
+    <ConfigContext.Provider
       value={{
-        user,
         coinComplete,
         setCoinComplete,
         diceComplete,
         setDiceComplete,
-        coinGameEnabled: config?.coin_game_enabled ?? false,
-        coinGameMinFlips: config?.coin_game_min_flips ?? 0,
-        coinGameMaxFlips: config?.coin_game_max_flips ?? 0,
-        coinGameBias: config?.coin_game_bias ?? 0.0,
-        coinGameMinutes: config?.coin_game_minutes ?? 0,
-        coinSimEnabled: config?.coin_sim_enabled ?? false,
-        coinSimMaxFlips: config?.coin_sim_max_flips ?? 0,
-        coinSimMaxSamples: config?.coin_sim_max_samples ?? 0,
-        diceGameEnabled: config?.dice_game_enabled ?? false,
-        diceGameRolls: config?.dice_game_rolls ?? 0,
-        diceSimEnabled: config?.dice_sim_enabled ?? false,
-        diceSimMaxSamples: config?.dice_sim_max_samples ?? 0,
+        coinGameEnabled: CONFIG.coinGameEnabled,
+        coinGameMinFlips: CONFIG.coinGameMinFlips,
+        coinGameMaxFlips: CONFIG.coinGameMaxFlips,
+        coinGameBias: CONFIG.coinGameBias,
+        coinGameMinutes: CONFIG.coinGameMinutes,
+        coinSimEnabled: CONFIG.coinSimEnabled,
+        coinSimMaxFlips: CONFIG.coinSimMaxFlips,
+        coinSimMaxSamples: CONFIG.coinSimMaxSamples,
+        diceGameEnabled: CONFIG.diceGameEnabled,
+        diceGameRolls: CONFIG.diceGameRolls,
+        diceSimEnabled: CONFIG.diceSimEnabled,
+        diceSimMaxSamples: CONFIG.diceSimMaxSamples,
         calibrationComplete,
         setCalibrationComplete,
-        loading,
-        refreshUser,
-        override: OVERRIDE,
+        coinFinalBalance,
+        setCoinFinalBalance,
+        loading: false,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </ConfigContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(ConfigContext);

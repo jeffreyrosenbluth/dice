@@ -13,9 +13,7 @@ import {
   NavbarBrand,
   Image,
 } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/authctx";
-import { Spinner } from "@nextui-org/spinner";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;
@@ -53,35 +51,19 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 };
 
 const AppNavbar: React.FC = () => {
-  // const { setModel } = useStateContext();
   const {
-    user,
     coinComplete,
-    setCoinComplete,
     diceComplete,
-    setDiceComplete,
     coinGameEnabled,
     coinSimEnabled,
     diceGameEnabled,
     diceSimEnabled,
-    loading,
-    override,
+    coinFinalBalance,
   } = useAuth();
 
-  const router = useRouter();
-
-  const handleAuthClick = async () => {
-    router.push("/login"); // Redirect to login page
-  };
-
-  if (loading) {
-    return <Spinner />;
-  }
-
   const coinDisabledKeys = () => {
-    if (override) return [];
-    const play = user && coinGameEnabled;
-    const sim = user && coinSimEnabled && coinComplete;
+    const play = coinGameEnabled;
+    const sim = coinSimEnabled && coinComplete;
     if (play && sim) return [];
     if (play) return ["simulation"];
     if (sim) return ["play"];
@@ -89,9 +71,8 @@ const AppNavbar: React.FC = () => {
   };
 
   const diceDisabledKeys = () => {
-    if (override) return [];
-    const play = user && diceGameEnabled;
-    const sim = user && diceSimEnabled && diceComplete;
+    const play = diceGameEnabled;
+    const sim = diceSimEnabled && diceComplete;
     if (play && sim) return [];
     if (play) return ["simulation"];
     if (sim) return ["play"];
@@ -99,16 +80,17 @@ const AppNavbar: React.FC = () => {
   };
 
   return (
-    <Navbar className="bg-slate-950 border-b border-gray-700">
-      <NavbarBrand>
-        <Link href="/" className="text-xl">
-          <div className="flex flex-row items-center gap-2">
-            <Image src="/elf.svg" alt="Elf" width={32} className="invert" />
-            ELF
-          </div>
-        </Link>
-      </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-8">
+    <div className="relative">
+      <Navbar className="bg-slate-950 border-b border-gray-700">
+        <NavbarBrand>
+          <Link href="/" className="text-xl">
+            <div className="flex flex-row items-center gap-2">
+              <Image src="/elf.svg" alt="Elf" width={32} className="invert" />
+              ELF
+            </div>
+          </Link>
+        </NavbarBrand>
+        <NavbarContent className="hidden sm:flex gap-8">
         <NavbarItem>
           <Dropdown>
             <DropdownTrigger>
@@ -170,23 +152,16 @@ const AppNavbar: React.FC = () => {
           <Link href="/trackrec">Track Record</Link>
         </NavbarItem>
       </NavbarContent>
-      {!override ? (
-        <NavbarContent className="sm:flex hidden" justify="end">
-          <NavbarItem>{user ? user.email!.split("@")[0] : null}</NavbarItem>
-          <NavbarItem>
-            {!user ? (
-              <Button variant="flat" onClick={handleAuthClick}>
-                Sign In
-              </Button>
-            ) : (
-              <Button isIconOnly variant="light" onClick={handleAuthClick}>
-                <Image src="/user.svg" alt="User" width={32} />
-              </Button>
-            )}
-          </NavbarItem>
-        </NavbarContent>
-      ) : null}
     </Navbar>
+    {coinFinalBalance !== null && (
+      <div className="absolute top-24 right-8 bg-slate-800 px-6 py-3 rounded-md border border-gray-600 shadow-lg min-w-[180px]">
+        <div className="text-sm text-slate-400">Final Balance</div>
+        <div className="text-2xl font-semibold text-green-400 break-words">
+          ${coinFinalBalance.toFixed(0)}
+        </div>
+      </div>
+    )}
+    </div>
   );
 };
 
