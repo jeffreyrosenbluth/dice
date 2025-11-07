@@ -5,6 +5,9 @@ import {
   Navbar,
   NavbarContent,
   NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -13,6 +16,7 @@ import {
   NavbarBrand,
   Image,
 } from "@nextui-org/react";
+import { useState } from "react";
 import { useAuth } from "@/app/authctx";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
@@ -51,6 +55,7 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 };
 
 const AppNavbar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     coinComplete,
     diceComplete,
@@ -81,16 +86,27 @@ const AppNavbar: React.FC = () => {
 
   return (
     <div className="relative">
-      <Navbar className="bg-slate-950 border-b border-gray-700">
-        <NavbarBrand>
-          <Link href="/" className="text-xl">
-            <div className="flex flex-row items-center gap-2">
-              <Image src="/elf.svg" alt="Elf" width={32} className="invert" />
-              ELF
-            </div>
-          </Link>
-        </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-8">
+      <Navbar
+        className="bg-slate-950 border-b border-gray-700"
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
+      >
+        <NavbarContent>
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="sm:hidden"
+          />
+          <NavbarBrand>
+            <Link href="/" className="text-xl">
+              <div className="flex flex-row items-center gap-2">
+                <Image src="/elf.svg" alt="Elf" width={32} className="invert" />
+                ELF
+              </div>
+            </Link>
+          </NavbarBrand>
+        </NavbarContent>
+
+        <NavbarContent className="hidden sm:flex gap-8" justify="center">
         <NavbarItem>
           <Dropdown>
             <DropdownTrigger>
@@ -152,9 +168,80 @@ const AppNavbar: React.FC = () => {
           <Link href="/trackrec">Track Record</Link>
         </NavbarItem>
       </NavbarContent>
+
+      <NavbarMenu className="bg-slate-950 pt-6">
+        <NavbarMenuItem>
+          <div className="w-full">
+            <p className="text-sm text-slate-400 mb-2 px-2">Coin Flipping</p>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/coinplay"
+                className={`w-full px-4 py-2 rounded-md ${
+                  !coinGameEnabled ? "opacity-50 pointer-events-none" : "hover:bg-slate-800"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Game
+              </Link>
+              <Link
+                href="/coinsim"
+                className={`w-full px-4 py-2 rounded-md ${
+                  !(coinSimEnabled && coinComplete) ? "opacity-50 pointer-events-none" : "hover:bg-slate-800"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Simulation
+              </Link>
+            </div>
+          </div>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <div className="w-full">
+            <p className="text-sm text-slate-400 mb-2 px-2">Dice Rolling</p>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/diceplay"
+                className={`w-full px-4 py-2 rounded-md ${
+                  !diceGameEnabled ? "opacity-50 pointer-events-none" : "hover:bg-slate-800"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Game
+              </Link>
+              <Link
+                href="/dicesim"
+                className={`w-full px-4 py-2 rounded-md ${
+                  !(diceSimEnabled && diceComplete) ? "opacity-50 pointer-events-none" : "hover:bg-slate-800"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Simulation
+              </Link>
+            </div>
+          </div>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <Link
+            href="/calibrate"
+            className="w-full px-4 py-2 rounded-md hover:bg-slate-800 block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Calibrate Utility
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <Link
+            href="/trackrec"
+            className="w-full px-4 py-2 rounded-md hover:bg-slate-800 block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Track Record
+          </Link>
+        </NavbarMenuItem>
+      </NavbarMenu>
     </Navbar>
     {coinFinalBalance !== null && (
-      <div className="absolute top-24 right-8 bg-slate-800 px-6 py-3 rounded-md border border-gray-600 shadow-lg min-w-[180px]">
+      <div className="hidden md:block absolute top-24 right-8 bg-slate-800 px-6 py-3 rounded-md border border-gray-600 shadow-lg min-w-[180px]">
         <div className="text-sm text-slate-400">Final Balance</div>
         <div className="text-2xl font-semibold text-green-400 break-words">
           ${coinFinalBalance.toFixed(2)}

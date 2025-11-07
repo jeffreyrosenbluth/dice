@@ -41,6 +41,7 @@ export default function Home() {
     coinGameBias,
     coinGameMinutes,
     setCoinFinalBalance,
+    coinFinalBalance,
   } = useAuth();
 
   // Initialize timer state from localStorage or default
@@ -182,6 +183,16 @@ export default function Home() {
       <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200">
         Coin Flipping Game
       </div>
+      {coinFinalBalance !== null && (
+        <div className="md:hidden flex justify-center">
+          <div className="bg-slate-800 px-4 py-2 rounded-md border border-gray-600 shadow-lg">
+            <div className="text-xs text-slate-400 text-center">Final Balance</div>
+            <div className="text-lg font-semibold text-green-400">
+              ${coinFinalBalance.toFixed(2)}
+            </div>
+          </div>
+        </div>
+      )}
       {!coinComplete ? (
         !isTimerRunning ? (
           <div className="flex flex-row justify-evenly">

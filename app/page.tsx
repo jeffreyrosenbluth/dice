@@ -26,15 +26,15 @@ const Page = () => {
   }
 
   return (
-    <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-8 w-full">
-      <div className="text-4xl md:text-4xl font-bold text-slate-200  mt-12 text-center">
+    <main className="flex min-h-screen max-w-5xl flex-col flex-grow items-center justify-start gap-6 md:gap-8 w-full px-4 md:px-6">
+      <div className="text-3xl md:text-4xl font-bold text-slate-200 mt-8 md:mt-12 text-center">
         Experiments for Learning Finance
       </div>
-      <div className="flex flex-col place-items-center">
-        <Image src="/elf_blue.svg" alt="Elf" width={96} />
-        <div className="max-w-3xl">
+      <div className="flex flex-col place-items-center w-full">
+        <Image src="/elf_blue.svg" alt="Elf" width={96} className="mb-4" />
+        <div className="max-w-3xl w-full px-2 md:px-0">
           <div className="py-4">
-            <div className="text-3xl text-blue-400 font-medium mb-2 ">
+            <div className="text-2xl md:text-3xl text-blue-400 font-medium mb-2">
               Coin Flip Game
             </div>
             <div>
@@ -98,7 +98,7 @@ const Page = () => {
             </div>
           </div>
           <div className="py-4">
-            <div className="text-3xl text-blue-400 font-medium mb-2">
+            <div className="text-2xl md:text-3xl text-blue-400 font-medium mb-2">
               Coin Flip Simulation
             </div>
             {coinComplete ? (
@@ -136,7 +136,7 @@ const Page = () => {
           </div>
           {diceGameEnabled ? (
             <div className="py-4">
-              <div className="text-3xl text-blue-400 font-medium mb-2">
+              <div className="text-2xl md:text-3xl text-blue-400 font-medium mb-2">
                 Dice Roll Game
               </div>
               <p>
@@ -169,11 +169,11 @@ const Page = () => {
               <br />
               <br />
               <div className="flex place-items-center"></div>
-              <div className="text-2xl font-bold text-slate-200 text-center">
+              <div className="text-xl md:text-2xl font-bold text-slate-200 text-center">
                 Risk and Return
               </div>
               <div className="overflow-x-auto mx-auto max-w-2xl">
-                <div className="min-w-full py-2 px-6 lg:px-8">
+                <div className="min-w-full py-2 px-2 md:px-6 lg:px-8">
                   <div className="overflow-hidden">
                     <table className="min-w-full text-left text-sm font-light">
                       <thead className="border-b font-medium dark:border-neutral-500">
@@ -226,12 +226,12 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-200 mt-12 text-center">
+              <div className="text-xl md:text-2xl font-bold text-slate-200 mt-8 md:mt-12 text-center">
                 Investment Net Returns
               </div>
               <div className="flex flex-col">
                 <div className="overflow-x-auto mx-auto mb-4 max-w-2xl">
-                  <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                  <div className="inline-block min-w-full py-2 px-2 sm:px-6 lg:px-8">
                     <div className="overflow-hidden">
                       <table className="min-w-full text-left text-sm font-light">
                         <thead className="border-b font-medium dark:border-neutral-500">
@@ -415,7 +415,7 @@ const Page = () => {
           <div className="py-4">
             {diceComplete && diceSimEnabled && (
               <>
-                <div className="text-3xl text-blue-400 font-medium mb-2">
+                <div className="text-2xl md:text-3xl text-blue-400 font-medium mb-2">
                   Dice Roll Simulation
                 </div>
                 <p>
