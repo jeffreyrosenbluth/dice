@@ -166,11 +166,11 @@ export default function Home() {
 
   if (!mounted) {
     return (
-      <main className="flex min-h-screen flex-col space-y-6 mt-12">
-        <div className="flex flex-row justify-center text-3xl text-slate-200">
+      <main className="flex min-h-screen flex-col space-y-6 mt-12 px-2 md:px-0">
+        <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200">
           Coin Flipping Game
         </div>
-        <div className="flex flex-row text-xl justify-center text-blue-300">
+        <div className="flex flex-row text-lg md:text-xl justify-center text-blue-300">
           Loading...
         </div>
       </main>
@@ -178,27 +178,27 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col space-y-6 mt-12">
-      <div className="flex flex-row justify-center text-3xl text-slate-200">
+    <main className="flex min-h-screen flex-col space-y-6 mt-12 px-2 md:px-0">
+      <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200">
         Coin Flipping Game
       </div>
       {!coinComplete ? (
         !isTimerRunning ? (
           <div className="flex flex-row justify-evenly">
             <Button
-              className="text-sm md:text-base py-2 mb-1 bg-green-600"
+              className="text-base md:text-base py-3 md:py-2 px-6 md:px-4 mb-1 bg-green-600 min-w-[120px]"
               onClick={startTimer}
             >
               Start
             </Button>
           </div>
         ) : (
-          <div className="flex flex-row justify-evenly text-xl text-green-500 font-medium">
+          <div className="flex flex-row justify-evenly text-lg md:text-xl text-green-500 font-medium">
             Time Remaining: {formatTime(timeRemaining)}
           </div>
         )
       ) : null}
-      <div className="flex flex-row text-xl justify-center text-blue-300">
+      <div className="flex flex-row text-lg md:text-xl justify-center text-blue-300">
         Balance: ${balance.toFixed(2)}
       </div>
       <Modal isOpen={timerModal.isOpen} onClose={timerModal.onClose}>
@@ -224,24 +224,24 @@ export default function Home() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <div className="grid grid-cols-12">
-        <div className="flex flex-col gap-6 col-span-4 px-8 max-w-72 md:min-w-80">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-0">
+        <div className="flex flex-col gap-6 col-span-12 md:col-span-4 px-4 md:px-8 max-w-full md:max-w-72 md:min-w-80">
           <RadioGroup
-            className="flex gap-8"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-8"
             value={selected || ""}
             onValueChange={handleRadio}
           >
-            <Radio classNames={{ label: "text-xs md:text-base" }} value="heads">
+            <Radio classNames={{ label: "text-base md:text-base" }} value="heads">
               Heads (probability = {coinGameBias})
             </Radio>
-            <Radio classNames={{ label: "text-xs md:text-base" }} value="tails">
+            <Radio classNames={{ label: "text-base md:text-base" }} value="tails">
               Tails (probability = {1 - coinGameBias})
             </Radio>
           </RadioGroup>
           <div>
-            <p className="text-sm md:text-base text-slate-200 mb-2">Bet Size</p>
+            <p className="text-base md:text-base text-slate-200 mb-2">Bet Size</p>
             <div className="relative mb-2">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm md:text-base text-slate-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-base md:text-base text-slate-400">$</span>
               <input
                 id="bet-input"
                 type="number"
@@ -257,7 +257,7 @@ export default function Home() {
                   }));
                 }}
                 onFocus={(e) => e.target.select()}
-                className="text-sm md:text-base w-full pl-7 pr-4 py-2 bg-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-base md:text-base w-full pl-7 pr-4 py-3 md:py-2 bg-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <Slider
@@ -271,10 +271,10 @@ export default function Home() {
               formatOptions={{ style: "percent" }}
             />
           </div>
-          <div className="flex flex-row justify-evenly">
+          <div className="flex flex-row justify-evenly gap-4">
             <Button
               className={clsx(
-                "text-sm md:text-base py-2 mb-1 bg-blue-500",
+                "text-base md:text-base py-3 md:py-2 px-6 md:px-4 mb-1 bg-blue-500 min-w-[120px]",
                 {
                   "opacity-50 ":
                     selected === undefined ||
@@ -302,14 +302,14 @@ export default function Home() {
             </Button>
             {coinComplete && (
               <Button
-                className="text-sm md:text-base py-2 mb-1 bg-blue-500"
+                className="text-base md:text-base py-3 md:py-2 px-6 md:px-4 mb-1 bg-blue-500 min-w-[120px]"
                 onClick={handleReset}
               >
                 Reset
               </Button>
             )}
           </div>
-          <div className="px-8 brightness-90">
+          <div className="px-4 md:px-8 brightness-90">
             <Coin
               headsImage="../heads.png"
               tailsImage="../tails.png"
@@ -322,18 +322,18 @@ export default function Home() {
             Balance: {balance.toFixed(2)}
           </div> */}
           <Card className="bg-zinc-800 mt-6">
-            <CardHeader className="text-sm md:text-base justify-center">
+            <CardHeader className="text-base md:text-base justify-center">
               Statistics
             </CardHeader>
             <Divider />
-            <CardBody className="flex flex-row text-slate-200 text-xs md:text-sm gap-6 justify-stretch">
+            <CardBody className="flex flex-row text-slate-200 text-sm md:text-sm gap-4 md:gap-6 justify-stretch">
               <div className="text-yellow-600">Heads {heads}</div>
               <div className="text-zinc-400">
                 Tails {model.coinPlayFlips.length - heads - 1}
               </div>
               <div>Flips {model.coinPlayFlips.length - 1}</div>
             </CardBody>
-            <div className="flex flex-row text-slate-200 text-xs md:text-sm px-3 justify-start">
+            <div className="flex flex-row text-slate-200 text-sm md:text-sm px-3 pb-2 justify-start">
               <div>Heads</div>
               <div className="ml-4">
                 {model.coinPlayFlips.length > 1
@@ -346,7 +346,7 @@ export default function Home() {
             </div>
           </Card>
         </div>
-        <div className="col-span-8 mx-8">
+        <div className="col-span-12 md:col-span-8 mx-4 md:mx-8">
           {model.coinPlayFlips.length > 1 ? (
             <FlipPlot flips={model.coinPlayFlips} completed={coinComplete} />
           ) : null}
