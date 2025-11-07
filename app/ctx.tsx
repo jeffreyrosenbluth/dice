@@ -95,6 +95,29 @@ export const initialModel: Model = {
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [model, setModel] = useState<Model>(initialModel);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load from localStorage after mount to avoid hydration mismatch
+  React.useEffect(() => {
+    const savedFlips = localStorage.getItem('coinPlayFlips');
+    if (savedFlips) {
+      try {
+        const flips = JSON.parse(savedFlips);
+        setModel((prev) => ({ ...prev, coinPlayFlips: flips }));
+      } catch (error) {
+        console.error('Error parsing saved flips:', error);
+      }
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save coinPlayFlips to localStorage whenever they change (only after hydration)
+  React.useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('coinPlayFlips', JSON.stringify(model.coinPlayFlips));
+    }
+  }, [model.coinPlayFlips, isHydrated]);
+
   return (
     <StateContext.Provider value={{ model, setModel }}>
       {children}

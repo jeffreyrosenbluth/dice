@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Image } from "@nextui-org/react";
 import { Link, Accordion, AccordionItem } from "@nextui-org/react";
 import { useAuth } from "@/app/authctx";
@@ -12,10 +11,7 @@ const Page = () => {
     loading,
     coinComplete,
     diceComplete,
-    coinGameMinFlips,
-    coinGameMaxFlips,
     coinGameBias,
-    coinGameMinutes,
     diceGameEnabled,
     diceGameRolls,
     diceSimEnabled,
@@ -54,14 +50,6 @@ const Page = () => {
                 To play choose <code className="text-white">Game</code> from the{" "}
                 <code className="text-white">Coin Flipping</code> menu.
               </div>
-              {/* <Button
-                className="mt-4 mb-2 py-2 px-4 bg-blue-500"
-                href="/coinplay"
-                as={Link}
-                variant="solid"
-              >
-                Play Coin Flip Game
-              </Button> */}
               <div className="mb=8">
                 It is recommend to play the coin flip game before reading the
                 discussion and playing the simulation.

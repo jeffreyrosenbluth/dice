@@ -68,7 +68,7 @@ const ConfigContext = createContext<ConfigContextType>({
 
 // Helper function to load initial state from localStorage
 const getInitialState = (key: string, defaultValue: boolean): boolean => {
-  if (typeof window === 'undefined') return defaultValue;
+  if (typeof window === "undefined") return defaultValue;
   try {
     const saved = localStorage.getItem(key);
     return saved !== null ? JSON.parse(saved) : defaultValue;
@@ -79,8 +79,11 @@ const getInitialState = (key: string, defaultValue: boolean): boolean => {
 };
 
 // Helper function to load initial number from localStorage
-const getInitialNumber = (key: string, defaultValue: number | null): number | null => {
-  if (typeof window === 'undefined') return defaultValue;
+const getInitialNumber = (
+  key: string,
+  defaultValue: number | null
+): number | null => {
+  if (typeof window === "undefined") return defaultValue;
   try {
     const saved = localStorage.getItem(key);
     return saved !== null ? JSON.parse(saved) : defaultValue;
@@ -91,38 +94,58 @@ const getInitialNumber = (key: string, defaultValue: number | null): number | nu
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [coinComplete, setCoinCompleteState] = useState(() =>
-    getInitialState("coinComplete", false)
+  const [coinComplete, setCoinCompleteState] = useState(false);
+  const [diceComplete, setDiceCompleteState] = useState(false);
+  const [calibrationComplete, setCalibrationCompleteState] = useState(false);
+  const [coinFinalBalance, setCoinFinalBalanceState] = useState<number | null>(
+    null
   );
-  const [diceComplete, setDiceCompleteState] = useState(() =>
-    getInitialState("diceComplete", false)
-  );
-  const [calibrationComplete, setCalibrationCompleteState] = useState(() =>
-    getInitialState("calibrationComplete", false)
-  );
-  const [coinFinalBalance, setCoinFinalBalanceState] = useState<number | null>(() =>
-    getInitialNumber("coinFinalBalance", null)
-  );
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load from localStorage after mount to avoid hydration mismatch
+  useEffect(() => {
+    const savedCoinComplete = getInitialState("coinComplete", false);
+    const savedDiceComplete = getInitialState("diceComplete", false);
+    const savedCalibrationComplete = getInitialState(
+      "calibrationComplete",
+      false
+    );
+    const savedCoinFinalBalance = getInitialNumber("coinFinalBalance", null);
+
+    setCoinCompleteState(savedCoinComplete);
+    setDiceCompleteState(savedDiceComplete);
+    setCalibrationCompleteState(savedCalibrationComplete);
+    setCoinFinalBalanceState(savedCoinFinalBalance);
+    setIsHydrated(true);
+  }, []);
 
   // Wrapper functions to save to localStorage when state changes
   const setCoinComplete = (value: boolean) => {
     setCoinCompleteState(value);
-    localStorage.setItem("coinComplete", JSON.stringify(value));
+    if (isHydrated) {
+      localStorage.setItem("coinComplete", JSON.stringify(value));
+    }
   };
 
   const setDiceComplete = (value: boolean) => {
     setDiceCompleteState(value);
-    localStorage.setItem("diceComplete", JSON.stringify(value));
+    if (isHydrated) {
+      localStorage.setItem("diceComplete", JSON.stringify(value));
+    }
   };
 
   const setCalibrationComplete = (value: boolean) => {
     setCalibrationCompleteState(value);
-    localStorage.setItem("calibrationComplete", JSON.stringify(value));
+    if (isHydrated) {
+      localStorage.setItem("calibrationComplete", JSON.stringify(value));
+    }
   };
 
   const setCoinFinalBalance = (value: number) => {
     setCoinFinalBalanceState(value);
-    localStorage.setItem("coinFinalBalance", JSON.stringify(value));
+    if (isHydrated) {
+      localStorage.setItem("coinFinalBalance", JSON.stringify(value));
+    }
   };
 
   return (

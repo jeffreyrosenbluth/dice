@@ -157,7 +157,7 @@ const AppNavbar: React.FC = () => {
       <div className="absolute top-24 right-8 bg-slate-800 px-6 py-3 rounded-md border border-gray-600 shadow-lg min-w-[180px]">
         <div className="text-sm text-slate-400">Final Balance</div>
         <div className="text-2xl font-semibold text-green-400 break-words">
-          ${coinFinalBalance.toFixed(0)}
+          ${coinFinalBalance.toFixed(2)}
         </div>
       </div>
     )}

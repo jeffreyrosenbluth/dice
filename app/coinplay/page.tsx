@@ -21,7 +21,6 @@ import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
 import { addFlip, flip, toCoinGameTable, BIAS, Face } from "@/app/lib/coin";
 import { initialFlips } from "@/app/ctx";
-import CurrencyInput from "react-currency-input-field";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
 import clsx from "clsx";
@@ -35,18 +34,29 @@ export default function Home() {
   const [gameEnded, setGameEnded] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
   const timerModal = useDisclosure();
-  const finishModal = useDisclosure();
   const {
     coinComplete,
     setCoinComplete,
-    coinGameMinFlips,
     coinGameMaxFlips,
     coinGameBias,
     coinGameMinutes,
     setCoinFinalBalance,
   } = useAuth();
 
-  const [timeRemaining, setTimeRemaining] = useState(coinGameMinutes * 60);
+  // Initialize timer state from localStorage or default
+  const [timeRemaining, setTimeRemaining] = useState(() => {
+    if (typeof window === 'undefined') return coinGameMinutes * 60;
+    const savedStartTime = localStorage.getItem('coinGameStartTime');
+    const savedIsRunning = localStorage.getItem('coinGameTimerRunning');
+
+    if (savedStartTime && savedIsRunning === 'true') {
+      const startTime = parseInt(savedStartTime);
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, coinGameMinutes * 60 - elapsed);
+      return remaining;
+    }
+    return coinGameMinutes * 60;
+  });
 
   // Calculate current balance
   const balance = model.coinPlayFlips[model.coinPlayFlips.length - 1].value;
@@ -54,7 +64,13 @@ export default function Home() {
   // Track when component has mounted on client
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    // Restore timer running state from localStorage
+    const savedIsRunning = localStorage.getItem('coinGameTimerRunning');
+    if (savedIsRunning === 'true' && !coinComplete) {
+      setIsTimerRunning(true);
+    }
+  }, [coinComplete]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -78,6 +94,9 @@ export default function Home() {
   }, [isTimerRunning, timeRemaining, gameEnded, balance]);
 
   const startTimer = () => {
+    const startTime = Date.now();
+    localStorage.setItem('coinGameStartTime', startTime.toString());
+    localStorage.setItem('coinGameTimerRunning', 'true');
     setIsTimerRunning(true);
   };
 
@@ -92,6 +111,8 @@ export default function Home() {
     setCoinFinalBalance(balance);
     setIsTimerRunning(false);
     setGameEnded(true);
+    localStorage.removeItem('coinGameStartTime');
+    localStorage.removeItem('coinGameTimerRunning');
     timerModal.onOpen();
   };
 
@@ -123,17 +144,16 @@ export default function Home() {
 
   const handleReset = () => {
     setModel((prevModel) => ({ ...prevModel, coinPlayFlips: initialFlips }));
+    setTimeRemaining(coinGameMinutes * 60);
+    setIsTimerRunning(false);
+    setGameEnded(false);
+    localStorage.removeItem('coinGameStartTime');
+    localStorage.removeItem('coinGameTimerRunning');
+    localStorage.removeItem('coinPlayFlips');
   };
 
   const handleSlider = (value: number | number[]) => {
     setModel((prevModel) => ({ ...prevModel, coinPlayBet: value as number }));
-  };
-
-  const handleInput = (value: any, name: any, values: any) => {
-    setModel((prevModel) => ({
-      ...prevModel,
-      coinPlayBet: Math.min(balance, values!.float || 0),
-    }));
   };
 
   const handleRadio = (value: string) => {
@@ -179,7 +199,7 @@ export default function Home() {
         )
       ) : null}
       <div className="flex flex-row text-xl justify-center text-blue-300">
-        Balance: ${balance.toFixed(0)}
+        Balance: ${balance.toFixed(2)}
       </div>
       <Modal isOpen={timerModal.isOpen} onClose={timerModal.onClose}>
         <ModalContent>
@@ -220,20 +240,26 @@ export default function Home() {
           </RadioGroup>
           <div>
             <p className="text-sm md:text-base text-slate-200 mb-2">Bet Size</p>
-            <CurrencyInput
-              id="bet-input"
-              name="bet-input"
-              placeholder="Enter bet amount"
-              prefix={"$ "}
-              decimalsLimit={0}
-              step={1}
-              value={model.coinPlayBet === 0 ? "" : model.coinPlayBet}
-              onValueChange={handleInput}
-              onFocus={(e) => e.target.select()}
-              className="text-sm md:text-base w-full px-4 py-2 mb-2 bg-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              allowNegativeValue={false}
-              max={balance}
-            />
+            <div className="relative mb-2">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm md:text-base text-slate-400">$</span>
+              <input
+                id="bet-input"
+                type="number"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                value={model.coinPlayBet === 0 ? "" : model.coinPlayBet}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value) || 0;
+                  setModel((prevModel) => ({
+                    ...prevModel,
+                    coinPlayBet: val,
+                  }));
+                }}
+                onFocus={(e) => e.target.select()}
+                className="text-sm md:text-base w-full pl-7 pr-4 py-2 bg-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <Slider
               className="text-orange-400 pb-4"
               value={model.coinPlayBet}
@@ -241,7 +267,7 @@ export default function Home() {
               maxValue={balance}
               hideThumb={true}
               onChange={handleSlider}
-              step={1.0}
+              step={0.01}
               formatOptions={{ style: "percent" }}
             />
           </div>
@@ -274,48 +300,7 @@ export default function Home() {
             >
               Flip
             </Button>
-            {!coinComplete ? (
-              <>
-                <Button
-                  className={clsx(
-                    "text-sm md:text-base py-2 mb-1 bg-blue-500",
-                    {
-                      "opacity-50 ":
-                        model.coinPlayFlips.length < coinGameMinFlips + 1,
-                    },
-                    {
-                      "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
-                        model.coinPlayFlips.length < coinGameMinFlips + 1,
-                    },
-                    "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
-                  )}
-                  disabled={model.coinPlayFlips.length < coinGameMinFlips + 1}
-                  onClick={finishModal.onOpen}
-                >
-                  Finish
-                </Button>
-                <Modal
-                  isOpen={finishModal.isOpen}
-                  onClose={finishModal.onClose}
-                >
-                  <ModalContent>
-                    <ModalHeader>
-                      <p className="text-red-600">Are you sure?</p>
-                    </ModalHeader>
-                    <ModalBody>
-                      <p>
-                        The game will end and your results will be submitted.
-                        You cannot undo this action.
-                      </p>
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button onPress={handleFinishGame}>Finish</Button>
-                      <Button onPress={finishModal.onClose}>Close</Button>
-                    </ModalFooter>
-                  </ModalContent>
-                </Modal>
-              </>
-            ) : (
+            {coinComplete && (
               <Button
                 className="text-sm md:text-base py-2 mb-1 bg-blue-500"
                 onClick={handleReset}
