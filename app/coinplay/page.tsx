@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react";
 import FlipPlot from "@/app/ui/flipplot";
 import Coin from "@/app/ui/coin";
-import { addFlip, flip, toCoinGameTable, BIAS, Face } from "@/app/lib/coin";
+import { addFlip, flip, toCoinGameTable, Face } from "@/app/lib/coin";
 import { initialFlips } from "@/app/ctx";
 import { useStateContext } from "@/app/ctx";
 import HTPlot from "@/app/ui/htplot";
@@ -42,6 +42,8 @@ export default function Home() {
     coinGameMinutes,
     setCoinFinalBalance,
     coinFinalBalance,
+    coinGameMinFlips,
+    coinGameUseTimer,
   } = useAuth();
 
   // Initialize timer state from localStorage or default
@@ -122,7 +124,7 @@ export default function Home() {
       setIsFlipping(true);
       setModel((prevModel) => ({
         ...prevModel,
-        coinPlayFlipResult: flip(model.coinPlayHT, BIAS),
+        coinPlayFlipResult: flip(coinGameBias),
       }));
     }
   };
@@ -194,18 +196,33 @@ export default function Home() {
         </div>
       )}
       {!coinComplete ? (
-        !isTimerRunning ? (
+        coinGameUseTimer ? (
+          !isTimerRunning ? (
+            <div className="flex flex-row justify-evenly">
+              <Button
+                className="text-base md:text-base py-3 md:py-2 px-6 md:px-4 mb-1 bg-green-600 min-w-[120px]"
+                onClick={startTimer}
+              >
+                Start
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-row justify-evenly text-lg md:text-xl text-green-500 font-medium">
+              Time Remaining: {formatTime(timeRemaining)}
+            </div>
+          )
+        ) : (
           <div className="flex flex-row justify-evenly">
             <Button
-              className="text-base md:text-base py-3 md:py-2 px-6 md:px-4 mb-1 bg-green-600 min-w-[120px]"
-              onClick={startTimer}
+              onClick={handleFinishGame}
+              disabled={model.coinPlayFlips.length - 1 < coinGameMinFlips}
+              className={clsx("bg-orange-600 px-6 py-3 md:px-4 md:py-2 transition duration-200 text-base md:text-base min-w-[120px]", {
+                "opacity-100": model.coinPlayFlips.length - 1 >= coinGameMinFlips,
+                "opacity-50": model.coinPlayFlips.length - 1 < coinGameMinFlips,
+              })}
             >
-              Start
+              Finish
             </Button>
-          </div>
-        ) : (
-          <div className="flex flex-row justify-evenly text-lg md:text-xl text-green-500 font-medium">
-            Time Remaining: {formatTime(timeRemaining)}
           </div>
         )
       ) : null}
@@ -242,10 +259,28 @@ export default function Home() {
             value={selected || ""}
             onValueChange={handleRadio}
           >
-            <Radio classNames={{ label: "text-base md:text-base" }} value="heads">
+            <Radio
+              size="lg"
+              classNames={{
+                label: "text-base md:text-base cursor-pointer",
+                wrapper: "group-data-[selected=true]:border-blue-500 cursor-pointer",
+                base: "cursor-pointer m-0",
+                control: "cursor-pointer"
+              }}
+              value="heads"
+            >
               Heads (probability = {coinGameBias})
             </Radio>
-            <Radio classNames={{ label: "text-base md:text-base" }} value="tails">
+            <Radio
+              size="lg"
+              classNames={{
+                label: "text-base md:text-base cursor-pointer",
+                wrapper: "group-data-[selected=true]:border-blue-500 cursor-pointer",
+                base: "cursor-pointer m-0",
+                control: "cursor-pointer"
+              }}
+              value="tails"
+            >
               Tails (probability = {1 - coinGameBias})
             </Radio>
           </RadioGroup>
@@ -290,13 +325,13 @@ export default function Home() {
                   "opacity-50 ":
                     selected === undefined ||
                     model.coinPlayBet === 0 ||
-                    (!coinComplete && !isTimerRunning),
+                    (!coinComplete && coinGameUseTimer && !isTimerRunning),
                 },
                 {
                   "hover:opacity-50 hover:bg-blue-500 hover:border-transparent":
                     selected === undefined ||
                     model.coinPlayBet === 0 ||
-                    (!coinComplete && !isTimerRunning),
+                    (!coinComplete && coinGameUseTimer && !isTimerRunning),
                 },
                 "disabled:hover:opacity-50 disabled:hover:bg-blue-500 disabled:hover:border-transparent"
               )}
@@ -306,7 +341,7 @@ export default function Home() {
                 selected === undefined ||
                 model.coinPlayBet === 0 ||
                 model.coinPlayFlips.length > coinGameMaxFlips ||
-                (!coinComplete && !isTimerRunning)
+                (!coinComplete && coinGameUseTimer && !isTimerRunning)
               }
             >
               Flip

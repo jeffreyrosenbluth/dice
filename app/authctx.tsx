@@ -5,13 +5,13 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 // Hardcoded configuration values - EDIT THESE TO CHANGE GAME SETTINGS
 const CONFIG = {
   coinGameEnabled: true,
-  coinGameMinFlips: 20,
+  coinGameMinFlips: 5,
   coinGameMaxFlips: 300,
   coinGameBias: 0.6,
   coinGameMinutes: 15,
   coinSimEnabled: true,
   coinSimMaxSamples: 100000,
-  coinSimMaxFlips: 100,
+  coinSimMaxFlips: 300,
   diceGameEnabled: true,
   diceGameRolls: 100,
   diceSimEnabled: true,
@@ -39,6 +39,8 @@ type ConfigContextType = {
   setCalibrationComplete: (value: boolean) => void;
   coinFinalBalance: number | null;
   setCoinFinalBalance: (value: number) => void;
+  coinGameUseTimer: boolean;
+  setCoinGameUseTimer: (value: boolean) => void;
   loading: boolean;
 };
 
@@ -63,6 +65,8 @@ const ConfigContext = createContext<ConfigContextType>({
   setCalibrationComplete: () => {},
   coinFinalBalance: null,
   setCoinFinalBalance: () => {},
+  coinGameUseTimer: true,
+  setCoinGameUseTimer: () => {},
   loading: false,
 });
 
@@ -100,6 +104,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [coinFinalBalance, setCoinFinalBalanceState] = useState<number | null>(
     null
   );
+  const [coinGameUseTimer, setCoinGameUseTimerState] = useState(true);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Load from localStorage after mount to avoid hydration mismatch
@@ -111,11 +116,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       false
     );
     const savedCoinFinalBalance = getInitialNumber("coinFinalBalance", null);
+    const savedCoinGameUseTimer = getInitialState("coinGameUseTimer", true);
 
     setCoinCompleteState(savedCoinComplete);
     setDiceCompleteState(savedDiceComplete);
     setCalibrationCompleteState(savedCalibrationComplete);
     setCoinFinalBalanceState(savedCoinFinalBalance);
+    setCoinGameUseTimerState(savedCoinGameUseTimer);
     setIsHydrated(true);
   }, []);
 
@@ -148,6 +155,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const setCoinGameUseTimer = (value: boolean) => {
+    setCoinGameUseTimerState(value);
+    if (isHydrated) {
+      localStorage.setItem("coinGameUseTimer", JSON.stringify(value));
+    }
+  };
+
   return (
     <ConfigContext.Provider
       value={{
@@ -171,6 +185,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCalibrationComplete,
         coinFinalBalance,
         setCoinFinalBalance,
+        coinGameUseTimer,
+        setCoinGameUseTimer,
         loading: false,
       }}
     >

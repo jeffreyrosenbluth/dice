@@ -24,15 +24,12 @@ export type Profit = {
   value: number;
 };
 
-export const BIAS = 0.6;
 const K1 = 0.1;
 const K2 = 20;
 const KELLY = 0.2;
 
-export function flip(betOn: Face, bias: number): number {
-  const ht = betOn === "heads" ? 1 : 0;
-  const b = ht ? bias : 1 - bias;
-  return d3.randomBernoulli(b)();
+export function flip(bias: number): number {
+  return d3.randomBernoulli(bias)();
 }
 
 export function addFlip(
@@ -42,16 +39,27 @@ export function addFlip(
   betOn: Face
 ): Flip[] {
   let flip = flips[flips.length - 1];
+
+  // flipResult is 1 for heads, 0 for tails
+  const coinResultFace: Face = flipResult === 1 ? "heads" : "tails";
+
+  // Determine if the player won their bet
+  const won = coinResultFace === betOn;
+
+  // Calculate balance change
   const b = betOn === "heads" ? bet : -bet;
-  const v = flip.value > 0 ? (flipResult ? flip.value + b : flip.value - b) : 0;
-  const v1 = flipResult
+  const v = flip.value > 0 ? (won ? flip.value + bet : flip.value - bet) : 0;
+
+  // Calculate comparison strategies (they always bet on heads)
+  const v1 = flipResult === 1
     ? flip.value10 + flip.value10 * K1
     : flip.value10 - flip.value10 * K1;
   const v2 =
-    flip.value20 > 0 ? (flipResult ? flip.value20 + K2 : flip.value20 - K2) : 0;
-  const vk = flipResult
+    flip.value20 > 0 ? (flipResult === 1 ? flip.value20 + K2 : flip.value20 - K2) : 0;
+  const vk = flipResult === 1
     ? flip.kelly + flip.kelly * KELLY
     : flip.kelly - flip.kelly * KELLY;
+
   return [
     ...flips,
     {
@@ -62,7 +70,7 @@ export function addFlip(
       kelly: vk,
       betOn: betOn,
       betSize: bet,
-      coinResult: flipResult ? "heads" : "tails",
+      coinResult: coinResultFace,
     },
   ];
 }
@@ -107,7 +115,7 @@ function mkCoinBatch(n: number, bias: number, betFraction: number): Profit[] {
   const kellyFraction = bias * 2 - 1;
   const bet = Math.trunc(betFraction * 100);
   for (let i = 0; i < n; i++) {
-    const toss = flip("heads", bias);
+    const toss = flip(bias);
     c10p = toss ? (1 + betFraction) * c10p : c10p * (1 - betFraction);
     c20d = c20d > 0 ? (toss ? c20d + K2 / 100 : c20d - K2 / 100) : 0;
     kelly = toss ? kelly * (1 + kellyFraction) : kelly * (1 - kellyFraction);

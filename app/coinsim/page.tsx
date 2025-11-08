@@ -26,6 +26,7 @@ export default function Home() {
     coinComplete,
     coinSimEnabled,
     coinSimMaxSamples,
+    coinSimMaxFlips,
   } = useAuth();
 
   useEffect(() => {
@@ -134,13 +135,13 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col space-y-6 mt-12">
-      <div className="flex flex-row justify-center text-3xl text-slate-200 py-8">
+    <main className="flex min-h-screen flex-col space-y-6 mt-8 md:mt-12 px-2 md:px-0">
+      <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200 py-4 md:py-8">
         Coin Flipping Simulation
       </div>
-      <div className="grid gap-4 grid-cols-9">
-        <div className="flex flex-col gap-4 col-span-2 px-8 md:min-w-56">
-          <Button className="py-4 mb-2 bg-blue-500" onClick={go}>
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-9">
+        <div className="flex flex-col gap-4 col-span-1 md:col-span-2 px-4 md:px-8 md:min-w-56">
+          <Button className="py-6 md:py-4 mb-2 bg-blue-500 text-base md:text-base" onClick={go}>
             Run
           </Button>
           <Slider
@@ -148,7 +149,7 @@ export default function Home() {
             label="Flips"
             value={model.coinSimSliders.yearsSlider}
             minValue={1}
-            maxValue={100}
+            maxValue={coinSimMaxFlips}
             step={1}
             hideThumb={true}
             onChange={handleYearsSlider}
@@ -196,20 +197,20 @@ export default function Home() {
             onValueChange={handleCheckbox}
           >
             <Checkbox
-              classNames={{ label: "text-xs md:text-sm" }}
+              classNames={{ label: "text-sm md:text-sm" }}
               value="constant"
             >
               Constant $20
             </Checkbox>
             <Checkbox
-              classNames={{ label: "text-xs md:text-sm" }}
+              classNames={{ label: "text-sm md:text-sm" }}
               value="kelly"
             >
               {`Kelly ${Math.round(10000 * kellyFraction) / 100}%`}
             </Checkbox>
           </CheckboxGroup>
         </div>
-        <div className="col-span-5 ml-12">
+        <div className="col-span-1 md:col-span-5 mx-4 md:ml-12 md:mr-0">
           {model.coinSim.length > 1 && !isCalculating ? (
             <CoinSimPlot
               profits={model.coinSim}
@@ -217,13 +218,13 @@ export default function Home() {
               toPlot={model.coinSimBoxes}
             />
           ) : (
-            <div className="text-9xl flex justify-center mt-24 mr-8">
-              <Image src="/heads.png" alt="Heads" width={250} />
+            <div className="text-9xl flex justify-center mt-12 md:mt-24 mr-0 md:mr-8">
+              <Image src="/heads.png" alt="Heads" width={200} className="md:w-[250px]" />
             </div>
           )}
         </div>
         {model.coinSim.length > 1 && !isCalculating ? (
-          <div className="col-span-2  flex  flex-col gap-1 text-sm">
+          <div className="col-span-1 md:col-span-2 flex flex-col gap-1 text-sm px-4 md:px-0">
             <Card className="text-blue-400 bg-inherit">
               <p>
                 Mean Return: {d3.format("10.2%")(model.coinAvgReturns.player)}
