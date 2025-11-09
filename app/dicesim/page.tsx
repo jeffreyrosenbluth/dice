@@ -134,13 +134,13 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col space-y-24 mt-12">
-      <div className="flex flex-row justify-center text-3xl text-slate-200">
+    <main className="flex min-h-screen flex-col space-y-12 md:space-y-24 mt-8 md:mt-12 px-2 md:px-0">
+      <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200">
         Dice Simulation
       </div>
-      <div className="grid gap-4 grid-cols-9">
-        <div className="flex flex-col gap-4 col-span-2 px-8 max-w-56 md:min-w-56">
-          <Button className="py-4 mb-2 bg-blue-500" onClick={go}>
+      <div className="grid gap-8 md:gap-4 grid-cols-1 md:grid-cols-9">
+        <div className="flex flex-col gap-4 col-span-1 md:col-span-2 px-4 md:px-8 max-w-full md:max-w-56 md:min-w-56">
+          <Button className="py-3 md:py-4 mb-2 bg-blue-500 text-base md:text-base" onClick={go}>
             Run
           </Button>
           <Slider
@@ -227,16 +227,16 @@ export default function Home() {
             </Checkbox>
           </CheckboxGroup>
         </div>
-        <div className="col-span-5 ml-12">
+        <div className="col-span-1 md:col-span-5 mx-4 md:ml-12 md:mr-0">
           {model.diceSim.length > 1 && !isCalculating ? (
             <SimPlot data={model.diceSim} toPlot={model.diceSimBoxes} />
           ) : (
-            <div className="text-9xl flex justify-center mt-24 mr-24">🎲</div>
+            <div className="text-6xl md:text-9xl flex justify-center mt-12 md:mt-24 md:mr-24">🎲</div>
           )}
         </div>
         {model.diceSim.length > 1 && !isCalculating ? (
-          <div className="col-span-2 flex flex-col gap-1 text-xs lg:text-sm">
-            <div className="flex flex-row text-base px-4 font-semibold text-slate-200">
+          <div className="col-span-1 md:col-span-2 flex flex-col gap-1 px-4 text-sm md:text-xs lg:text-sm">
+            <div className="flex flex-row text-base md:text-base font-semibold text-slate-200">
               Returns
             </div>
             <Card className="text-blue-400 bg-inherit">

@@ -135,12 +135,12 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col space-y-6 mt-12">
-      <div className="flex flex-row justify-center text-3xl text-slate-200 mb-6">
+    <main className="flex min-h-screen flex-col space-y-6 mt-8 md:mt-12 px-2 md:px-0">
+      <div className="flex flex-row justify-center text-2xl md:text-3xl text-slate-200 mb-6">
         Track Record Game
       </div>
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-2 col-start-2 flex flex-col items-left gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-4">
+        <div className="col-span-1 md:col-span-2 md:col-start-2 flex flex-col items-left gap-6 md:gap-8 px-4 md:px-0">
           <Slider
             label="Coin Bias"
             isDisabled={
@@ -166,11 +166,11 @@ export default function Home() {
           </Switch>
           <DiceButton onClick={handleReset}>Reset</DiceButton>
         </div>
-        <div></div>
+        <div className="hidden md:block"></div>
         <div
           className={clsx(
-            "col-span-3 flex flex-col items-center gap-8",
-            trackCoin1.current ? "order-1" : "order-2"
+            "col-span-1 md:col-span-3 flex flex-col items-center gap-4 md:gap-8 text-sm md:text-base px-4 md:px-0",
+            trackCoin1.current ? "md:order-1" : "md:order-2"
           )}
         >
           <Coin
@@ -201,13 +201,13 @@ export default function Home() {
             </div>
           ) : null}
           {model.trackReveal ? (
-            <div className="text-amber-400 text-5xl">✸</div>
+            <div className="text-amber-400 text-4xl md:text-5xl">✸</div>
           ) : null}
         </div>
         <div
           className={clsx(
-            "col-span-3 flex flex-col items-center gap-8",
-            trackCoin1.current ? "order-2" : "order-1"
+            "col-span-1 md:col-span-3 flex flex-col items-center gap-4 md:gap-8 text-sm md:text-base px-4 md:px-0",
+            trackCoin1.current ? "md:order-2" : "md:order-1"
           )}
         >
           <Coin
@@ -237,6 +237,9 @@ export default function Home() {
               {(100 * (isNaN(entropy2) ? 0 : entropy2)).toFixed(4)}%
             </div>
           ) : null}
+          {!model.trackReveal && (
+            <div className="text-amber-400 text-4xl md:text-5xl invisible">✸</div>
+          )}
         </div>
       </div>
       {/* <div>Expected Entropy Coin 1 = {(100 * entropy1).toFixed(4)}</div>

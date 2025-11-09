@@ -50,12 +50,12 @@ const Page = () => {
                 To play choose <code className="text-white">Game</code> from the{" "}
                 <code className="text-white">Coin Flipping</code> menu.
               </div>
-              <div className="mb=8">
+              <div className="mb-8">
                 It is recommend to play the coin flip game before reading the
                 discussion and playing the simulation.
               </div>
               {coinComplete ? (
-                <Accordion variant="bordered">
+                <Accordion variant="bordered" className="mt-6">
                   <AccordionItem title="Discussion">
                     <div className="text-orange-400">
                       Despite the favorable odds, many players struggle with bet

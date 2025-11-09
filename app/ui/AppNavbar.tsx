@@ -18,6 +18,7 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useAuth } from "@/app/authctx";
+import { usePathname } from "next/navigation";
 
 interface ChevronDownProps extends React.SVGProps<SVGSVGElement> {
   fill?: string;
@@ -56,6 +57,7 @@ const ChevronDown: React.FC<ChevronDownProps> = ({
 
 const AppNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
   const {
     coinComplete,
     diceComplete,
@@ -240,7 +242,7 @@ const AppNavbar: React.FC = () => {
         </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
-    {coinFinalBalance !== null && (
+    {coinFinalBalance !== null && pathname === "/coinplay" && (
       <div className="hidden md:block absolute top-24 right-8 bg-slate-800 px-6 py-3 rounded-md border border-gray-600 shadow-lg min-w-[180px]">
         <div className="text-sm text-slate-400">Final Balance</div>
         <div className="text-2xl font-semibold text-green-400 break-words">
