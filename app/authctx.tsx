@@ -13,7 +13,7 @@ const CONFIG = {
   coinSimMaxSamples: 100000,
   coinSimMaxFlips: 300,
   diceGameEnabled: true,
-  diceGameRolls: 100,
+  diceGameRolls: 20,
   diceSimEnabled: true,
   diceSimMaxSamples: 100000,
 };

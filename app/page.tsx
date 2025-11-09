@@ -399,7 +399,7 @@ const Page = () => {
                         Being Warren Buffett: A Classroom Simulation of Risk and
                         Wealth When Investing in the Stock Market
                       </em>
-                      , by Dean P. Foster and Robert A. Stein.
+                      , by Dean P. Foster and Robert A. Stine.
                     </Link>
                   </div>
                 </div>
