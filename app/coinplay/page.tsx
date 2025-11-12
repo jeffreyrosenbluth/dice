@@ -294,12 +294,15 @@ export default function Home() {
                 placeholder="0.00"
                 step="0.01"
                 min="0"
+                max={balance}
                 value={model.coinPlayBet === 0 ? "" : model.coinPlayBet}
                 onChange={(e) => {
                   const val = parseFloat(e.target.value) || 0;
+                  const cappedVal = Math.min(val, balance);
+                  const roundedVal = Math.round(cappedVal * 100) / 100;
                   setModel((prevModel) => ({
                     ...prevModel,
-                    coinPlayBet: val,
+                    coinPlayBet: roundedVal,
                   }));
                 }}
                 onFocus={(e) => e.target.select()}
